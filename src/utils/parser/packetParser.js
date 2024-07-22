@@ -4,36 +4,17 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import CustomError from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
 
-export const packetParser = (data) => {
+export const packetParser = (data, packetId) => {
   const protoMessages = getProtoMessages();
-  const Packet = protoMessages.common.Packet;
-  let packet;
-
-  try {
-    packet = Packet.decode(data);
-  } catch (err) {
-    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다.');
-  }
-
-  const handlerId = packet.handlerId;
-  const userId = packet.userId;
-  const clientVersion = packet.clientVersion;
-
-  if (clientVersion !== config.client.version)
-    throw new CustomError(
-      ErrorCodes.CLIENT_VERSION_MISMATCH,
-      '클라이언트 버전이 일치하지 않습니다.',
-    );
-
-  const protoTypeName = getProtoTypeNameByHandlerId(handlerId);
+  const protoTypeName = getProtoTypeNameByHandlerId(packetId);
   if (!protoTypeName)
-    throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `알 수 없는 핸들러 ID: ${handlerId}`);
+    throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `알 수 없는 패킷 ID: ${packetId}`);
 
   const [namespace, typeName] = protoTypeName.split('.');
   const PayloadType = protoMessages[namespace][typeName];
   let payload;
   try {
-    payload = PayloadType.decode(packet.payload);
+    payload = PayloadType.decode(data);
   } catch (err) {
     throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, '패킷 구조가 일치하지 않습니다.');
   }
@@ -47,5 +28,5 @@ export const packetParser = (data) => {
       `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
     );
 
-  return { handlerId, userId, payload };
+  return { payload };
 };

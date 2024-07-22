@@ -13,28 +13,18 @@ export const onData = (socket) => async (data) => {
   const totalHeaderLength = config.packet.totalLength + config.packet.typeLength;
 
   while (socket.buffer.length >= totalHeaderLength) {
-    const length = socket.buffer.readUInt32BE(0);
-    const packetType = socket.buffer.readUInt8(config.packet.totalLength);
+    const length = socket.buffer.readUInt32LE(0);
+    const packetId = socket.buffer.readUInt8(config.packet.totalLength);
 
     if (socket.buffer.length >= length) {
       const packet = socket.buffer.slice(totalHeaderLength, length);
       socket.buffer = socket.buffer.slice(length);
 
       try {
-        switch (packetType) {
-          case PACKET_TYPE.PING:
-            {
-              const protoMessages = getProtoMessages();
-              const Ping = protoMessages.common.Ping;
-              const pingMessage = Ping.decode(packet);
-              const user = getUserBySocket(socket);
-              if (!user)
-                throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
+        const { payload } = packetParser(packet, packetId);
 
-              user.handlePong(pingMessage);
-            }
-            break;
-        }
+        const handler = getHandlerById(packetId);
+        await handler({ socket, payload });
       } catch (err) {
         handleError(socket, err);
       }
