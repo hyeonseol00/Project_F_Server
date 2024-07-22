@@ -2,9 +2,9 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
-export const createResponse = (handlerId, data = null) => {
+export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  const Response = protoMessages.response[handlerId];
+  const Response = protoMessages[packageType][packetId];
 
   const buffer = Response.encode(data).finish();
 
@@ -15,7 +15,7 @@ export const createResponse = (handlerId, data = null) => {
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(handlerId, 0);
+  packetType.writeUInt8(PACKET_TYPE[packetId], 0);
 
   return Buffer.concat([packetLength, packetType, buffer]);
 };
