@@ -17,13 +17,13 @@ const enterTownHandler = ({ socket, userId, payload }) => {
     const user = addUser(socket, nickname);
     gameSession.addUser(user);
 
-    const transformInfo = createCustomMessage('custom', 'TransformInfo', {
+    const transformInfo = {
       posX: 0,
       posY: 1,
       posZ: 0,
       rot: 0,
-    });
-    const statInfo = createCustomMessage('custom', 'StatInfo', {
+    };
+    const statInfo = {
       level: 1,
       hp: 100,
       maxHp: 100,
@@ -33,14 +33,14 @@ const enterTownHandler = ({ socket, userId, payload }) => {
       def: 10,
       magic: 10,
       speed: 10,
-    });
-    const playerInfo = createCustomMessage('custom', 'PlayerInfo', {
+    };
+    const playerInfo = {
       playerId: user.id,
       nickname,
       class: characterClass,
-      transformInfo,
+      transform: transformInfo,
       statInfo,
-    });
+    };
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
