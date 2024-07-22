@@ -2,14 +2,11 @@ import { createPingPacket } from '../../utils/notification/game.notification.js'
 import roundM5 from '../../utils/round.js';
 
 class User {
-  constructor(id, playerId, socket, latency, x, y) {
+  constructor(id, playerId, socket) {
     this.id = id;
     this.playerId = playerId;
     this.socket = socket;
-    this.x = x;
-    this.y = y;
     this.lastUpdateTime = Date.now();
-    this.latency = latency;
   }
 
   updatePosition(x, y) {
