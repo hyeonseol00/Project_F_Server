@@ -1,12 +1,13 @@
-import { HANDLER_IDS } from '../constants/handlerIds.js';
+import { PACKET_TYPE } from '../constants/header.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
-import createGameHandler from './game/createGame.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
 import updateLocationHandler from './game/updateLocation.handler.js';
+import enterTownHandler from './town/enter.handler.js';
 import initialHandler from './user/initial.handler.js';
 
 const handlers = {
+  /* 
   [HANDLER_IDS.INITIAL]: {
     handler: initialHandler,
     protoType: 'initial.InitialPacket',
@@ -22,6 +23,11 @@ const handlers = {
   [HANDLER_IDS.UPDATE_LOCATION]: {
     handler: updateLocationHandler,
     protoType: 'game.LocationUpdatePayload',
+	},
+   */
+  [PACKET_TYPE.C_Enter]: {
+    handler: enterTownHandler,
+    protoType: 'town.C_Enter',
   },
 };
 
