@@ -24,7 +24,7 @@ class Game {
   }
 
   getAllUserIds() {
-    const userIds = this.users.map((user) => user.id);
+    const userIds = this.users.map((user) => user.playerId);
 
     return userIds;
   }
