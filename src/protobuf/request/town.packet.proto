@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package tower.packet;
+
+//캐릭터 선택 + 닉네임 입력
+message C_Enter{
+  string nickname = 1;
+  int32 class = 2;
+}
+
+//캐릭터 이동
+message C_Move {
+  TransformInfo transform = 1;
+}
+
+//마을에서 애니메이션 패킷 전달
+message C_Animation {
+  int32 animCode = 1;
+}
+
+//채팅 
+message C_Chat{
+  int32 playerId = 1;
+  string senderName = 2;
+  string chatMsg = 3;
+}
+
+//던전 입장
+message C_EnterDungeon{
+  int32 dungeonCode = 1;
+}
