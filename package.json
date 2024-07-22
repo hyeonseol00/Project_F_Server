@@ -1,12 +1,13 @@
 {
-  "name": "tcp_multiplay_server",
+  "name": "project_f_server",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "migrate": "node src/db/migrations/createSchemas.js"
+    "migrate": "node src/db/migrations/createSchemas.js",
+    "prettier": "prettier --write --config ./.prettierrc **/*.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   }
 }

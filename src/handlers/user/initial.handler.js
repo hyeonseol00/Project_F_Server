@@ -9,45 +9,38 @@ import { config } from '../../config/config.js';
 import { createUserbackupCoordinate, findUserByDeviceID } from '../../db/backup/coordinates.db.js';
 import CustomError from '../../utils/error/customError.js';
 
-const initialHandler = async ({ socket, userId, payload }) =>
-{
-	try
-	{
-		const { deviceId, playerId, latency } = payload;
-		const gameSession = getGameSession(config.session.id);
-		const user = getUserById(playerId);
-		if (user)
-			throw new CustomError(ErrorCodes.DUPLICATE_DEVICE_ID, '중복된 deviceId 입니다.');
+const initialHandler = async ({ socket, userId, payload }) => {
+  try {
+    const { deviceId, playerId, latency } = payload;
+    const gameSession = getGameSession(config.session.id);
+    const user = getUserById(playerId);
+    if (user) throw new CustomError(ErrorCodes.DUPLICATE_DEVICE_ID, '중복된 deviceId 입니다.');
 
-		let userData = await findUserByDeviceID(deviceId);
-		if (!userData)
-			userData = await createUserbackupCoordinate(deviceId);
+    let userData = await findUserByDeviceID(deviceId);
+    if (!userData) userData = await createUserbackupCoordinate(deviceId);
 
-		addUser(socket, deviceId, playerId, latency, userData.x, userData.y);
+    addUser(socket, deviceId, playerId, latency, userData.x, userData.y);
 
-		const initialResponse = createResponse(
-			HANDLER_IDS.INITIAL,
-			RESPONSE_SUCCESS_CODE,
-			{
-				userId: deviceId,
-				x: userData.x,
-				y: userData.y
-			},
-			playerId,
-			"InitData",
-		);
+    const initialResponse = createResponse(
+      HANDLER_IDS.INITIAL,
+      RESPONSE_SUCCESS_CODE,
+      {
+        userId: deviceId,
+        x: userData.x,
+        y: userData.y,
+      },
+      playerId,
+      'InitData',
+    );
 
-		socket.write(initialResponse);
+    socket.write(initialResponse);
 
-		if (!gameSession)
-			createGameHandler({ socket, userId: deviceId, payload: { gameId: config.session.id } });
-		else
-			joinGameHandler({ socket, userId: deviceId, payload: { gameId: config.session.id } });
-	}
-	catch (err)
-	{
-		handleError(socket, err);
-	}
+    if (!gameSession)
+      createGameHandler({ socket, userId: deviceId, payload: { gameId: config.session.id } });
+    else joinGameHandler({ socket, userId: deviceId, payload: { gameId: config.session.id } });
+  } catch (err) {
+    handleError(socket, err);
+  }
 };
 
 export default initialHandler;
