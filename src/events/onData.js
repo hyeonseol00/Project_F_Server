@@ -1,5 +1,11 @@
 import { config } from '../config/config.js';
 import { PACKET_TYPE } from '../constants/header.js';
+import {
+  findCharacterByUserIdAndClass,
+  findUserByUsername,
+  insertCharacter,
+  insertUserByUsername,
+} from '../db/backup/coordinates.db.js';
 import { getHandlerById } from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { getUserById, getUserBySocket } from '../session/user.session.js';
@@ -22,6 +28,8 @@ export const onData = (socket) => async (data) => {
 
       try {
         switch (packetType) {
+          case PACKET_TYPE.C_Enter:
+            break;
           case PACKET_TYPE.PING:
             {
               const protoMessages = getProtoMessages();

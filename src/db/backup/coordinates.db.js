@@ -3,18 +3,46 @@ import pools from '../database.js';
 import { SQL_QUERIES } from './coordinates.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 
-export const findUserByDeviceID = async (deviceId) => {
-  const [rows] = await pools.USER_COORDINATES.query(SQL_QUERIES.FIND_USER_BY_DEVICE_ID, [deviceId]);
+export const findUserByUsername = async (username) => {
+  const [rows] = await pools.USER_COORDINATES.query(SQL_QUERIES.FIND_USER_BY_USERNAME, [username]);
 
   return toCamelCase(rows[0]);
 };
 
-export const createUserbackupCoordinate = async (deviceId) => {
-  const id = uuidv4();
+export const insertUserByUsername = async (username) => {
+  // const id = uuidv4();
 
-  await pools.USER_COORDINATES.query(SQL_QUERIES.BACKUP_COORDINATE, [id, deviceId, 0, 0]);
+  await pools.USER_COORDINATES.query(SQL_QUERIES.INSERT_USER, [username]);
+};
 
-  return { id, deviceId, x: 0, y: 0 };
+export const findCharacterByUserIdAndClass = async (userId, jobId) => {
+  const [rows] = await pools.USER_COORDINATES.query(
+    SQL_QUERIES.FIND_CHARACTER_BY_USER_ID_AND_CLASS,
+    [userId, jobId],
+  );
+
+  return toCamelCase(rows[0]);
+};
+
+export const insertCharacter = async (user, jobId) => {
+  const { jobName, baseHp, baseMp, baseAttack, baseDefense } = await getJobInfo(jobId);
+
+  await pools.USER_COORDINATES.query(SQL_QUERIES.INSERT_CHARACTER, [
+    user.userId,
+    user.username,
+    jobId,
+    jobName,
+    baseHp,
+    baseMp,
+    baseAttack,
+    baseDefense,
+  ]);
+};
+
+export const getJobInfo = async (jobId) => {
+  const [rows] = await pools.USER_COORDINATES.query(SQL_QUERIES.GET_JOB_INFO, [jobId]);
+
+  return toCamelCase(rows[0]);
 };
 
 export const updateUserBackupCoordinate = async (id, x, y) => {
