@@ -10,6 +10,51 @@ message Response {
   bytes data = 4;            // 실제 응답 데이터 (선택적 필드)
 }
 
+
+// 마을
+//캐릭터 생성
+message S_Enter {
+  PlayerInfo player = 1;
+}
+
+//다른 유저 캐릭터 생성
+message S_Spawn {
+  repeated PlayerInfo players = 1;
+}
+
+//다른 유저 위치 정보 전달
+message S_Move {
+  int32 playerId = 1;
+  TransformInfo transform = 2;
+}
+
+//마을 애니메이션 모션 패킷 전달
+message S_Animation {
+  int32 playerId = 1;
+  int32 animCode = 2;
+}
+
+//채팅
+message S_Chat{
+  int32 playerId = 1;
+  string chatMsg = 2;
+}
+
+//던전 이동
+message S_EnterDungeon{
+  DungeonInfo dungeonInfo = 1;
+  PlayerStatus player = 2;
+  ScreenText screenText = 3; // Option
+  BattleLog battleLog = 4;
+}
+
+//마을 나가기
+message S_Despawn {
+  repeated int32 playerIds = 1;
+}
+
+
+// 던전
 // 던전 나가기
 message S_LeaveDungeon { }
 
