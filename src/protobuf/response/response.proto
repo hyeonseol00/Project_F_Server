@@ -2,10 +2,44 @@ syntax = "proto3";
 
 package response;
 
-// 공통 응답 메시지 구조
-message Response {
-  uint32 handlerId = 1;      // 핸들러 ID
-  uint32 responseCode = 2;   // 응답 코드 (성공: 0, 실패: 에러 코드)
-  int64 timestamp = 3;       // 메시지 생성 타임스탬프 (Unix 타임스탬프)
-  bytes data = 4;            // 실제 응답 데이터 (선택적 필드)
+
+//캐릭터 생성
+message S_Enter {
+  PlayerInfo player = 1;
+}
+
+//다른 유저 캐릭터 생성
+message S_Spawn {
+  repeated PlayerInfo players = 1;
+}
+
+//다른 유저 위치 정보 전달
+message S_Move {
+  int32 playerId = 1;
+  TransformInfo transform = 2;
+}
+
+//마을 애니메이션 모션 패킷 전달
+message S_Animation {
+  int32 playerId = 1;
+  int32 animCode = 2;
+}
+
+//채팅
+message S_Chat{
+  int32 playerId = 1;
+  string chatMsg = 2;
+}
+
+//던전 이동
+message S_EnterDungeon{
+  DungeonInfo dungeonInfo = 1;
+  PlayerStatus player = 2;
+  ScreenText screenText = 3; // Option
+  BattleLog battleLog = 4;
+}
+
+//마을 나가기
+message S_Despawn {
+  repeated int32 playerIds = 1;
 }
