@@ -36,8 +36,18 @@ export const insertCharacter = async (user, jobId) => {
   ]);
 };
 
+
 export const getJobInfo = async (jobId) => {
   const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.GET_JOB_INFO, [jobId]);
+
+  return toCamelCase(rows[0]);
+};
+
+export const findCharacterByUserIdAndNickname = async (userId, nickname) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_CHARACTER_BY_USER_ID_AND_NICKNAME, [
+    userId,
+    nickname,
+  ]);
 
   return toCamelCase(rows[0]);
 };
