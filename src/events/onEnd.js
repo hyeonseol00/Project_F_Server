@@ -4,7 +4,7 @@ import { getUserBySocket, removeUser } from '../session/user.session.js';
 
 export const onEnd = (socket) => async () => {
   const user = getUserBySocket(socket);
-  const gameSession = getGameSession(config.session.id);
+  const gameSession = getGameSession(config.session.townId);
 
   gameSession.removeUser(user.id);
 
