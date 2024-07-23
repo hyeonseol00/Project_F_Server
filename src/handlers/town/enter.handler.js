@@ -16,7 +16,7 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const characterClass = payload.class;
     const gameSession = getGameSession(config.session.id);
 
-    const user = addUser(socket, nickname);
+    const user = addUser(socket, nickname, characterClass);
     gameSession.addUser(user);
 
     // DB
