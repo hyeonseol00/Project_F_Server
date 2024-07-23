@@ -5,8 +5,10 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.playerId);
+  // 하드코딩 예외처리. 클라이언트 수정 요망
+  const responseCode = payload.responseCode ? payload.responseCode : 0;
 
-  switch (payload.responseCode) {
+  switch (responseCode) {
     case 0:
       const btns = [];
       for (let i = 0; i < dungeon.monsters.length; i++) {
@@ -18,9 +20,11 @@ const battleResponseHandler = async ({ socket, payload }) => {
         typingAnimation: true,
         btns,
       };
-      const response = createResponse('battle', 'S_BattleLog', { battleLog });
+      const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
+      const responseScreenDone = createResponse('response', 'S_ScreenDone', {});
 
-      socket.write(response);
+      socket.write(responseBattleLog);
+      socket.write(responseScreenDone);
       break;
     case 1:
     case 2:
