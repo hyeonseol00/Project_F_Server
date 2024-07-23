@@ -3,6 +3,7 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import enterTownHandler from './town/enter.handler.js';
 import moveTownHandler from './town/move.handler.js';
+import enterDungeonHandler from './town/enterDungeon.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -13,6 +14,10 @@ const handlers = {
     handler: moveTownHandler,
     protoType: 'town.C_Move',
   },
+  [PACKET_TYPE.C_EnterDungeon]: {
+    handler: enterDungeonHandler,
+    protoType: 'town.C_EnterDungeon',
+  }
 };
 
 export const getHandlerById = (handlerId) => {

@@ -17,8 +17,9 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const characterClass = payload.class;
     const gameSession = getGameSession(config.session.id);
 
-    const curUser = addUser(socket, nickname);
-    
+    const user = addUser(socket, nickname, characterClass);
+    gameSession.addUser(user);
+
     // DB
     let userInDB = await findUserByUsername(nickname);
     if (!userInDB) {
@@ -98,7 +99,7 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     }
 
     // ---------- spawn 끝 -----------------
-    
+
   } catch (err) {
     handleError(socket, err);
   }
