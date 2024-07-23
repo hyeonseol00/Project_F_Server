@@ -22,11 +22,13 @@ export const packetParser = (data, packetId) => {
   const expectedFields = Object.keys(PayloadType.fields);
   const actualFields = Object.keys(payload);
   const missingFields = expectedFields.filter((field) => !actualFields.includes(field));
-  if (missingFields.length > 0)
-    throw new CustomError(
-      ErrorCodes.MISSING_FIELDS,
-      `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
-    );
+  // missingFields != 'responseCode' 부분 검사는 하드코딩 예외처리. 클라이언트 수정 요망
+  if (missingFields != 'responseCode')
+    if (missingFields.length > 0)
+      throw new CustomError(
+        ErrorCodes.MISSING_FIELDS,
+        `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
+      );
 
   return { payload };
 };
