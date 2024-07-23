@@ -1,16 +1,31 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { getUserBySocket } from '../../session/user.session.js';
+import {
+  findCharacterByUserIdAndNickname,
+  findUserByUsername,
+} from '../../db/user/user.db.js';
 
 const enterDungeonHandler = async ({ socket, userId, payload }) => {
   try {
     const { dungeonCode } = payload;
+    const user = getUserBySocket(socket);
+    const nickname =user.playerId;
 
+    let userInDB = await findUserByUsername(nickname);
+    let character = await findCharacterByUserIdAndNickname(userInDB.userId, userInDB.username);
     const monsterStatus = [
       {
-        monsterIdx: 2001,
-        monsterModel: 0,
+        monsterIdx :0,
+        monsterModel: 2001,
         monsterName: '몬스터',
         monsterHp: 100.0,
+      },
+      {
+        monsterIdx: 1,
+        monsterModel: 2004,
+        monsterName: '몬스터2',
+        monsterHp: 300.0,
       },
     ];
 
@@ -20,13 +35,13 @@ const enterDungeonHandler = async ({ socket, userId, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: 1,
-      playerLevel: 1,
-      playerName: 'aa',
-      playerFullHp: 100.0,
-      playerFullMp: 100.0,
-      playerCurHp: 100.0,
-      playerCurMp: 100.0,
+      playerClass: character.job_id,
+      playerLevel: character.level,
+      playerName: character.name,
+      playerFullHp: character.MaxHp,
+      playerFullMp: character.MaxMp,
+      playerCurHp: character.hp,
+      playerCurMp: character.mp,
     };
 
     const ScreenTextAlignment = {
