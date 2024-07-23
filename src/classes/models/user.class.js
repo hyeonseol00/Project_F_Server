@@ -7,11 +7,18 @@ class User {
     this.playerId = playerId;
     this.socket = socket;
     this.lastUpdateTime = Date.now();
+    this.playerInfo = {};
   }
 
-  updatePosition(x, y) {
+  setPlayerInfo(playerInfo){
+    this.playerInfo = playerInfo;
+  }
+
+  updatePosition(x, y, z, rot) {
     this.x = x;
     this.y = y;
+    this.z = z;
+    this.rot = rot
     this.lastUpdateTime = Date.now();
   }
 

@@ -2,11 +2,16 @@ import { PACKET_TYPE } from '../constants/header.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import enterTownHandler from './town/enter.handler.js';
+import moveTownHandler from './town/move.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
     handler: enterTownHandler,
     protoType: 'town.C_Enter',
+  },
+  [PACKET_TYPE.C_Move]:{
+    handler: moveTownHandler,
+    protoType: 'town.C_Move',
   },
 };
 
