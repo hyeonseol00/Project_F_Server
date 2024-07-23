@@ -1,10 +1,16 @@
 import { config } from '../../config/config.js';
+import {
+  findCharacterByUserIdAndClass,
+  findUserByUsername,
+  insertCharacter,
+  insertUserByUsername,
+} from '../../db/backup/coordinates.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const enterTownHandler = ({ socket, userId, payload }) => {
+const enterTownHandler = async ({ socket, userId, payload }) => {
   try {
     const { nickname } = payload;
     const characterClass = payload.class;
@@ -40,6 +46,24 @@ const enterTownHandler = ({ socket, userId, payload }) => {
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
+
+    // DB
+    const username = nickname;
+    const jobId = characterClass;
+    let userInDB = await findUserByUsername(username);
+    if (!userInDB) {
+      console.log(`${username} user 생성`);
+      await insertUserByUsername(username);
+      userInDB = await findUserByUsername(username);
+    }
+    console.log(userInDB);
+    let character = await findCharacterByUserIdAndClass(userInDB.userId, jobId);
+    if (!character) {
+      console.log(`${jobId} character 생성`);
+      await insertCharacter(userInDB, jobId);
+      character = await findCharacterByUserIdAndClass(userInDB.userId, jobId);
+    }
+    console.log(character);
 
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
 

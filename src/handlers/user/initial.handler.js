@@ -5,6 +5,7 @@ import { getGameSession } from '../../session/game.session.js';
 import joinGameHandler from '../game/joinGame.handler.js';
 import createGameHandler from '../game/createGame.handler.js';
 import { config } from '../../config/config.js';
+import { insertUserByUsername, findUserByUsername } from '../../db/backup/coordinates.db.js';
 import CustomError from '../../utils/error/customError.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
@@ -14,8 +15,8 @@ const initialHandler = async ({ socket, userId, payload }) => {
     const user = getUserById(playerId);
     if (user) throw new CustomError(ErrorCodes.DUPLICATE_DEVICE_ID, '중복된 deviceId 입니다.');
 
-    let userData = await findUserByDeviceID(deviceId);
-    if (!userData) userData = await createUserbackupCoordinate(deviceId);
+    let userData = await findUserByUsername(deviceId);
+    if (!userData) userData = await insertUserByUsername(deviceId);
 
     addUser(socket, deviceId, playerId, latency, userData.x, userData.y);
 

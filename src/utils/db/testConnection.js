@@ -1,3 +1,9 @@
+import {
+  findCharacterByUserIdAndClass,
+  findUserByUsername,
+  insertCharacter,
+  insertUserByUsername,
+} from '../../db/backup/coordinates.db.js';
 import pools from '../../db/database.js';
 
 const testDbConnection = async (pool, dbName) => {
