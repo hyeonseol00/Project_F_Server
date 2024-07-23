@@ -1,22 +1,20 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
-import {
-  findCharacterByUserIdAndNickname,
-  findUserByUsername,
-} from '../../db/user/user.db.js';
+import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 
 const enterDungeonHandler = async ({ socket, userId, payload }) => {
   try {
     const { dungeonCode } = payload;
     const user = getUserBySocket(socket);
-    const nickname =user.playerId;
+    const nickname = user.playerId;
+    const characterClass = user.characterClass;
 
     let userInDB = await findUserByUsername(nickname);
-    let character = await findCharacterByUserIdAndNickname(userInDB.userId, userInDB.username);
+    let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     const monsterStatus = [
       {
-        monsterIdx :0,
+        monsterIdx: 0,
         monsterModel: 2001,
         monsterName: '몬스터',
         monsterHp: 100.0,
@@ -33,9 +31,9 @@ const enterDungeonHandler = async ({ socket, userId, payload }) => {
       dungeonCode: dungeonCode + 5000,
       monsters: monsterStatus,
     };
-
+    console.log(character);
     const playerStatus = {
-      playerClass: character.job_id,
+      playerClass: character.jobId,
       playerLevel: character.level,
       playerName: character.name,
       playerFullHp: character.MaxHp,

@@ -5,5 +5,4 @@ export const SQL_QUERIES = {
   FIND_CHARACTER_BY_USER_ID_AND_CLASS: 'SELECT * FROM Characters WHERE user_id = ? AND job_id = ?',
   INSERT_CHARACTER:
     'INSERT INTO Characters (user_id, name, job_id, job_name, MaxHp, MaxMp, hp, mp, attack, defense, magic, speed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-  FIND_CHARACTER_BY_USER_ID_AND_NICKNAME: 'SELECT * FROM Characters WHERE user_id = ? AND name = ?',
 };
