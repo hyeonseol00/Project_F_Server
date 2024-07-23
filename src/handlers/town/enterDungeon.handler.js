@@ -2,6 +2,8 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
+import { findMonsterByMonsters } from '../../db/user/user.db.js';
+import { findMonstersByDungeonMonsters } from '../../db/user/user.db.js';
 
 const enterDungeonHandler = async ({ socket, userId, payload }) => {
   try {
@@ -12,20 +14,24 @@ const enterDungeonHandler = async ({ socket, userId, payload }) => {
 
     let userInDB = await findUserByUsername(nickname);
     let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-    const monsterStatus = [
-      {
-        monsterIdx: 0,
-        monsterModel: 2001,
-        monsterName: '몬스터',
-        monsterHp: 100.0,
-      },
-      {
-        monsterIdx: 1,
-        monsterModel: 2004,
-        monsterName: '몬스터2',
-        monsterHp: 300.0,
-      },
-    ];
+    let monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
+
+    const monsterStatus = [];
+
+    for(let i= 0 ; i<3 ; i++){
+      const monsterDB = await findMonsterByMonsters(monsters[Math.floor(Math.random() * monsters.length)].monsterId);
+
+      const monster = {
+        monsterIdx: i,
+        monsterModel: monsterDB.monsterId,
+        monsterName: monsterDB.name,
+        monsterHp: monsterDB.hp,
+      }
+      monsterStatus.push(monster);
+    }
+
+
+
 
     const dungeonInfo = {
       dungeonCode: dungeonCode + 5000,
