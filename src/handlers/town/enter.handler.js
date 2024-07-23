@@ -1,11 +1,7 @@
-import User from '../../classes/models/user.class.js';
 import { config } from '../../config/config.js';
-import { PACKET_TYPE } from '../../constants/header.js';
-import { packetNames } from '../../protobuf/packetNames.js';
 import { getGameSession } from '../../session/game.session.js';
-import { addUser, getUserById } from '../../session/user.session.js';
+import { addUser } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createCustomMessage } from '../../utils/response/createCustomMessage.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const enterTownHandler = ({ socket, userId, payload }) => {
