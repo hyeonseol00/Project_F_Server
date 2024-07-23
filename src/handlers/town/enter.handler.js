@@ -17,8 +17,8 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const characterClass = payload.class;
     const gameSession = getGameSession(config.session.id);
 
-    const user = addUser(socket, nickname, characterClass);
-    gameSession.addUser(user);
+    const curUser = addUser(socket, nickname, characterClass);
+    gameSession.addUser(curUser);
 
     // DB
     let userInDB = await findUserByUsername(nickname);
@@ -65,9 +65,8 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
       player: playerInfo,
     });
 
-    // // 플레이어 정보를 user에 추가하고 게임세션에 해당 유저를 추가한다.
+    // 플레이어 정보를 user에 추가하고 게임세션에 해당 유저를 추가한다.
     curUser.setPlayerInfo(playerInfo);
-    gameSession.addUser(curUser);
 
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
     console.log("curUser.playerId", curUser.playerId);
