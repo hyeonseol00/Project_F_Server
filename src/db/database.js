@@ -31,7 +31,7 @@ const createPool = (dbConfig) => {
 };
 
 const pools = {
-  town_monster: createPool(databases.town_monster),
+  TOWN_MONSTER: createPool(databases.TOWN_MONSTER),
 };
 
 export default pools;
