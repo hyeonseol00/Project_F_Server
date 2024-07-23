@@ -6,7 +6,7 @@ import {
   insertUserByUsername,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
-import { addUser } from '../../session/user.session.js';
+import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -16,8 +16,9 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const characterClass = payload.class;
     const gameSession = getGameSession(config.session.townId);
 
-    const user = addUser(socket, nickname, characterClass);
-    gameSession.addUser(user);
+    const userExist = getUserBySocket(socket);
+    const user = userExist ? userExist : addUser(socket, nickname, characterClass);
+    if (!userExist) gameSession.addUser(user);
 
     // DB
     let userInDB = await findUserByUsername(nickname);
