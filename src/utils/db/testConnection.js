@@ -1,9 +1,3 @@
-import {
-  findCharacterByUserIdAndClass,
-  findUserByUsername,
-  insertCharacter,
-  insertUserByUsername,
-} from '../../db/backup/coordinates.db.js';
 import pools from '../../db/database.js';
 
 const testDbConnection = async (pool, dbName) => {
@@ -16,7 +10,7 @@ const testDbConnection = async (pool, dbName) => {
 };
 
 const testAllConnections = async () => {
-  await testDbConnection(pools.USER_COORDINATES, 'USER_COORDINATES');
+  await testDbConnection(pools.TOWN_MONSTER, 'TOWN_MONSTER');
 };
 
 export { testDbConnection, testAllConnections };

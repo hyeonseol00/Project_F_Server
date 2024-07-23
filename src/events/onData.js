@@ -1,16 +1,5 @@
 import { config } from '../config/config.js';
-import { PACKET_TYPE } from '../constants/header.js';
-import {
-  findCharacterByUserIdAndClass,
-  findUserByUsername,
-  insertCharacter,
-  insertUserByUsername,
-} from '../db/backup/coordinates.db.js';
 import { getHandlerById } from '../handlers/index.js';
-import { getProtoMessages } from '../init/loadProtos.js';
-import { getUserById, getUserBySocket } from '../session/user.session.js';
-import CustomError from '../utils/error/customError.js';
-import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { handleError } from '../utils/error/errorHandler.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 
