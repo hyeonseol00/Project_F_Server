@@ -40,8 +40,8 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       playerClass: character.jobId,
       playerLevel: character.level,
       playerName: character.name,
-      playerFullHp: character.MaxHp,
-      playerFullMp: character.MaxMp,
+      playerFullHp: character.maxHp,
+      playerFullMp: character.maxMp,
       playerCurHp: character.hp,
       playerCurMp: character.mp,
     };
