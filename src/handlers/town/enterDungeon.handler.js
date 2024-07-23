@@ -31,7 +31,7 @@ const enterDungeonHandler = async ({ socket, userId, payload }) => {
       dungeonCode: dungeonCode + 5000,
       monsters: monsterStatus,
     };
-    console.log(character);
+
     const playerStatus = {
       playerClass: character.jobId,
       playerLevel: character.level,
