@@ -46,7 +46,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       playerCurMp: character.mp,
     };
 
-    const ScreenTextAlignment = {
+    const screenTextAlignment = {
       x: 0,
       y: 0,
     };
@@ -63,10 +63,10 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: 0,
     };
 
-    const ScreenText = {
+    const screenText = {
       msg: 'screen_text_test',
       typingAnimation: true,
-      alignment: ScreenTextAlignment,
+      alignment: screenTextAlignment,
       textColor: textColor,
       screenColor: screenColor,
     };
@@ -85,7 +85,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const enterDungeonResponse = createResponse('response', 'S_EnterDungeon', {
       dungeonInfo: dungeonInfo,
       player: playerStatus,
-      ScreenText: ScreenText,
+      screenText: screenText,
       battleLog: BattleLog,
     });
 

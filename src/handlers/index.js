@@ -16,7 +16,7 @@ const handlers = {
   },
   [PACKET_TYPE.C_PlayerResponse]: {
     handler: battleResponseHandler,
-    protoType: 'batttle.C_PlayerResponse',
+    protoType: 'battle.C_PlayerResponse',
   },
 };
 

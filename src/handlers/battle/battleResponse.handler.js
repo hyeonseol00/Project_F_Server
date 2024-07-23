@@ -20,7 +20,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
       };
       const response = createResponse('battle', 'S_BattleLog', { battleLog });
 
-      socket.emit(response);
+      socket.write(response);
       break;
     case 1:
     case 2:
