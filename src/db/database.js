@@ -31,7 +31,7 @@ const createPool = (dbConfig) => {
 };
 
 const pools = {
-  USER_COORDINATES: createPool(databases.USER_COORDINATES),
+  TOWN_MONSTER: createPool(databases.TOWN_MONSTER),
 };
 
 export default pools;

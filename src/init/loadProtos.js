@@ -42,5 +42,5 @@ export const loadProtos = async () => {
 };
 
 export const getProtoMessages = () => {
-  return { ...protoMessages };
+  return Object.freeze(protoMessages);
 };
