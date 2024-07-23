@@ -1,24 +1,5 @@
 export const packetNames = {
-  common: {
-    Packet: 'common.Packet',
-    Ping: 'common.Ping',
-  },
-  initial: {
-    InitialPacket: 'initial.InitialPacket',
-  },
-  game: {
-    CreateGamePayload: 'game.CreateGamePayload',
-    JoinGamePayload: 'game.JoinGamePayload',
-    LocationUpdatePayload: 'game.LocationUpdatePayload',
-  },
-  responseData: {
-    InitData: 'responseData.InitData',
-  },
-  gameNotification: {
-    LocationUpdate: 'gameNotification.LocationUpdate',
-  },
   response: {
-    Response: 'response.Response',
     S_Enter: 'response.S_Enter',
     S_Spawn: 'response.S_Spawn',
     S_Move: 'response.S_Move',
