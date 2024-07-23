@@ -1,14 +1,16 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
-import { findCharacterByUserIdAndNickname, findUserByUsername } from '../../db/user/user.db.js';
 import { addDungeon } from '../../session/dungeon.session.js';
+import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
     const user = getUserBySocket(socket);
     const nickname = user.playerId;
+
+    const characterClass = user.characterClass;
     const dungeon = addDungeon(user.playerId);
 
     // 이 부분 지금 하드코딩임. 데이터베이스에서 받아와서 랜덤으로 뽑는 등 처리 요망
@@ -16,7 +18,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     dungeon.addMonster(1, 2002, 300, 60, '외눈슬라임');
 
     const userInDB = await findUserByUsername(nickname);
-    const character = await findCharacterByUserIdAndNickname(userInDB.userId, userInDB.username);
+    const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
 
     const monsterStatus = [];
     for (let i = 0; i < dungeon.monsters.length; i++) {
@@ -35,7 +37,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: character.job_id,
+      playerClass: character.jobId,
       playerLevel: character.level,
       playerName: character.name,
       playerFullHp: character.MaxHp,

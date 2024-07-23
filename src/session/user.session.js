@@ -2,8 +2,8 @@ import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import { getRegistCount } from './GaApplication.session.js';
 
-export const addUser = (socket, playerId) => {
-  const user = new User(getRegistCount(), playerId, socket);
+export const addUser = (socket, playerId, characterClass) => {
+  const user = new User(getRegistCount(), playerId, characterClass, socket);
   userSessions.push(user);
   return user;
 };
