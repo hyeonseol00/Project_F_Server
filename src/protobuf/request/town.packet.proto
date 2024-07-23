@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package tower.packet;
+package town;
 
 //캐릭터 선택 + 닉네임 입력
 message C_Enter{

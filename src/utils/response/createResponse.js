@@ -2,25 +2,11 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
-export const createResponse = (handlerId, responseCode, data = null, userId, dataType = null) => {
+export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  const Response = protoMessages.response.Response;
+  const Response = protoMessages[packageType][packetId];
 
-  let ResponseData;
-  let encodedData = data ? Buffer.from(JSON.stringify(data)) : null;
-  if (dataType) {
-    ResponseData = protoMessages.responseData[dataType];
-    encodedData = ResponseData.encode(data).finish();
-  }
-
-  const responsePayload = {
-    handlerId,
-    responseCode,
-    timestamp: Date.now(),
-    data: encodedData,
-  };
-
-  const buffer = Response.encode(responsePayload).finish();
+  const buffer = Response.encode(data).finish();
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(
@@ -29,7 +15,7 @@ export const createResponse = (handlerId, responseCode, data = null, userId, dat
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(PACKET_TYPE.NORMAL, 0);
+  packetType.writeUInt8(PACKET_TYPE[packetId], 0);
 
   return Buffer.concat([packetLength, packetType, buffer]);
 };

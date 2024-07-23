@@ -10,7 +10,7 @@ const testDbConnection = async (pool, dbName) => {
 };
 
 const testAllConnections = async () => {
-  await testDbConnection(pools.USER_COORDINATES, 'USER_COORDINATES');
+  await testDbConnection(pools.TOWN_MONSTER, 'TOWN_MONSTER');
 };
 
 export { testDbConnection, testAllConnections };

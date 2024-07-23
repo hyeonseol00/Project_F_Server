@@ -27,7 +27,7 @@ export const config = {
     id: GAME_SESSION_ID,
   },
   databases: {
-    USER_COORDINATES: {
+    TOWN_MONSTER: {
       name: DB1_NAME,
       user: DB1_USER,
       password: DB1_PASSWORD,
