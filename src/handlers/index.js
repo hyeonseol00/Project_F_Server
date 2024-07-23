@@ -1,6 +1,7 @@
 import { PACKET_TYPE } from '../constants/header.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import battleResponseHandler from './battle/battleResponse.handler.js';
 import enterTownHandler from './town/enter.handler.js';
 import enterDungeonHandler from './town/enterDungeon.handler.js';
 
@@ -12,7 +13,11 @@ const handlers = {
   [PACKET_TYPE.C_EnterDungeon]: {
     handler: enterDungeonHandler,
     protoType: 'town.C_EnterDungeon',
-  }
+  },
+  [PACKET_TYPE.C_PlayerResponse]: {
+    handler: battleResponseHandler,
+    protoType: 'batttle.C_PlayerResponse',
+  },
 };
 
 export const getHandlerById = (handlerId) => {
