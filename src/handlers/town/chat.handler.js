@@ -14,7 +14,7 @@ const chatHandler = async ({ socket, userId, payload }) => {
 
     
     const chatResponse = createResponse('response', 'S_Chat', {
-      playerId: payload.playerId,
+      playerId: payload.nickname,
       chatMsg: payload.chatMsg
     });
 
