@@ -8,6 +8,8 @@ import {
   SCENE_MESSAGE_WINDOW,
   SCENE_CHOOSE_ACTION,
   SCENE_CONFIRM,
+  SCENE_PLAYER_ATTACK,
+  SCENE_ENEMY_ATTACK,
 } from '../constants/battle/battleSceneStatus.js';
 import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
 import {
@@ -51,6 +53,8 @@ export const config = {
     message: SCENE_MESSAGE_WINDOW,
     action: SCENE_CHOOSE_ACTION,
     target: SCENE_CHOOSE_TARGET,
+    playerAtk: SCENE_PLAYER_ATTACK,
+    enemyAtk: SCENE_ENEMY_ATTACK,
     confirm: SCENE_CONFIRM,
   },
   actionButton: {
