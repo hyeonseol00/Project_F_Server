@@ -15,7 +15,7 @@ export const removeUser = (socket) => {
 };
 
 export const getUserById = (id) => {
-  return userSessions.find((user) => user.id === id);
+  return userSessions.find((user) => user.playerId === id);
 };
 
 export const getUserBySocket = (socket) => {

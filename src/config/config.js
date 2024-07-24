@@ -1,3 +1,4 @@
+import { CHOOSE_TARGET, MESSAGE_WINDOW } from '../constants/battleSceneStatus.js';
 import {
   PORT,
   HOST,
@@ -9,7 +10,7 @@ import {
   DB1_PORT,
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
-import { GAME_SESSION_ID } from '../constants/session.js';
+import { TOWN_SESSION_ID } from '../constants/session.js';
 
 export const config = {
   server: {
@@ -24,7 +25,7 @@ export const config = {
     typeLength: PACKET_TYPE_LENGTH,
   },
   session: {
-    id: GAME_SESSION_ID,
+    townId: TOWN_SESSION_ID,
   },
   databases: {
     TOWN_MONSTER: {
@@ -34,5 +35,9 @@ export const config = {
       host: DB1_HOST,
       port: DB1_PORT,
     },
+  },
+  sceneStatus: {
+    message: MESSAGE_WINDOW,
+    target: CHOOSE_TARGET,
   },
 };

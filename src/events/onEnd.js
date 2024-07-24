@@ -5,9 +5,9 @@ import leaveTownHandler  from '../handlers/town/leave.handler.js';
 
 export const onEnd = (socket) => async () => {
   const user = getUserBySocket(socket);
-  const gameSession = getGameSession(config.session.id);
+  const gameSession = getGameSession(config.session.townId);
 
-  gameSession.removeUser(user.id);
+  gameSession.removeUser(user.playerId);
 
   // leaveTownHandler(user.playerId);
 
