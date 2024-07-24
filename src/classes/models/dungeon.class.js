@@ -6,7 +6,6 @@ class InstanceDungeon {
     this.id = userId;
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
-    this.btns = [];
   }
 
   addMonster(idx, id, hp, power, name) {
@@ -16,7 +15,7 @@ class InstanceDungeon {
 
   removeMonster(idx) {
     const target = this.monsters.findIndex((monster) => monster.idx == idx);
-    this.monsters.slice(target, 1);
+    this.monsters.splice(target, 1);
   }
 }
 
