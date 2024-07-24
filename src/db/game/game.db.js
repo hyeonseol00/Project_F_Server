@@ -1,5 +1,5 @@
 import pools from '../database.js';
-import { SQL_GAME_QUERIES } from './game.queries';
+import { SQL_GAME_QUERIES } from './game.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 
 export const findMonstersByDungeonMonsters = async (dungeonId) => {
