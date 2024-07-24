@@ -1,4 +1,15 @@
-import { CHOOSE_TARGET, MESSAGE_WINDOW } from '../constants/battleSceneStatus.js';
+import {
+  BUTTON_COMMON_ATTACK,
+  BUTTON_SKILL_ATTACK,
+  BUTTON_RUNAWAY,
+} from '../constants/battle/actionSceneButton.js';
+import {
+  SCENE_CHOOSE_TARGET,
+  SCENE_MESSAGE_WINDOW,
+  SCENE_CHOOSE_ACTION,
+  SCENE_CONFIRM,
+} from '../constants/battle/battleSceneStatus.js';
+import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
 import {
   PORT,
   HOST,
@@ -37,7 +48,18 @@ export const config = {
     },
   },
   sceneStatus: {
-    message: MESSAGE_WINDOW,
-    target: CHOOSE_TARGET,
+    message: SCENE_MESSAGE_WINDOW,
+    action: SCENE_CHOOSE_ACTION,
+    target: SCENE_CHOOSE_TARGET,
+    confirm: SCENE_CONFIRM,
+  },
+  actionButton: {
+    attack: BUTTON_COMMON_ATTACK,
+    skill: BUTTON_SKILL_ATTACK,
+    runaway: BUTTON_RUNAWAY,
+  },
+  confirmButton: {
+    confirm: BUTTON_CONFIRM,
+    cancel: BUTTON_CANCEL,
   },
 };
