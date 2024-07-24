@@ -1,6 +1,7 @@
 import { config } from '../../config/config.js';
 import {
   findCharacterByUserIdAndClass,
+  findJobById,
   findUserByUsername,
   insertCharacter,
   insertUserByUsername,
@@ -16,8 +17,23 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const characterClass = payload.class;
     const gameSession = getGameSession(config.session.townId);
 
+    const jobInfo = await findJobById(characterClass);
+    const { baseHp, baseMp, baseAttack, baseDefense, baseMagic, baseSpeed } = jobInfo;
+
     const userExist = getUserBySocket(socket);
-    const user = userExist ? userExist : addUser(socket, nickname, characterClass);
+    const user = userExist
+      ? userExist
+      : addUser(
+          socket,
+          nickname,
+          characterClass,
+          baseHp,
+          baseMp,
+          baseAttack,
+          baseDefense,
+          baseMagic,
+          baseSpeed,
+        );
     if (!userExist) gameSession.addUser(user);
 
     // DB
