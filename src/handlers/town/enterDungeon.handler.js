@@ -3,8 +3,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
-import { findMonsterByMonsters } from '../../db/user/user.db.js';
-import { findMonstersByDungeonMonsters } from '../../db/user/user.db.js';
+import { findMonsterByMonsters, findMonstersByDungeonMonsters } from '../../db/game/game.db.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
