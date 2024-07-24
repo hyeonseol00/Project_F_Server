@@ -9,14 +9,14 @@ export default function switchToActionScene(dungeon, socket) {
 
   const battleLog = {
     msg: '무엇을 할까요?',
-    typingAnimation: true,
+    typingAnimation: false,
     btns: btns,
   };
-  const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
   const responseScreenDone = createResponse('response', 'S_ScreenDone', {});
-
-  socket.write(responseBattleLog);
   socket.write(responseScreenDone);
+
+  const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
+  socket.write(responseBattleLog);
 
   dungeon.battleSceneStatus = config.sceneStatus.action;
 }
