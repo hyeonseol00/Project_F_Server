@@ -16,7 +16,9 @@ import {
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 import { TOWN_SESSION_ID } from '../constants/session.js';
-
+import { SCREENTEXTALIGNMENT_X , SCREENTEXTALIGNMENT_Y } from '../constants/battleSceneStatus.js';
+import { TEXTCOLOR_R , TEXTCOLOR_G , TEXTCOLOR_B } from '../constants/battleSceneStatus.js';
+import { SCREENCOLOR_R , SCREENCOLOR_G , SCREENCOLOR_B } from '../constants/battleSceneStatus.js';
 export const config = {
   server: {
     port: PORT,
@@ -52,4 +54,22 @@ export const config = {
     message: MESSAGE_WINDOW,
     target: CHOOSE_TARGET,
   },
+
+  screenTextAlignment: {
+    x: SCREENTEXTALIGNMENT_X,
+    y: SCREENTEXTALIGNMENT_Y,
+  },
+
+  textColor: {
+    r: TEXTCOLOR_R,
+    g: TEXTCOLOR_G,
+    b: TEXTCOLOR_B,
+  },
+
+  screenColor: {
+    r: SCREENCOLOR_R,
+    g: SCREENCOLOR_G,
+    b: SCREENCOLOR_B,
+  }
+
 };
