@@ -3,6 +3,7 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import battleResponseHandler from './battle/battleResponse.handler.js';
 import enterTownHandler from './town/enter.handler.js';
+import moveTownHandler from './town/move.handler.js';
 import enterDungeonHandler from './town/enterDungeon.handler.js';
 import animHandler from './town/anim.handler.js';
 import chatHandler from './town/chat.handler.js';
@@ -11,6 +12,10 @@ const handlers = {
   [PACKET_TYPE.C_Enter]: {
     handler: enterTownHandler,
     protoType: 'town.C_Enter',
+  },
+  [PACKET_TYPE.C_Move]:{
+    handler: moveTownHandler,
+    protoType: 'town.C_Move',
   },
   [PACKET_TYPE.C_EnterDungeon]: {
     handler: enterDungeonHandler,

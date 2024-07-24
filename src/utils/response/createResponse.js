@@ -6,6 +6,9 @@ export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages[packageType][packetId];
 
+  // 디버깅 로그 추가
+  // console.log("Creating response with data:", data);
+
   const buffer = Response.encode(data).finish();
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
