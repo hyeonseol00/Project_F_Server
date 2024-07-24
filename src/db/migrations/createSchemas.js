@@ -19,7 +19,7 @@ const executeSqlFile = async (pool, filePath) => {
 const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
   try {
-    //await executeSqlFile(pools.TOWN_MONSTER, path.join(sqlDir, 'user_coordinates.sql'));
+    await executeSqlFile(pools.TOWN_MONSTER, path.join(sqlDir, 'user_db.sql'));
     await executeSqlFile(pools.TOWN_GAME, path.join(sqlDir, 'game_db.sql'));
     console.log('데이터베이스 테이블이 성공적으로 생성되었습니다.');
   } catch (err) {
