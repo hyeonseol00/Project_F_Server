@@ -70,7 +70,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const screenText = {
-      msg: 'screen_text_test',
+      msg: '던전에 진입합니다. 전투를 준비하세요!',
       typingAnimation: true,
       alignment: screenTextAlignment,
       textColor: textColor,
