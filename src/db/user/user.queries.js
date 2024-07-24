@@ -4,5 +4,7 @@ export const SQL_QUERIES = {
   GET_JOB_INFO: 'SELECT * FROM Jobs WHERE job_id = ?',
   FIND_CHARACTER_BY_USER_ID_AND_CLASS: 'SELECT * FROM Characters WHERE user_id = ? AND job_id = ?',
   INSERT_CHARACTER:
-    'INSERT INTO Characters (user_id, name, job_id, job_name, hp, mp, attack, defense) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO Characters (user_id, name, job_id, job_name, max_hp, max_mp, hp, mp, attack, defense, magic, speed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  FIND_MONSTERS_BY_DUNGEON_MONSTERS: 'SELECT * FROM Dungeon_Monsters WHERE dungeon_id = ?',
+  FIND_MONSTER_BY_MONSTERS: 'SELECT * FROM Monsters WHERE monster_id = ?',
 };

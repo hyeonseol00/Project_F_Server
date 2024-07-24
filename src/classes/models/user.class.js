@@ -1,9 +1,10 @@
 import roundM5 from '../../utils/round.js';
 
 class User {
-  constructor(id, playerId, socket) {
+  constructor(id, playerId, characterClass, socket) {
     this.id = id;
     this.playerId = playerId;
+    this.characterClass = characterClass;
     this.socket = socket;
     this.lastUpdateTime = Date.now();
   }
