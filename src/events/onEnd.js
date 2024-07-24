@@ -4,9 +4,9 @@ import { getUserBySocket, removeUser } from '../session/user.session.js';
 
 export const onEnd = (socket) => async () => {
   const user = getUserBySocket(socket);
-  const gameSession = getGameSession(config.session.id);
+  const gameSession = getGameSession(config.session.townId);
 
-  gameSession.removeUser(user.id);
+  gameSession.removeUser(user.playerId);
 
   console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
   console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
