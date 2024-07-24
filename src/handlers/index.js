@@ -4,6 +4,8 @@ import { ErrorCodes } from '../utils/error/errorCodes.js';
 import battleResponseHandler from './battle/battleResponse.handler.js';
 import enterTownHandler from './town/enter.handler.js';
 import enterDungeonHandler from './town/enterDungeon.handler.js';
+import animHandler from './town/anim.handler.js';
+import chatHandler from './town/chat.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -17,6 +19,14 @@ const handlers = {
   [PACKET_TYPE.C_PlayerResponse]: {
     handler: battleResponseHandler,
     protoType: 'battle.C_PlayerResponse',
+  },
+  [PACKET_TYPE.C_Animation]: {
+    handler: animHandler,
+    protoType: 'town.C_Animation',
+  },
+  [PACKET_TYPE.C_Chat]: {
+    handler: chatHandler,
+    protoType: 'town.C_Chat',
   },
 };
 
