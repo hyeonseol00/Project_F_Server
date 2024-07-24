@@ -12,11 +12,13 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       }
       const attackBattleLog = {
         msg: '공격할 몬스터를 선택하세요!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 
-      const attackResponse = createResponse('response', 'S_BattleLog', { attackBattleLog });
+      const attackResponse = createResponse('response', 'S_BattleLog', {
+        battleLog: attackBattleLog,
+      });
       socket.write(attackResponse);
 
       dungeon.battleSceneStatus = config.sceneStatus.target;
@@ -25,13 +27,16 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       break;
     case config.actionButton.runaway:
       btns.push({ msg: '확인', enable: true });
+      btns.push({ msg: '취소', enable: true });
       const runawayBattleLog = {
         msg: '전투에서 도망칩니다!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 
-      const runawayResponse = createResponse('response', 'S_BattleLog', { runawayBattleLog });
+      const runawayResponse = createResponse('response', 'S_BattleLog', {
+        battleLog: runawayBattleLog,
+      });
       socket.write(runawayResponse);
 
       dungeon.battleSceneStatus = config.sceneStatus.confirm;
