@@ -26,7 +26,11 @@ const animHandler = async ({ socket, userId, payload }) => {
       animCode: payload.animCode
     });
 
-    socket.write(animationResponse);
+    // 게임 세션에 저장된 모든 유저에게 전송합니다.
+    for (const user of session[0].users) {
+      user.socket.write(animationResponse);
+    }
+
   } catch (err) {
     console.error('애니메이션 처리 중 에러가 발생했습니다:', err.message);
     handleError(socket, err.message, '애니메이션 처리 중 에러가 발생했습니다: ' + err.message);
