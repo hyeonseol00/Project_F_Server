@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
 import { getDungeonByUserId, removeDungeon } from '../../../session/dungeon.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
-import switchToActionScene from './switchScene/attack.switch.js';
+import switchToActionScene from './switchScene/action.switch.js';
 
 export default function confirmScene(responseCode, dungeon, nickname, socket) {
   switch (responseCode) {
