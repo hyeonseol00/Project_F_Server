@@ -4,6 +4,7 @@ import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 import { findMonsterByMonsters, findMonstersByDungeonMonsters } from '../../db/game/game.db.js';
+import { config } from '../../config/config.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -52,24 +53,26 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const screenTextAlignment = {
-      x: 0,
-      y: 0,
+      x: config.screenTextAlignment.x,
+      y: config.screenTextAlignment.y,
     };
 
     const textColor = {
-      r: 255,
-      g: 255,
-      b: 255,
+      r: config.textColor.r,
+      g: config.textColor.g,
+      b: config.textColor.b,
     };
 
     const screenColor = {
-      r: 0,
-      g: 0,
-      b: 0,
+      r: config.screenColor.r,
+      g: config.screenColor.g,
+      b: config.screenColor.b,
     };
 
+    const message =`${nickname} 가 ${monsterStatus[0].monsterName}, ${monsterStatus[1].monsterName}, ${monsterStatus[2].monsterName}와 전투를 시작합니다.`;
+
     const screenText = {
-      msg: 'screen_text_test',
+      msg: message,
       typingAnimation: true,
       alignment: screenTextAlignment,
       textColor: textColor,
