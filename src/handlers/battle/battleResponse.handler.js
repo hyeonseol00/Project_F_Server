@@ -4,8 +4,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
-  const dungeon = getDungeonByUserId(user.playerId);
-  // 하드코딩 예외처리. 클라이언트 수정 요망
+  const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
 
   switch (responseCode) {
@@ -53,7 +52,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
           socket.write(responseLeaveDungeon);
         }, 1000);
 
-        removeDungeon(user.playerId);
+        removeDungeon(user.nickname);
       }
       break;
     default:

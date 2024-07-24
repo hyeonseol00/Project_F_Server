@@ -21,17 +21,17 @@ class Game {
   }
 
   getUser(userId) {
-    return this.users.find((user) => user.id === userId);
+    return this.users.find((user) => user.playerId === userId);
   }
 
   getAllUserIds() {
-    const userIds = this.users.map((user) => user.playerId);
+    const userIds = this.users.map((user) => user.nickname);
 
     return userIds;
   }
 
   removeUser(userId) {
-    this.users = this.users.filter((user) => user.id !== userId);
+    this.users = this.users.filter((user) => user.playerId !== userId);
     this.intervalManager.removePlayer(userId);
   }
 }

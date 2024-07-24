@@ -10,10 +10,10 @@ const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
     const user = getUserBySocket(socket);
-    const nickname = user.playerId;
+    const { nickname } = user;
 
     const characterClass = user.characterClass;
-    const dungeon = addDungeon(user.playerId);
+    const dungeon = addDungeon(nickname);
 
     const userInDB = await findUserByUsername(nickname);
     const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);

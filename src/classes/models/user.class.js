@@ -1,9 +1,9 @@
 import { config } from '../../config/config.js';
 
 class User {
-  constructor(id, playerId, characterClass, socket) {
-    this.id = id;
+  constructor(playerId, nickname, characterClass, socket) {
     this.playerId = playerId;
+    this.nickname = nickname;
     this.characterClass = characterClass;
     this.socket = socket;
     this.lastUpdateTime = Date.now();

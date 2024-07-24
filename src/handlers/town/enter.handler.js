@@ -51,7 +51,7 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
       speed: character.speed,
     };
     const playerInfo = {
-      playerId: user.id,
+      playerId: user.playerId,
       nickname,
       class: characterClass,
       transform: transformInfo,
