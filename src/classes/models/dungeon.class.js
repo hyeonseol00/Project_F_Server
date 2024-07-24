@@ -6,6 +6,7 @@ class InstanceDungeon {
     this.id = userId;
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
+    this.btns = [];
   }
 
   addMonster(idx, id, hp, power, name) {
