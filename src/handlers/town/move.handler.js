@@ -3,7 +3,7 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { userSessions } from '../../session/sessions.js';
 
-const moveTownHandler = async ({ socket, userId, payload }) => {
+const moveTownHandler = async ({ socket, payload }) => {
   try {
     const { transform } = payload;
 
@@ -26,7 +26,7 @@ const moveTownHandler = async ({ socket, userId, payload }) => {
     for (const user of userSessions) {
       
       if (user.playerId === curUser.playerId) continue;
-      console.log(user.playerId);
+      console.log("이동 패킷을 받는 다른 유저: ", user.playerId);
       user.socket.write(moveTownResponse);
     }
 

@@ -11,7 +11,7 @@ import { addUser } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const enterTownHandler = async ({ socket, userId, payload }) => {
+const enterTownHandler = async ({ socket, payload }) => {
   try {
     const { nickname } = payload;
     const characterClass = payload.class;
@@ -36,26 +36,24 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     console.log("character", character);
 
     const transformInfo = {
-      posX: character.x,
-      posY: 1,
-      posZ: character.z,
-      rot: character.rot,
+      posX: Math.random()*18-9,   // -9 ~ 9
+      posY: 1.0,
+      posZ: Math.random()*16-8,   // -8 ~ 8
+      rot: Math.random()*360,     // 0 ~ 360
     };
-
-    console.log("transformInfo", transformInfo);
     const statInfo = {
       level: character.level,
-      hp: character.hp,
-      maxHp: character.hp,
-      mp: character.mp,
-      maxMp: character.mp,
-      atk: character.attack,
-      def: character.defense,
-      magic: character.magic,
-      speed: character.speed,
+      hp: parseFloat(character.hp),
+      maxHp: parseFloat(character.hp),
+      mp: parseFloat(character.mp),
+      maxMp: parseFloat(character.mp),
+      atk: parseFloat(character.attack),
+      def: parseFloat(character.defense),
+      magic: parseFloat(character.magic),
+      speed: parseFloat(character.speed),
     };
     const playerInfo = {
-      playerId: curUser.playerId,
+      playerId: curUser.id,
       nickname,
       class: characterClass,
       transform: transformInfo,
@@ -64,6 +62,9 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
+
+    // 디버그 출력문
+    console.log("transformInfo", transformInfo);
 
     // 플레이어 정보를 user에 추가하고 게임세션에 해당 유저를 추가한다.
     curUser.setPlayerInfo(playerInfo);
@@ -83,9 +84,11 @@ const enterTownHandler = async ({ socket, userId, payload }) => {
       players.push(user.playerInfo);
     }
 
+    console.log("user.playerInfo", playerInfo);
+
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
     for (const user of gameSessions[0].users) {  
-      const filterdPlayers = players.filter((player) => player.playerId !== user.playerId)
+      const filterdPlayers = players.filter((player) => player.playerId !== user.id)
       
       console.log("filterdPlayers", filterdPlayers);
 
