@@ -19,8 +19,12 @@ export default function targetMonsterScene(responseCode, dungeon, socket, skill 
   const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
   socket.write(responseBattleLog);
 
+  player.mp -= skill === 'wide' ? 50 : skill ? 25 : 0;
+  const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
+  socket.write(responseSetPlayerMp);
+
   const actionSet = {
-    animCode: 1,
+    animCode: 0,
     effectCode: skill === 'wide' ? 3027 : skill ? 3017 : 3001,
   };
 
@@ -30,7 +34,7 @@ export default function targetMonsterScene(responseCode, dungeon, socket, skill 
   });
   socket.write(responsePlayerAction);
 
-  monster.hp -= player.attack;
+  monster.hp -= player.attack * skill ? 2 : 1;
   const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
     monsterIdx: targetMonsterIdx,
     hp: monster.hp,
