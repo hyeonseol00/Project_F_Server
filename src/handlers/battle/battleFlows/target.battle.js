@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
-import { createResponse } from '../../../utils/response/createResponse.js';
+import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
 
-export default function targetMonsterScene(responseCode, dungeon, socket) {
+export default async function targetMonsterScene(responseCode, dungeon, socket) {
   const btns = [{ msg: '다음', enable: true }];
   const targetMonsterIdx = responseCode - 1;
   const player = dungeon.player;
@@ -12,21 +12,21 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     typingAnimation: false,
     btns,
   };
-  const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
+  const responseBattleLog = await createResponseAsync('response', 'S_BattleLog', { battleLog });
   socket.write(responseBattleLog);
 
   const actionSet = {
     animCode: 0,
     effectCode: 3001,
   };
-  const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
+  const responsePlayerAction = await createResponseAsync('response', 'S_PlayerAction', {
     targetMonsterIdx,
     actionSet,
   });
   socket.write(responsePlayerAction);
 
   monster.hp -= player.attack;
-  const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
+  const responseSetMonsterHp = await createResponseAsync('response', 'S_SetMonsterHp', {
     monsterIdx: targetMonsterIdx,
     hp: monster.hp,
   });

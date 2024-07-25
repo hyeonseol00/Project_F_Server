@@ -15,21 +15,21 @@ const battleResponseHandler = async ({ socket, payload }) => {
   console.log('responseCode: ', responseCode);
   switch (dungeon.battleSceneStatus) {
     case config.sceneStatus.message:
-      messageWindowScene(responseCode, dungeon, socket);
+      await messageWindowScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.action:
-      chooseActionScene(responseCode, dungeon, socket);
+      await chooseActionScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.target:
-      targetMonsterScene(responseCode, dungeon, socket);
+      await targetMonsterScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.playerAtk:
-      playerAttackScene(responseCode, dungeon, socket);
+      await playerAttackScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.enemyAtk:
       break;
     case config.sceneStatus.confirm:
-      confirmScene(responseCode, dungeon, user.nickname, socket);
+      await confirmScene(responseCode, dungeon, user.nickname, socket);
       break;
   }
   console.log('battleSceneStatus: ', dungeon.battleSceneStatus);

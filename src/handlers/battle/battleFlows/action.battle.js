@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
-import { createResponse } from '../../../utils/response/createResponse.js';
+import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
 
-export default function chooseActionScene(responseCode, dungeon, socket) {
+export default async function chooseActionScene(responseCode, dungeon, socket) {
   const btns = [];
 
   switch (responseCode) {
@@ -16,7 +16,7 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
         btns,
       };
 
-      const attackResponse = createResponse('response', 'S_BattleLog', {
+      const attackResponse = await createResponseAsync('response', 'S_BattleLog', {
         battleLog: attackBattleLog,
       });
       socket.write(attackResponse);
@@ -34,7 +34,7 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
         btns,
       };
 
-      const runawayResponse = createResponse('response', 'S_BattleLog', {
+      const runawayResponse = await createResponseAsync('response', 'S_BattleLog', {
         battleLog: runawayBattleLog,
       });
       socket.write(runawayResponse);
