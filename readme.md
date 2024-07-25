@@ -38,7 +38,7 @@
 
 ## 📃 와이어 프레임
 
-### [와이어프레임]
+### ![와이어프레임](https://github.com/user-attachments/assets/8d601aa0-0397-44cc-a1e5-a6f56ea08a19)
 
 ## 📃 ERD Diagram
 
