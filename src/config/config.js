@@ -3,6 +3,7 @@ import {
   BUTTON_SKILL_ATTACK,
   BUTTON_RUNAWAY,
 } from '../constants/battle/actionSceneButton.js';
+import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
   SCENE_CHOOSE_TARGET,
   SCENE_MESSAGE_WINDOW,
@@ -96,6 +97,11 @@ export const config = {
   confirmButton: {
     confirm: BUTTON_CONFIRM,
     cancel: BUTTON_CANCEL,
+  },
+  attackType: {
+    normal: NORMAL_HIT,
+    single: SINGLE_SKILL,
+    wide: WIDE_AREA_SKILL,
   },
   skillButton: {
     single: BUTTON_SINGLE,
