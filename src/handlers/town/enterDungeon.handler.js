@@ -6,6 +6,7 @@ import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user
 import { findMonsterByMonsters } from '../../db/user/user.db.js';
 import { findMonstersByDungeonMonsters } from '../../db/user/user.db.js';
 import { config } from '../../config/config.js';
+import { getGameSession } from '../../session/game.session.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
