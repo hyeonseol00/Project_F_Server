@@ -11,6 +11,7 @@ const testDbConnection = async (pool, dbName) => {
 
 const testAllConnections = async () => {
   await testDbConnection(pools.TOWN_MONSTER, 'TOWN_MONSTER');
+  await testDbConnection(pools.TOWN_GAME, 'TOWN_GAME');
 };
 
 export { testDbConnection, testAllConnections };

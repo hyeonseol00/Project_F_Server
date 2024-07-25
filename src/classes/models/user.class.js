@@ -7,6 +7,7 @@ class User {
     this.characterClass = characterClass;
     this.socket = socket;
     this.lastUpdateTime = Date.now();
+    this.playerInfo = {};
     this.battleSceneStatus = config.sceneStatus.message;
 
     this.hp = hp;
@@ -16,6 +17,19 @@ class User {
     this.magic = magic;
     this.speed = speed;
   }
+
+  setPlayerInfo(playerInfo){
+    this.playerInfo = playerInfo;
+  }
+
+  updatePosition(x, y, z, rot) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.rot = rot
+    this.lastUpdateTime = Date.now();
+  }
+
 }
 
 export default User;
