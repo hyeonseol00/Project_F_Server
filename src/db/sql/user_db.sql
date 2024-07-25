@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Characters
   character_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_id INTEGER,
   character_name VARCHAR(50) NOT NULL,
-  character_level INTEGER NOT NULL,
+  character_level INTEGER NOT NULL DEFAULT 1,
   experience INTEGER NOT NULL,
   job_id INTEGER,
   job_name VARCHAR(50) NOT NULL,
