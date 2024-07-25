@@ -13,7 +13,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
 
-  console.log('responseCode: ', responseCode);
+  // console.log('responseCode: ', responseCode);
   switch (dungeon.battleSceneStatus) {
     case config.sceneStatus.message:
       await messageWindowScene(responseCode, dungeon, socket);
@@ -25,21 +25,22 @@ const battleResponseHandler = async ({ socket, payload }) => {
       await targetMonsterScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.targetSkill:
-      targetMonsterScene(responseCode, dungeon, socket, true);
+      await targetMonsterScene(responseCode, dungeon, socket, true);
       break;
     case config.sceneStatus.playerAtk:
       await playerAttackScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.enemyAtk:
       break;
+    case config.sceneStatus.skill:
+      await chooseSkillType(responseCode, dungeon, socket);
+      break;
     case config.sceneStatus.confirm:
       await confirmScene(responseCode, dungeon, user.nickname, socket);
       break;
-    case config.sceneStatus.skill:
-      chooseSkillType(responseCode, dungeon, socket);
-      break;
   }
-  console.log('battleSceneStatus: ', dungeon.battleSceneStatus);
+  // console.log('battleSceneStatus: ', dungeon.battleSceneStatus);
+  // console.log('\n');
 };
 
 export default battleResponseHandler;

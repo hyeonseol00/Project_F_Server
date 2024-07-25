@@ -1,6 +1,6 @@
 import { getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
 import { userSessions } from '../../session/sessions.js';
 
 const moveTownHandler = async ({ socket, payload }) => {
@@ -15,7 +15,7 @@ const moveTownHandler = async ({ socket, payload }) => {
 
     curUser.updatePosition(transform.posX, transform.posY, transform.posZ, transform.rot);
 
-    const moveTownResponse = createResponse('response', 'S_Move', {
+    const moveTownResponse = await createResponseAsync('response', 'S_Move', {
       playerId: curUser.playerId,
       transform,
     });
@@ -25,7 +25,6 @@ const moveTownHandler = async ({ socket, payload }) => {
       // console.log("이동 패킷을 받는 다른 유저: ", user.playerId);
       user.socket.write(moveTownResponse);
     }
-
   } catch (err) {
     handleError(socket, err);
   }

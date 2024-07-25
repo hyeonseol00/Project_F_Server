@@ -7,10 +7,6 @@ export default async function targetMonsterScene(responseCode, dungeon, socket, 
   const player = dungeon.player;
   const monster = dungeon.monsters[targetMonsterIdx];
 
-  console.log(
-    `몬스터${targetMonsterIdx}${skill === 'wide' ? ' 광역 스킬 ' : skill ? ' 스킬 ' : ' '}공격!`,
-  );
-
   const battleLog = {
     msg: `${skill === 'wide' ? '광역 스킬로' : skill ? '스킬로' : ''}몬스터 ${monster.name}을(를) 공격합니다!`,
     typingAnimation: true,
@@ -20,7 +16,9 @@ export default async function targetMonsterScene(responseCode, dungeon, socket, 
   socket.write(responseBattleLog);
 
   player.mp -= skill === 'wide' ? 50 : skill ? 25 : 0;
-  const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
+  const responseSetPlayerMp = await createResponseAsync('response', 'S_SetPlayerMp', {
+    mp: player.mp,
+  });
   socket.write(responseSetPlayerMp);
 
   const actionSet = {
@@ -33,7 +31,7 @@ export default async function targetMonsterScene(responseCode, dungeon, socket, 
   });
   socket.write(responsePlayerAction);
 
-  monster.hp -= player.attack * skill ? 2 : 1;
+  monster.hp -= player.attack * (skill ? 2 : 1);
   const responseSetMonsterHp = await createResponseAsync('response', 'S_SetMonsterHp', {
     monsterIdx: targetMonsterIdx,
     hp: monster.hp,

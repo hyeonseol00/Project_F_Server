@@ -37,7 +37,7 @@ export default async function chooseActionScene(responseCode, dungeon, socket, s
         btns,
       };
 
-      const skillResponse = createResponse('response', 'S_BattleLog', {
+      const skillResponse = await createResponseAsync('response', 'S_BattleLog', {
         battleLog: skillBattleLog,
       });
       socket.write(skillResponse);
