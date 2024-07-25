@@ -44,12 +44,12 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const playerStatus = {
       playerClass: character.jobId,
-      playerLevel: character.level,
-      playerName: character.name,
+      playerLevel: character.characterLevel,
+      playerName: character.characterName,
       playerFullHp: character.maxHp,
       playerFullMp: character.maxMp,
-      playerCurHp: character.hp,
-      playerCurMp: character.mp,
+      playerCurHp: character.curHp,
+      playerCurMp: character.curMp,
     };
 
     const screenTextAlignment = {
@@ -69,7 +69,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: config.screenColor.b,
     };
 
-    const message =`${nickname} 가 ${monsterStatus[0].monsterName}, ${monsterStatus[1].monsterName}, ${monsterStatus[2].monsterName}와 전투를 시작합니다.`;
+    const message = `${nickname} 가 ${monsterStatus[0].monsterName}, ${monsterStatus[1].monsterName}, ${monsterStatus[2].monsterName}와 전투를 시작합니다.`;
 
     const screenText = {
       msg: message,
