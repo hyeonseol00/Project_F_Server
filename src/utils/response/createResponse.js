@@ -28,9 +28,14 @@ export const createResponseAsync = async (packageType, packetId, data = null) =>
   const Response = protoMessages[packageType][packetId];
 
   // 디버깅 로그 추가
-  // console.log('Creating response with data:', data);
+  // console.log('createResponse로 전달된 data: ', data);
 
   const buffer = await Response.encode(data).finish();
+  const decodedBuffer = await Response.decode(buffer);
+
+  // console.log('전송할 buffer: ', buffer);
+  // console.log('buffer를 바로 decode해본 것: ', decodedBuffer);
+  // console.log('\n');
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(
