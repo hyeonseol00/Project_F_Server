@@ -25,7 +25,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
     // 그렇지 않으면 유저세션, 게임세션에 추가한다.
     const userExist = getUserBySocket(socket);
-    const user = userExist
+    const curUser = userExist
       ? userExist
       : addUser(
           socket,
@@ -38,7 +38,7 @@ const enterTownHandler = async ({ socket, payload }) => {
           baseMagic,
           baseSpeed,
         );
-    if (!userExist) gameSession.addUser(user);
+    if (!userExist) gameSession.addUser(curUser);
 
     // DB
     let userInDB = await findUserByUsername(nickname);
