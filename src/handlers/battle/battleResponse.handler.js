@@ -25,7 +25,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
       targetMonsterScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.targetSkill:
-      targetMonsterScene(responseCode, dungeon, socket, true);
+      targetMonsterScene(responseCode, dungeon, socket, config.attackType.single);
       break;
     case config.sceneStatus.playerAtk:
       playerAttackScene(responseCode, dungeon, socket);

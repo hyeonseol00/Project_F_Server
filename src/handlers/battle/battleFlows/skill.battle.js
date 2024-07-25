@@ -6,10 +6,10 @@ import targetMonsterScene from './target.battle.js';
 export default function chooseSkillType(responseCode, dungeon, socket) {
   switch (responseCode) {
     case config.skillButton.single:
-      chooseActionScene(responseCode, dungeon, socket, true);
+      chooseActionScene(responseCode, dungeon, socket, config.attackType.single);
       break;
     case config.skillButton.wide:
-      targetMonsterScene(responseCode, dungeon, socket, 'wide');
+      targetMonsterScene(responseCode, dungeon, socket, config.attackType.wide);
       break;
     case config.skillButton.cancel:
       switchToActionScene(dungeon, socket);

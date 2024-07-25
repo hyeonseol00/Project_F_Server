@@ -1,45 +1,62 @@
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function targetMonsterScene(responseCode, dungeon, socket, skill = false) {
+export default function targetMonsterScene(
+  responseCode,
+  dungeon,
+  socket,
+  attackType = config.attackType.normal,
+) {
   const btns = [{ msg: '다음', enable: true }];
-  const targetMonsterIdx = skill === 'wide' ? 1 : responseCode - 1;
-  const player = dungeon.player;
-  const monster = dungeon.monsters[targetMonsterIdx];
 
-  console.log(
-    `몬스터${targetMonsterIdx}${skill === 'wide' ? ' 광역 스킬 ' : skill ? ' 스킬 ' : ' '}공격!`,
-  );
+  const player = dungeon.player;
+  const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
+  const targetMonster = dungeon.monsters[targetMonsterIdx[attackType]];
+  const msg = [
+    `${targetMonster.name}을(를) 공격합니다!`,
+    `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
+    `광역 스킬로 몬스터들을 공격합니다!`,
+  ];
+  const effectCode = [3001, 3017, 3027];
+  const decreaseHp = [player.attack, player.attack * 2, player.attack * 2];
+  const decreaseMp = [0, 25, 50];
 
   const battleLog = {
-    msg: `${skill === 'wide' ? '광역 스킬로' : skill ? '스킬로' : ''}몬스터 ${monster.name}을(를) 공격합니다!`,
+    msg: msg[attackType],
     typingAnimation: true,
     btns,
   };
   const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
   socket.write(responseBattleLog);
 
-  player.mp -= skill === 'wide' ? 50 : skill ? 25 : 0;
+  player.mp -= decreaseMp[attackType];
+  console.log(attackType);
   const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
   socket.write(responseSetPlayerMp);
 
   const actionSet = {
     animCode: 0,
-    effectCode: skill === 'wide' ? 3027 : skill ? 3017 : 3001,
+    effectCode: effectCode[attackType],
   };
 
   const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
-    targetMonsterIdx,
+    targetMonsterIdx: targetMonsterIdx[attackType],
     actionSet,
   });
   socket.write(responsePlayerAction);
 
-  monster.hp -= player.attack * skill ? 2 : 1;
-  const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
-    monsterIdx: targetMonsterIdx,
-    hp: monster.hp,
-  });
-  socket.write(responseSetMonsterHp);
+  for (let monsterIdx in dungeon.monsters) {
+    const monster = dungeon.monsters[monsterIdx];
+    if (attackType === config.attackType.wide || monster === targetMonster) {
+      console.log(dungeon.monsters[monsterIdx], 'attack');
+      monster.hp -= decreaseHp[attackType];
+      const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
+        monsterIdx,
+        hp: monster.hp,
+      });
+      socket.write(responseSetMonsterHp);
+    }
+  }
 
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
 }
