@@ -47,12 +47,12 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const playerStatus = {
       playerClass: character.jobId,
-      playerLevel: character.level,
-      playerName: character.name,
+      playerLevel: character.characterLevel,
+      playerName: character.characterName,
       playerFullHp: character.maxHp,
       playerFullMp: character.maxMp,
-      playerCurHp: character.hp,
-      playerCurMp: character.mp,
+      playerCurHp: character.curHp,
+      playerCurMp: character.curMp,
     };
 
     const screenTextAlignment = {
@@ -72,7 +72,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: config.screenColor.b,
     };
 
-    const message = `${nickname} 가 ${monsterStatus[0].monsterName}, ${monsterStatus[1].monsterName}, ${monsterStatus[2].monsterName}와 전투를 시작합니다.`;
+    const message = `${nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
 
     const screenText = {
       msg: message,
@@ -103,6 +103,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     });
 
     socket.write(enterDungeonResponse);
+    dungeonCode; // socket.write 밑에 아무 코드 없으면 동작 안하길래 아무 의미 없지만 넣어본 코드
   } catch (err) {
     handleError(socket, err);
   }
