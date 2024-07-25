@@ -9,7 +9,7 @@ import {
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -60,11 +60,11 @@ const enterTownHandler = async ({ socket, payload }) => {
       rot: Math.random() * 360, // 0 ~ 360
     };
     const statInfo = {
-      level: character.level,
-      hp: parseFloat(character.hp),
-      maxHp: parseFloat(character.hp),
-      mp: parseFloat(character.mp),
-      maxMp: parseFloat(character.mp),
+      level: character.characterLevel,
+      hp: parseFloat(character.curHp),
+      maxHp: parseFloat(character.maxHp),
+      mp: parseFloat(character.curMp),
+      maxMp: parseFloat(character.maxMp),
       atk: parseFloat(character.attack),
       def: parseFloat(character.defense),
       magic: parseFloat(character.magic),
@@ -77,7 +77,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       transform: transformInfo,
       statInfo,
     };
-    const enterTownResponse = createResponse('response', 'S_Enter', {
+    const enterTownResponse = await createResponseAsync('response', 'S_Enter', {
       player: playerInfo,
     });
 
@@ -105,7 +105,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       // console.log('filterdPlayers', filterdPlayers);
 
       // 해당 유저에게 다른 유저들을 스폰(해당 유저 제외)
-      const spawnTownResponse = createResponse('response', 'S_Spawn', {
+      const spawnTownResponse = await createResponseAsync('response', 'S_Spawn', {
         players: filterdPlayers,
       });
 

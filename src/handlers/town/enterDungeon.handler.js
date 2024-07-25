@@ -1,5 +1,5 @@
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
@@ -76,7 +76,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const screenText = {
       msg: message,
-      typingAnimation: true,
+      typingAnimation: false,
       alignment: screenTextAlignment,
       textColor: textColor,
       screenColor: screenColor,
@@ -95,7 +95,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       btns,
     };
 
-    const enterDungeonResponse = createResponse('response', 'S_EnterDungeon', {
+    const enterDungeonResponse = await createResponseAsync('response', 'S_EnterDungeon', {
       dungeonInfo,
       player: playerStatus,
       screenText,
@@ -103,7 +103,6 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     });
 
     socket.write(enterDungeonResponse);
-    dungeonCode; // socket.write 밑에 아무 코드 없으면 동작 안하길래 아무 의미 없지만 넣어본 코드
   } catch (err) {
     handleError(socket, err);
   }
