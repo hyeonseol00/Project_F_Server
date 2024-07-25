@@ -1,4 +1,4 @@
-# One Punch - One Punch Tower Defence
+# 파이어펀치 - Project F
 
 ## 🎈 팀 노션
 
