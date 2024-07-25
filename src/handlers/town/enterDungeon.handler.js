@@ -5,6 +5,7 @@ import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 import { findMonsterByMonsters, findMonstersByDungeonMonsters } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
+import { getGameSession } from '../../session/game.session.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
