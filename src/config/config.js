@@ -28,8 +28,23 @@ import {
   DB1_PASSWORD,
   DB1_HOST,
   DB1_PORT,
+  DB2_NAME,
+  DB2_USER,
+  DB2_PASSWORD,
+  DB2_HOST,
+  DB2_PORT,
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
+import {
+  SCREENCOLOR_B,
+  SCREENCOLOR_G,
+  SCREENCOLOR_R,
+  SCREENTEXTALIGNMENT_X,
+  SCREENTEXTALIGNMENT_Y,
+  TEXTCOLOR_B,
+  TEXTCOLOR_G,
+  TEXTCOLOR_R,
+} from '../constants/screenText.js';
 import { TOWN_SESSION_ID } from '../constants/session.js';
 
 export const config = {
@@ -55,6 +70,13 @@ export const config = {
       host: DB1_HOST,
       port: DB1_PORT,
     },
+    TOWN_GAME: {
+      name: DB2_NAME,
+      user: DB2_USER,
+      password: DB2_PASSWORD,
+      host: DB2_HOST,
+      port: DB2_PORT,
+    },
   },
   sceneStatus: {
     message: SCENE_MESSAGE_WINDOW,
@@ -79,5 +101,19 @@ export const config = {
     single: BUTTON_SINGLE,
     wide: BUTTON_WIDE_AREA,
     cancel: BUTTON_SKILL_CANCEL,
+  },
+  screenTextAlignment: {
+    x: SCREENTEXTALIGNMENT_X,
+    y: SCREENTEXTALIGNMENT_Y,
+  },
+  textColor: {
+    r: TEXTCOLOR_R,
+    g: TEXTCOLOR_G,
+    b: TEXTCOLOR_B,
+  },
+  screenColor: {
+    r: SCREENCOLOR_R,
+    g: SCREENCOLOR_G,
+    b: SCREENCOLOR_B,
   },
 };
