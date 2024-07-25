@@ -12,7 +12,7 @@ export default function chooseActionScene(responseCode, dungeon, socket, skill =
       }
       const attackBattleLog = {
         msg: '공격할 몬스터를 선택하세요!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 
@@ -49,7 +49,7 @@ export default function chooseActionScene(responseCode, dungeon, socket, skill =
       btns.push({ msg: '취소', enable: true });
       const runawayBattleLog = {
         msg: '전투에서 도망칩니다!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 

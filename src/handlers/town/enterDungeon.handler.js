@@ -5,6 +5,7 @@ import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 import { findMonsterByMonsters } from '../../db/user/user.db.js';
 import { findMonstersByDungeonMonsters } from '../../db/user/user.db.js';
+import { config } from '../../config/config.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -12,8 +13,10 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const user = getUserBySocket(socket);
     const { nickname } = user;
 
+    const gameSession = getGameSession(config.session.townId);
+    const player = gameSession.getUser(user.playerId);
+    const dungeon = addDungeon(nickname, player);
     const characterClass = user.characterClass;
-    const dungeon = addDungeon(nickname);
 
     const userInDB = await findUserByUsername(nickname);
     const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
@@ -71,28 +74,30 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const screenText = {
       msg: '던전에 진입합니다. 전투를 준비하세요!',
-      typingAnimation: true,
+      typingAnimation: false,
       alignment: screenTextAlignment,
       textColor: textColor,
       screenColor: screenColor,
     };
 
-    const BtnInfo = {
-      msg: 'btn_test',
-      enable: true,
-    };
+    const btns = [
+      {
+        msg: 'btn_test',
+        enable: false,
+      },
+    ];
 
-    const BattleLog = {
+    const battleLog = {
       msg: 'battle_log_test',
-      typingAnimation: true,
-      btns: BtnInfo,
+      typingAnimation: false,
+      btns,
     };
 
     const enterDungeonResponse = createResponse('response', 'S_EnterDungeon', {
-      dungeonInfo: dungeonInfo,
+      dungeonInfo,
       player: playerStatus,
-      screenText: screenText,
-      battleLog: BattleLog,
+      screenText,
+      battleLog,
     });
 
     socket.write(enterDungeonResponse);

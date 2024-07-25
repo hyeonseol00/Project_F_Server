@@ -1,4 +1,4 @@
-import switchToActionScene from './switchScene/attack.switch.js';
+import switchToActionScene from './switchScene/action.switch.js';
 
 export default function messageWindowScene(responseCode, dungeon, socket) {
   if (responseCode == 0) {

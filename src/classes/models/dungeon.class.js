@@ -2,8 +2,9 @@ import { config } from '../../config/config.js';
 import Monster from './monster.class.js';
 
 class InstanceDungeon {
-  constructor(userId) {
+  constructor(userId, player) {
     this.id = userId;
+    this.player = player;
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
   }

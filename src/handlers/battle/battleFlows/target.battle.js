@@ -2,20 +2,20 @@ import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
 export default function targetMonsterScene(responseCode, dungeon, socket, skill = false) {
-  // 몬스터 공격 버튼 중 1택
-  const btns = [];
+  const btns = [{ msg: '다음', enable: true }];
   const targetMonsterIdx = skill === 'wide' ? 1 : responseCode - 1;
+  const player = dungeon.player;
+  const monster = dungeon.monsters[targetMonsterIdx];
 
   console.log(
     `몬스터${targetMonsterIdx}${skill === 'wide' ? ' 광역 스킬 ' : skill ? ' 스킬 ' : ' '}공격!`,
   );
 
   const battleLog = {
-    msg: `${dungeon.monsters[targetMonsterIdx]}${skill === 'wide' ? ' 광역 스킬 ' : skill ? ' 스킬 ' : ' '}공격!`,
+    msg: `${skill === 'wide' ? '광역 스킬로' : skill ? '스킬로' : ''}몬스터 ${monster.name}을(를) 공격합니다!`,
     typingAnimation: true,
     btns,
   };
-
   const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
   socket.write(responseBattleLog);
 
@@ -30,5 +30,12 @@ export default function targetMonsterScene(responseCode, dungeon, socket, skill 
   });
   socket.write(responsePlayerAction);
 
-  dungeon.battleSceneStatus = config.sceneStatus.message;
+  monster.hp -= player.attack;
+  const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
+    monsterIdx: targetMonsterIdx,
+    hp: monster.hp,
+  });
+  socket.write(responseSetMonsterHp);
+
+  dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
 }
