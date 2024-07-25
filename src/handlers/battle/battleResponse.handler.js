@@ -6,6 +6,7 @@ import messageWindowScene from './battleFlows/message.battle.js';
 import confirmScene from './battleFlows/confirm.battle.js';
 import targetMonsterScene from './battleFlows/target.battle.js';
 import playerAttackScene from './battleFlows/playerAttack.battle.js';
+import chooseSkillType from './battleFlows/skill.battle.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
@@ -23,6 +24,9 @@ const battleResponseHandler = async ({ socket, payload }) => {
     case config.sceneStatus.target:
       await targetMonsterScene(responseCode, dungeon, socket);
       break;
+    case config.sceneStatus.targetSkill:
+      targetMonsterScene(responseCode, dungeon, socket, true);
+      break;
     case config.sceneStatus.playerAtk:
       await playerAttackScene(responseCode, dungeon, socket);
       break;
@@ -30,6 +34,9 @@ const battleResponseHandler = async ({ socket, payload }) => {
       break;
     case config.sceneStatus.confirm:
       await confirmScene(responseCode, dungeon, user.nickname, socket);
+      break;
+    case config.sceneStatus.skill:
+      chooseSkillType(responseCode, dungeon, socket);
       break;
   }
   console.log('battleSceneStatus: ', dungeon.battleSceneStatus);

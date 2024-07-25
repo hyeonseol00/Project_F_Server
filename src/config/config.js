@@ -8,10 +8,17 @@ import {
   SCENE_MESSAGE_WINDOW,
   SCENE_CHOOSE_ACTION,
   SCENE_CONFIRM,
+  SCENE_CHOOSE_SKILL_TYPE,
+  SCENE_CHOOSE_TARGET_WITH_SKILL,
   SCENE_PLAYER_ATTACK,
   SCENE_ENEMY_ATTACK,
 } from '../constants/battle/battleSceneStatus.js';
 import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
+import {
+  BUTTON_SINGLE,
+  BUTTON_SKILL_CANCEL,
+  BUTTON_WIDE_AREA,
+} from '../constants/battle/skillSceneButton.js';
 import {
   PORT,
   HOST,
@@ -78,6 +85,8 @@ export const config = {
     playerAtk: SCENE_PLAYER_ATTACK,
     enemyAtk: SCENE_ENEMY_ATTACK,
     confirm: SCENE_CONFIRM,
+    skill: SCENE_CHOOSE_SKILL_TYPE,
+    targetSkill: SCENE_CHOOSE_TARGET_WITH_SKILL,
   },
   actionButton: {
     attack: BUTTON_COMMON_ATTACK,
@@ -87,6 +96,11 @@ export const config = {
   confirmButton: {
     confirm: BUTTON_CONFIRM,
     cancel: BUTTON_CANCEL,
+  },
+  skillButton: {
+    single: BUTTON_SINGLE,
+    wide: BUTTON_WIDE_AREA,
+    cancel: BUTTON_SKILL_CANCEL,
   },
   screenTextAlignment: {
     x: SCREENTEXTALIGNMENT_X,
