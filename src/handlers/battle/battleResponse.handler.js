@@ -49,7 +49,6 @@ const battleResponseHandler = async ({ socket, payload }) => {
       await confirmScene(responseCode, dungeon, user.nickname, socket);
       break;
   }
-  console.log('battleSceneStatus: ', dungeon.battleSceneStatus);
   index = index % 3;
   // console.log('battleSceneStatus: ', dungeon.battleSceneStatus);
   // console.log('\n');
