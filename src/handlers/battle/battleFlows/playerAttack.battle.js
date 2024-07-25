@@ -1,7 +1,9 @@
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
+import switchToActionScene from './switchScene/action.switch.js';
 
-export default function playerAttackScene(responseCode, dungeon, socket) {
+export default async function playerAttackScene(responseCode, dungeon, socket) {
+  /* 
   if (responseCode == 1) {
     const btns = [{ msg: '다음', enable: true }];
     const targetMonsterIdx = 0;
@@ -25,5 +27,6 @@ export default function playerAttackScene(responseCode, dungeon, socket) {
     socket.write(monsterAction);
 
     dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
-  }
+  } */
+  switchToActionScene(dungeon, socket);
 }
