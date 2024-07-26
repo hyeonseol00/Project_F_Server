@@ -63,10 +63,9 @@ CREATE TABLE IF NOT EXISTS Character_Items
   FOREIGN KEY (character_id) REFERENCES Characters(character_id)
 );
 
-//데이터 삽입
+-- 데이터 삽입
 
-//Jobs 데이터 삽입
-
+-- Jobs 데이터 삽입
 INSERT INTO Jobs (job_id , job_name , base_hp, base_mp, base_attack, base_defense, base_magic, base_speed, wide_effect, base_effect, single_effect ) VALUE 
 ( 1001, "섭르탄" , 1000, 40 , 50 , 80 , 100 , 10 , 3024, 3004, 3012 ),
 ( 1002, "클르탄" , 500, 60 , 80 , 40 , 100 , 10 , 3024 , 3004 , 3001),
