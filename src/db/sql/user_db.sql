@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS Jobs
   base_defense FLOAT NOT NULL,
   base_magic FLOAT NOT NULL,
   base_speed FLOAT NOT NULL,
-  character_effect INTEGER NOT NULL,
+  base_effect INTEGER NOT NULL,
+  single_effect INTEGER NOT NULL,
   wide_effect INTEGER NOT NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
