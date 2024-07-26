@@ -3,8 +3,29 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
 
 export default function switchToMonsterAttackScene(dungeon, socket) {
+  const player = dungeon.player;
+  const playerStatInfo = player.playerInfo.statInfo;
+  const btns = [{ msg: '다음', enable: true }];
+
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
+
+  if (playerStatInfo.hp <= 0) {
+    const deadBattleLog = {
+      msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
+      typingAnimation: false,
+      btns,
+    };
+
+    const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
+      battleLog: deadBattleLog,
+    });
+    socket.write(responseDeadBattleLog);
+
+    dungeon.battleSceneStatus = config.sceneStatus.gameOverLose;
+
+    return;
+  }
 
   if (monster) {
     while (monster.isDead) {
@@ -21,7 +42,6 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     switchToActionScene(dungeon, socket);
     dungeon.initTargetIdx();
   } else {
-    const btns = [{ msg: '다음', enable: true }];
     const battleLog = {
       msg: `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!`,
       typingAnimation: false,
@@ -42,33 +62,16 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     socket.write(monsterAction);
 
     // ------------- 플레이어 피격 코드 -------------
-    const player = dungeon.player;
-    const player_statInfo = player.playerInfo.statInfo;
-    player_statInfo.hp -= player_statInfo.hp > monster.power ? monster.power : player_statInfo.hp;
+    playerStatInfo.hp -= playerStatInfo.hp > monster.power ? monster.power : playerStatInfo.hp;
 
     const playerHp = createResponse('response', 'S_SetPlayerHp', {
-      hp: player_statInfo.hp,
+      hp: playerStatInfo.hp,
     });
     socket.write(playerHp);
 
     // console.log('playerHp', player_statInfo.hp);
 
-    if (player_statInfo.hp > 0) {
-      dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
-      dungeon.accTargetIdx();
-    } else {
-      const deadBattleLog = {
-        msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
-        typingAnimation: false,
-        btns,
-      };
-
-      const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
-        battleLog: deadBattleLog,
-      });
-      socket.write(responseDeadBattleLog);
-
-      dungeon.battleSceneStatus = config.sceneStatus.gameOverLose;
-    }
+    dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
+    dungeon.accTargetIdx();
   }
 }
