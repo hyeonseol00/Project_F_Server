@@ -66,14 +66,14 @@ const enterTownHandler = async ({ socket, payload }) => {
     };
     const statInfo = {
       level: character.characterLevel,
-      hp: parseFloat(character.curHp),
-      maxHp: parseFloat(character.maxHp),
-      mp: parseFloat(character.curMp),
-      maxMp: parseFloat(character.maxMp),
-      atk: parseFloat(character.attack),
-      def: parseFloat(character.defense),
-      magic: parseFloat(character.magic),
-      speed: parseFloat(character.speed),
+      hp: character.curHp,
+      maxHp: character.maxHp,
+      mp: character.curMp,
+      maxMp: character.maxMp,
+      atk: character.attack,
+      def: character.defense,
+      magic: character.magic,
+      speed: character.speed,
     };
     const playerInfo = {
       playerId: curUser.playerId,
