@@ -4,7 +4,6 @@ import switchToMonsterAttackScene from './monsterAttack.switch.js';
 
 export default function switchToMonsterDeadScene(dungeon, socket) {
   const index = dungeon.targetMonsterIdx;
-  const monster = dungeon.monsters[index];
 
   if (monster.hp <= 0 && monster.isDead == false && index < 3) {
     const monster = dungeon.monsters[index];
