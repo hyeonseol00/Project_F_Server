@@ -1,5 +1,5 @@
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
@@ -16,7 +16,7 @@ const chatHandler = async ({ socket, payload }) => {
 
     console.log('chatMsg:', chatMsg);
 
-    const chatResponse = await createResponseAsync('response', 'S_Chat', {
+    const chatResponse = createResponse('response', 'S_Chat', {
       playerId,
       chatMsg,
     });

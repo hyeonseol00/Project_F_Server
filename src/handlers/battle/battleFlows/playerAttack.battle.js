@@ -2,7 +2,7 @@ import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
 
-export default async function playerAttackScene(responseCode, dungeon, socket, index) {
+export default function playerAttackScene(responseCode, dungeon, socket, index) {
   if (responseCode == 1) {
     const btns = [{ msg: '다음', enable: true }];
 

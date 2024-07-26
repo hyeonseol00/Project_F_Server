@@ -1,5 +1,5 @@
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
@@ -95,7 +95,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       btns,
     };
 
-    const enterDungeonResponse = await createResponseAsync('response', 'S_EnterDungeon', {
+    const enterDungeonResponse = createResponse('response', 'S_EnterDungeon', {
       dungeonInfo,
       player: playerStatus,
       screenText,

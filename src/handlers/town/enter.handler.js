@@ -9,7 +9,7 @@ import {
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -77,7 +77,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       transform: transformInfo,
       statInfo,
     };
-    const enterTownResponse = await createResponseAsync('response', 'S_Enter', {
+    const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
 
@@ -105,7 +105,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       // console.log('filterdPlayers', filterdPlayers);
 
       // 해당 유저에게 다른 유저들을 스폰(해당 유저 제외)
-      const spawnTownResponse = await createResponseAsync('response', 'S_Spawn', {
+      const spawnTownResponse = createResponse('response', 'S_Spawn', {
         players: filterdPlayers,
       });
 

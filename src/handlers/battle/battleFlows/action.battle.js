@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
-import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default async function chooseActionScene(
+export default function chooseActionScene(
   responseCode,
   dungeon,
   socket,
@@ -22,7 +22,7 @@ export default async function chooseActionScene(
         btns,
       };
 
-      const attackResponse = await createResponseAsync('response', 'S_BattleLog', {
+      const attackResponse = createResponse('response', 'S_BattleLog', {
         battleLog: attackBattleLog,
       });
       socket.write(attackResponse);
@@ -44,7 +44,7 @@ export default async function chooseActionScene(
         btns,
       };
 
-      const skillResponse = await createResponseAsync('response', 'S_BattleLog', {
+      const skillResponse = createResponse('response', 'S_BattleLog', {
         battleLog: skillBattleLog,
       });
       socket.write(skillResponse);
@@ -60,7 +60,7 @@ export default async function chooseActionScene(
         btns,
       };
 
-      const runawayResponse = await createResponseAsync('response', 'S_BattleLog', {
+      const runawayResponse = createResponse('response', 'S_BattleLog', {
         battleLog: runawayBattleLog,
       });
       socket.write(runawayResponse);

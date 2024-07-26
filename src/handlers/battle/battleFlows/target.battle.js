@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
-import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default async function targetMonsterScene(
+export default function targetMonsterScene(
   responseCode,
   dungeon,
   socket,
@@ -26,7 +26,7 @@ export default async function targetMonsterScene(
     typingAnimation: true,
     btns,
   };
-  const responseBattleLog = await createResponseAsync('response', 'S_BattleLog', { battleLog });
+  const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
   socket.write(responseBattleLog);
 
   player.mp -= decreaseMp[attackType];
@@ -39,7 +39,7 @@ export default async function targetMonsterScene(
     effectCode: effectCode[attackType],
   };
 
-  const responsePlayerAction = await createResponseAsync('response', 'S_PlayerAction', {
+  const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
     targetMonsterIdx: targetMonsterIdx[attackType],
     actionSet,
   });
@@ -50,7 +50,7 @@ export default async function targetMonsterScene(
     if (attackType === config.attackType.wide || monster === targetMonster) {
       console.log(dungeon.monsters[monsterIdx], 'attack');
       monster.hp -= decreaseHp[attackType];
-      const responseSetMonsterHp = await createResponseAsync('response', 'S_SetMonsterHp', {
+      const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
         monsterIdx,
         hp: monster.hp,
       });

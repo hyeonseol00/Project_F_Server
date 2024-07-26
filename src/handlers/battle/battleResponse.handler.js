@@ -8,9 +8,7 @@ import targetMonsterScene from './battleFlows/target.battle.js';
 import playerAttackScene from './battleFlows/playerAttack.battle.js';
 import chooseSkillType from './battleFlows/skill.battle.js';
 
-let index = 0;
-
-const battleResponseHandler = async ({ socket, payload }) => {
+const battleResponseHandler = ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
@@ -18,38 +16,30 @@ const battleResponseHandler = async ({ socket, payload }) => {
   // console.log('responseCode: ', responseCode);
   switch (dungeon.battleSceneStatus) {
     case config.sceneStatus.message:
-      await messageWindowScene(responseCode, dungeon, socket);
+      messageWindowScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.action:
-      await chooseActionScene(responseCode, dungeon, socket);
+      chooseActionScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.target:
-      await targetMonsterScene(responseCode, dungeon, socket);
+      targetMonsterScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.targetSkill:
-      await targetMonsterScene(responseCode, dungeon, socket, config.attackType.single);
+      targetMonsterScene(responseCode, dungeon, socket, config.attackType.single);
       break;
     case config.sceneStatus.playerAtk:
-      console.log('playerAtk : ', index);
-      await playerAttackScene(responseCode, dungeon, socket, index);
-      index++;
+      playerAttackScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.enemyAtk:
-      console.log('enemyAtk : ', index);
-      await playerAttackScene(responseCode, dungeon, socket, index);
-      index++;
+      playerAttackScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.skill:
-      await chooseSkillType(responseCode, dungeon, socket);
-      break;
-    case config.sceneStatus.skill:
-      await chooseSkillType(responseCode, dungeon, socket);
+      chooseSkillType(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.confirm:
-      await confirmScene(responseCode, dungeon, user.nickname, socket);
+      confirmScene(responseCode, dungeon, user.nickname, socket);
       break;
   }
-  index = index % 3;
   // console.log('battleSceneStatus: ', dungeon.battleSceneStatus);
   // console.log('\n');
 };

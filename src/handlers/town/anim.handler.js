@@ -1,5 +1,5 @@
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse, createResponseAsync } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 import { getAllGameSessions } from '../../session/game.session.js';
@@ -21,7 +21,7 @@ const animHandler = async ({ socket, userId, payload }) => {
     const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     if (!character) throw new Error('캐릭터를 찾을 수 없습니다.');
 
-    const animationResponse = await createResponseAsync('response', 'S_Animation', {
+    const animationResponse = createResponse('response', 'S_Animation', {
       playerId: user.playerId,
       animCode: payload.animCode,
     });
