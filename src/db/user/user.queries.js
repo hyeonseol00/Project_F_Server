@@ -8,4 +8,7 @@ export const SQL_QUERIES = {
   FIND_MONSTERS_BY_DUNGEON_MONSTERS: 'SELECT * FROM Dungeon_Monsters WHERE dungeon_id = ?',
   FIND_MONSTER_BY_MONSTERS: 'SELECT * FROM Monsters WHERE monster_id = ?',
   FIND_JOB_BY_ID: 'SELECT * FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_BASE_EFFECT_CODE: 'SELECT base_effect FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_SINGLE_EFFECT_CODE: 'SELECT single_effect FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_WIDE_EFFECT_CODE: 'SELECT wide_effect FROM Jobs WHERE job_id = ?',
 };

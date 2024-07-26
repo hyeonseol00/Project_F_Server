@@ -1,4 +1,9 @@
 import { config } from '../../../config/config.js';
+import {
+  getCharacterBaseEffectCode,
+  getCharacterSingleEffectCode,
+  getCharacterWideEffectCode,
+} from '../../../db/user/user.db.js';
 import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
 
 export default async function targetMonsterScene(
@@ -17,7 +22,11 @@ export default async function targetMonsterScene(
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
-  const effectCode = [3001, 3017, 3027];
+  const effectCode = [
+    await getCharacterBaseEffectCode(player.characterClass),
+    await getCharacterSingleEffectCode(player.characterClass),
+    await getCharacterWideEffectCode(player.characterClass),
+  ];
   const decreaseHp = [player.attack, player.attack * 2, player.attack * 2];
   const decreaseMp = [0, 25, 50];
 
@@ -30,13 +39,12 @@ export default async function targetMonsterScene(
   socket.write(responseBattleLog);
 
   player.mp -= decreaseMp[attackType];
-  console.log(attackType);
   const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
   socket.write(responseSetPlayerMp);
 
   const actionSet = {
     animCode: 0,
-    effectCode: effectCode[attackType],
+    effectCode: effectCode[attackType] + player.level - 1,
   };
 
   const responsePlayerAction = await createResponseAsync('response', 'S_PlayerAction', {
