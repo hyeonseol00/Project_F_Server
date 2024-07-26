@@ -14,7 +14,7 @@ export default function chooseActionScene(
     case config.actionButton.attack:
       for (let i = 0; i < dungeon.monsters.length; i++) {
         const monster = dungeon.monsters[i];
-        btns.push({ msg: `${monster.name}`, enable: true });
+        btns.push({ msg: `${monster.name}`, enable: !monster.isDead });
       }
       const attackBattleLog = {
         msg: '공격할 몬스터를 선택하세요!',
