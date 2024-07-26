@@ -3,7 +3,7 @@ import { getMonsterEffect } from '../../../../db/game/game.db.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
 
-export default async function switchToMonsterAttackScene(dungeon, socket) {
+export default function switchToMonsterAttackScene(dungeon, socket) {
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
 
@@ -31,7 +31,7 @@ export default async function switchToMonsterAttackScene(dungeon, socket) {
     const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
     socket.write(responseBattleLog);
 
-    const effectCode = await getMonsterEffect(monster.id);
+    const effectCode = monster.effectCode;
     const actionSet = {
       animCode: 0,
       effectCode,

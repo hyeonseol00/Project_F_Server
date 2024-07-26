@@ -14,6 +14,9 @@ class User {
     speed,
     level,
     experience,
+    normalCode,
+    singleSkillCode,
+    wideSkillCode,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
@@ -31,6 +34,8 @@ class User {
     this.speed = speed;
     this.level = level;
     this.experience = experience;
+
+    this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }
 
   setPlayerInfo(playerInfo) {

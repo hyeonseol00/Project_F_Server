@@ -3,7 +3,11 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
-import { findMonsterByMonsters, findMonstersByDungeonMonsters } from '../../db/game/game.db.js';
+import {
+  findMonsterByMonsters,
+  findMonstersByDungeonMonsters,
+  getMonsterEffect,
+} from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 
@@ -28,6 +32,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsters[Math.floor(Math.random() * monsters.length)].monsterId,
       );
       const { monsterId, monsterHp, monsterAttack, monsterName } = monsterDB;
+      const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
         monsterIdx: i,
@@ -37,7 +42,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       };
       monsterStatus.push(monster);
 
-      dungeon.addMonster(i, monsterId, monsterHp, monsterAttack, monsterName);
+      dungeon.addMonster(i, monsterId, monsterHp, monsterAttack, monsterName, effectCode);
     }
 
     const dungeonInfo = {

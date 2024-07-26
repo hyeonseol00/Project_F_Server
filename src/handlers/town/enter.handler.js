@@ -1,8 +1,8 @@
 import { config } from '../../config/config.js';
 import {
   findCharacterByUserIdAndClass,
-  findJobById,
   findUserByUsername,
+  getJobInfo,
   insertCharacter,
   insertUserByUsername,
 } from '../../db/user/user.db.js';
@@ -33,6 +33,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(config.session.townId);
 
     const { curHp, curMp, attack, defense, magic, speed, characterLevel, experience } = character;
+    const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
     // 그렇지 않으면 유저세션, 게임세션에 추가한다.
@@ -51,6 +52,9 @@ const enterTownHandler = async ({ socket, payload }) => {
           speed,
           characterLevel,
           experience,
+          baseEffect,
+          singleEffect,
+          wideEffect,
         );
     if (!userExist) gameSession.addUser(curUser);
 

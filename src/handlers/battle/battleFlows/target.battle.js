@@ -1,12 +1,7 @@
 import { config } from '../../../config/config.js';
-import {
-  getCharacterBaseEffectCode,
-  getCharacterSingleEffectCode,
-  getCharacterWideEffectCode,
-} from '../../../db/user/user.db.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default async function targetMonsterScene(
+export default function targetMonsterScene(
   responseCode,
   dungeon,
   socket,
@@ -22,12 +17,8 @@ export default async function targetMonsterScene(
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
-  const effectCode = [
-    await getCharacterBaseEffectCode(player.characterClass),
-    await getCharacterSingleEffectCode(player.characterClass),
-    await getCharacterWideEffectCode(player.characterClass),
-  ];
-  const decreaseHp = [player.attack, player.attack * 2, player.attack * 2];
+  const effectCode = [player.effectCode.normal, player.effectCode.single, player.effectCode.wide];
+  const decreaseHp = [player.attack, player.magic, player.magic];
   const decreaseMp = [0, 25, 50];
 
   // S_BattleLog 패킷
