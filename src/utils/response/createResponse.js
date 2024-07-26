@@ -6,10 +6,8 @@ export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages[packageType][packetId];
 
-  // 디버깅 로그 추가
-  // console.log('createResponse로 전달된 data: ', data);
-
   const buffer = Response.encode(data).finish();
+
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(
     buffer.length + config.packet.totalLength + config.packet.typeLength,
@@ -18,6 +16,5 @@ export const createResponse = (packageType, packetId, data = null) => {
 
   const packetType = Buffer.alloc(config.packet.typeLength);
   packetType.writeUInt8(PACKET_TYPE[packetId], 0);
-
   return Buffer.concat([packetLength, packetType, buffer]);
 };
