@@ -5,6 +5,7 @@ class Monster {
     this.hp = hp;
     this.power = power;
     this.name = name;
+    this.isDead = false;
   }
 }
 

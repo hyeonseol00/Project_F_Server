@@ -1,18 +1,18 @@
 import { config } from '../../../config/config.js';
-import { getDungeonByUserId, removeDungeon } from '../../../session/dungeon.session.js';
-import { createResponse, createResponseAsync } from '../../../utils/response/createResponse.js';
+import { removeDungeon } from '../../../session/dungeon.session.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
 
-export default async function confirmScene(responseCode, dungeon, nickname, socket) {
+export default function confirmScene(responseCode, dungeon, nickname, socket) {
   switch (responseCode) {
     case config.confirmButton.confirm:
-      const responseLeaveDungeon = await createResponseAsync('response', 'S_LeaveDungeon', {});
+      const responseLeaveDungeon = createResponse('response', 'S_LeaveDungeon', {});
       socket.write(responseLeaveDungeon);
 
       removeDungeon(nickname);
       break;
     case config.confirmButton.cancel:
-      await switchToActionScene(dungeon, socket);
+      switchToActionScene(dungeon, socket);
       break;
   }
 }
