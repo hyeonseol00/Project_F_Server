@@ -8,6 +8,7 @@ class InstanceDungeon {
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
     this.targetMonsterIdx = 0;
+    this.currentAttackType = config.attackType.normal;
   }
 
   addMonster(idx, id, hp, power, name) {
@@ -38,6 +39,16 @@ class InstanceDungeon {
     const idx = this.monsters.findIndex((monster) => monster.isDead === false);
 
     return idx;
+  }
+
+  isMonstersAllDead() {
+    const result = this.monsters.find((monster) => monster.isDead === false);
+
+    if (result === undefined) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

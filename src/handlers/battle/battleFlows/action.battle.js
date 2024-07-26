@@ -32,6 +32,8 @@ export default function chooseActionScene(
       } else {
         dungeon.battleSceneStatus = config.sceneStatus.target;
       }
+
+      dungeon.currentAttackType = config.attackType.normal;
       break;
     case config.actionButton.skill:
       const playerMp = player.mp;
