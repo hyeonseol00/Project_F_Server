@@ -104,3 +104,28 @@ CREATE TABLE IF NOT EXISTS Levels
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+//데이터 삽입
+
+//레벨 데이터 삽입
+INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, skill_point) VALUES 
+(NULL, 0, 0, 0, 0, 0, 0, 0, 0),
+(NULL, 100, 10, 10, 2, 2, 2, 2, 1),
+(NULL, 250, 10, 10, 2, 2, 2, 2, 1),
+(NULL, 450, 15, 15, 3, 3, 3, 3, 1),
+(NULL, 700, 15, 15, 3, 3, 3, 3, 2),
+(NULL, 1000, 20, 20, 4, 4, 4, 4, 1),
+(NULL, 1350, 25, 25, 4, 4, 4, 4, 1),
+(NULL, 1750, 25, 25, 5, 5, 5, 5, 1),
+(NULL, 2200, 30, 30, 5, 5, 5, 5, 1),
+(NULL, 2700, 30, 30, 6, 6, 6, 6, 2),
+(NULL, 3250, 35, 35, 6, 6, 6, 6, 1),
+(NULL, 3850, 35, 35, 7, 7, 7, 7, 1),
+(NULL, 4500, 40, 40, 7, 7, 7, 7, 1),
+(NULL, 5200, 40, 40, 8, 8, 8, 8, 1),
+(NULL, 5950, 45, 45, 8, 8, 8, 8, 2),
+(NULL, 6750, 45, 45, 9, 9, 9, 9, 1),
+(NULL, 7600, 50, 50, 9, 9, 9, 9, 1),
+(NULL, 8500, 50, 50, 10, 10, 10, 10, 1),
+(NULL, 9450, 60, 60, 10, 10, 10, 10, 1),
+(NULL, 10450, 60, 60, 12, 12, 12, 12, 2);
