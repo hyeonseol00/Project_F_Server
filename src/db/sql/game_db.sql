@@ -44,8 +44,6 @@ CREATE TABLE IF NOT EXISTS Dungeon_Monsters
   FOREIGN KEY (monster_id) REFERENCES Monsters(monster_id)
 );
 
-
-
 CREATE TABLE IF NOT EXISTS Shops
 (
   shop_id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -106,9 +104,9 @@ CREATE TABLE IF NOT EXISTS Levels
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-//데이터 삽입
+-- 데이터 삽입
 
-//레벨 데이터 삽입
+-- 레벨 데이터 삽입
 INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, skill_point) VALUES 
 (NULL, 0, 0, 0, 0, 0, 0, 0, 0),
 (NULL, 100, 10, 10, 2, 2, 2, 2, 1),
@@ -131,7 +129,7 @@ INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, spee
 (NULL, 9450, 60, 60, 10, 10, 10, 10, 1),
 (NULL, 10450, 60, 60, 12, 12, 12, 12, 2);
 
-// 던전 데이터 삽입
+-- 던전 데이터 삽입
 INSERT INTO Dungeons (dungeon_id, dungeon_name, required_level) VALUES
 (5001, "바람부는 평원", 1),
 (5002, "얼어붙은 언덕", 1),
@@ -140,7 +138,7 @@ INSERT INTO Dungeons (dungeon_id, dungeon_name, required_level) VALUES
 (5005, "버그의 둥지", 1),
 (5006, "결투장", 1);
 
-// 던전 별 출현 몬스터 데이터 삽입
+-- 던전 별 출현 몬스터 데이터 삽입
 INSERT INTO Dungeon_Monsters (dungeon_monster_id, dungeon_id, monster_id) VALUES
 (NULL, 5001, 2001),
 (NULL, 5001, 2002),
@@ -170,7 +168,7 @@ INSERT INTO Dungeon_Monsters (dungeon_monster_id, dungeon_id, monster_id) VALUES
 (NULL, 5005, 2028),
 (NULL, 5005, 2029);
 
-// 이펙트 데이터 삽입
+-- 이펙트 데이터 삽입
 INSERT INTO Effects (effect_id, effect_name, effect_type) VALUES
 (3001, "Effect1", "단일 대상"),
 (3002, "Effect2", "단일 대상"),
@@ -200,7 +198,7 @@ INSERT INTO Effects (effect_id, effect_name, effect_type) VALUES
 (3026, "Effect26", "전체 대상"),
 (3027, "Effect27", "전체 대상");
 
-// 몬스터 데이터 삽입
+-- 몬스터 데이터 삽입
 INSERT INTO Monsters (monster_id, monster_name, monster_hp, monster_attack, monster_exp, monster_effect) VALUES
 (2001, "빨간버섯", 300, 60, 10, 3005),
 (2002, "외눈슬라임", 300, 60, 10, 3005),
