@@ -6,9 +6,10 @@ import messageWindowScene from './battleFlows/message.battle.js';
 import confirmScene from './battleFlows/confirm.battle.js';
 import targetMonsterScene from './battleFlows/target.battle.js';
 import playerAttackScene from './battleFlows/playerAttack.battle.js';
-import chooseSkillType from './battleFlows/skill.battle.js';
+import chooseSkillTypeScene from './battleFlows/skill.battle.js';
 import monsterAttackScene from './battleFlows/monsterAttack.battle.js';
 import monsterDeadScene from './battleFlows/monsterDead.battle.js';
+import gameOverWinScene from './battleFlows/gameOverWin.battle.js';
 
 const battleResponseHandler = ({ socket, payload }) => {
   const user = getUserBySocket(socket);
@@ -35,10 +36,15 @@ const battleResponseHandler = ({ socket, payload }) => {
       monsterAttackScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.skill:
-      chooseSkillType(responseCode, dungeon, socket);
+      chooseSkillTypeScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.monsterDead:
       monsterDeadScene(responseCode, dungeon, socket);
+      break;
+    case config.sceneStatus.gameOverWin:
+      gameOverWinScene(responseCode, dungeon, socket);
+      break;
+    case config.sceneStatus.gameOverLose:
       break;
     case config.sceneStatus.confirm:
       confirmScene(responseCode, dungeon, user.nickname, socket);
