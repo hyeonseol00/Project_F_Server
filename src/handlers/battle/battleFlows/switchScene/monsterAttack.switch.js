@@ -5,12 +5,12 @@ import switchToActionScene from './action.switch.js';
 export default function switchToMonsterAttackScene(dungeon, socket) {
   const player = dungeon.player;
   const playerStatInfo = player.playerInfo.statInfo;
-  const btns = [{ msg: '다음', enable: true }];
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
 
   if (playerStatInfo.hp <= 0) {
+    const btns = [{ msg: '마을로 귀환', enable: true }];
     const deadBattleLog = {
       msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
       typingAnimation: false,
@@ -42,6 +42,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     switchToActionScene(dungeon, socket);
     dungeon.initTargetIdx();
   } else {
+    const btns = [{ msg: '다음', enable: true }];
     const battleLog = {
       msg: `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!`,
       typingAnimation: false,
@@ -62,7 +63,8 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     socket.write(monsterAction);
 
     // ------------- 플레이어 피격 코드 -------------
-    playerStatInfo.hp -= playerStatInfo.hp > monster.power ? monster.power : playerStatInfo.hp;
+    const finalDamage = monster.power / (1 + playerStatInfo.def * 0.01); // LOL 피해량 공식
+    playerStatInfo.hp -= playerStatInfo.hp > finalDamage ? finalDamage : playerStatInfo.hp;
 
     const playerHp = createResponse('response', 'S_SetPlayerHp', {
       hp: playerStatInfo.hp,
