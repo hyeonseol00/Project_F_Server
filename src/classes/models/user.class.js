@@ -1,7 +1,20 @@
 import { config } from '../../config/config.js';
 
 class User {
-  constructor(playerId, nickname, characterClass, socket, hp, mp, attack, defense, magic, speed) {
+  constructor(
+    playerId,
+    nickname,
+    characterClass,
+    socket,
+    hp,
+    mp,
+    attack,
+    defense,
+    magic,
+    speed,
+    level,
+    experience,
+  ) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
@@ -16,9 +29,11 @@ class User {
     this.defense = defense;
     this.magic = magic;
     this.speed = speed;
+    this.level = level;
+    this.experience = experience;
   }
 
-  setPlayerInfo(playerInfo){
+  setPlayerInfo(playerInfo) {
     this.playerInfo = playerInfo;
   }
 
@@ -26,10 +41,9 @@ class User {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.rot = rot
+    this.rot = rot;
     this.lastUpdateTime = Date.now();
   }
-
 }
 
 export default User;

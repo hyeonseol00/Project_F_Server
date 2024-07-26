@@ -12,6 +12,7 @@ export const addUser = (
   defense,
   magic,
   speed,
+  level,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -24,6 +25,7 @@ export const addUser = (
     defense,
     magic,
     speed,
+    level,
   );
   userSessions.push(user);
   return user;

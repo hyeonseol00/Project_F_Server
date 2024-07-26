@@ -1,7 +1,12 @@
 import { config } from '../../../config/config.js';
+import {
+  getCharacterBaseEffectCode,
+  getCharacterSingleEffectCode,
+  getCharacterWideEffectCode,
+} from '../../../db/user/user.db.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function targetMonsterScene(
+export default async function targetMonsterScene(
   responseCode,
   dungeon,
   socket,
@@ -17,8 +22,12 @@ export default function targetMonsterScene(
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
-  const effectCode = [3001, 3017, 3027];
-  const damage = [player.attack, player.attack * 2, player.attack * 2];
+  const effectCode = [
+    await getCharacterBaseEffectCode(player.characterClass),
+    await getCharacterSingleEffectCode(player.characterClass),
+    await getCharacterWideEffectCode(player.characterClass),
+  ];
+  const decreaseHp = [player.attack, player.attack * 2, player.attack * 2];
   const decreaseMp = [0, 25, 50];
 
   // S_BattleLog 패킷
@@ -38,7 +47,7 @@ export default function targetMonsterScene(
   // S_PlayerAction 패킷
   const actionSet = {
     animCode: 0,
-    effectCode: effectCode[attackType],
+    effectCode: effectCode[attackType] + player.level - 1,
   };
   const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
     targetMonsterIdx: targetMonsterIdx[attackType],
@@ -51,7 +60,7 @@ export default function targetMonsterScene(
     const monster = dungeon.monsters[monsterIdx];
 
     if (attackType === config.attackType.wide || monster === targetMonster) {
-      monster.hp -= damage[attackType];
+      monster.hp -= decreaseHp[attackType];
 
       const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
         monsterIdx,
