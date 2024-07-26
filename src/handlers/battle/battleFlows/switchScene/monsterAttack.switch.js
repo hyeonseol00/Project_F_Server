@@ -10,6 +10,10 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     while (monster.isDead) {
       index = dungeon.accTargetIdx();
       monster = dungeon.monsters[index];
+
+      if (index > 2) {
+        break;
+      }
     }
   }
 
