@@ -7,9 +7,14 @@ export default function playerAttackScene(responseCode, dungeon, socket) {
     let monster = dungeon.monsters[index];
 
     if (dungeon.currentAttackType == config.attackType.wide) {
-      while (monster.isDead) {
+      while (monster.hp > 0 || monster.isDead === true) {
         index = dungeon.accTargetIdx();
         monster = dungeon.monsters[index];
+
+        if (index > 2) {
+          dungeon.initTargetIdx();
+          break;
+        }
       }
     }
 

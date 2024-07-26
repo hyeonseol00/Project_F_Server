@@ -62,6 +62,10 @@ export default function targetMonsterScene(
     }
   }
 
-  dungeon.setTargetIdx(responseCode - 1);
+  if (dungeon.currentAttackType === config.attackType.wide) {
+    dungeon.initTargetIdx();
+  } else {
+    dungeon.setTargetIdx(responseCode - 1);
+  }
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
 }

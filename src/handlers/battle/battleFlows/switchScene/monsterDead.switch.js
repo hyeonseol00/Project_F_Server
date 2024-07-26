@@ -6,7 +6,13 @@ export default function switchToMonsterDeadScene(dungeon, socket) {
   const index = dungeon.targetMonsterIdx;
   const monster = dungeon.monsters[index];
 
-  if (monster.hp <= 0 && monster.isDead == false && index < 3) {
+  let hp, isDead;
+  if (monster) {
+    hp = monster.hp;
+    isDead = monster.isDead;
+  }
+
+  if (hp <= 0 && isDead === false && index < 3) {
     monster.isDead = true;
 
     const btns = [{ msg: '다음', enable: true }];
