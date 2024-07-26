@@ -36,7 +36,35 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     });
     socket.write(monsterAction);
 
-    dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
-    dungeon.accTargetIdx();
+    // ------------- 플레이어 피격 코드 -------------
+    const player = dungeon.player;
+    const player_statInfo = player.playerInfo.statInfo;
+    player_statInfo.hp -= player_statInfo.hp > monster.power ? monster.power : player_statInfo.hp;
+
+    const playerHp = createResponse('response', 'S_SetPlayerHp', {
+      hp: player_statInfo.hp,
+    });
+    socket.write(playerHp);
+
+    // console.log('playerHp', player_statInfo.hp);
+
+    if (player_statInfo.hp > 0) {
+      dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
+      dungeon.accTargetIdx();
+      return;
+    }
+
+    const deadBattleLog = {
+      msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
+      typingAnimation: false,
+      btns,
+    };
+
+    const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
+      battleLog: deadBattleLog,
+    });
+    socket.write(responseDeadBattleLog);
+
+    dungeon.battleSceneStatus = config.sceneStatus.confirm;
   }
 }
