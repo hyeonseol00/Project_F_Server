@@ -16,31 +16,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     const { nickname } = payload;
     const characterClass = payload.class;
 
-    // 게임세션을 가져온다.
-    const gameSession = getGameSession(config.session.townId);
-
-    const jobInfo = await findJobById(characterClass);
-    const { baseHp, baseMp, baseAttack, baseDefense, baseMagic, baseSpeed } = jobInfo;
-
-    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-    const userExist = getUserBySocket(socket);
-    const curUser = userExist
-      ? userExist
-      : addUser(
-          socket,
-          nickname,
-          characterClass,
-          baseHp,
-          baseMp,
-          baseAttack,
-          baseDefense,
-          baseMagic,
-          baseSpeed,
-        );
-    if (!userExist) gameSession.addUser(curUser);
-
-    // DB
+    // DB에서 user, character 정보 가져오기
     let userInDB = await findUserByUsername(nickname);
     if (!userInDB) {
       await insertUserByUsername(nickname);
@@ -52,6 +28,31 @@ const enterTownHandler = async ({ socket, payload }) => {
       await insertCharacter(userInDB, characterClass);
       character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     }
+
+    // 게임세션을 가져온다.
+    const gameSession = getGameSession(config.session.townId);
+
+    const { curHp, curMp, attack, defense, magic, speed, characterLevel, experience } = character;
+
+    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
+    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
+    const userExist = getUserBySocket(socket);
+    const curUser = userExist
+      ? userExist
+      : addUser(
+          socket,
+          nickname,
+          characterClass,
+          curHp,
+          curMp,
+          attack,
+          defense,
+          magic,
+          speed,
+          characterLevel,
+          experience,
+        );
+    if (!userExist) gameSession.addUser(curUser);
 
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9

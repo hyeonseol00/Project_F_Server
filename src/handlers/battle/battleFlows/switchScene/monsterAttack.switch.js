@@ -1,8 +1,9 @@
 import { config } from '../../../../config/config.js';
+import { getMonsterEffect } from '../../../../db/game/game.db.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
 
-export default function switchToMonsterAttackScene(dungeon, socket) {
+export default async function switchToMonsterAttackScene(dungeon, socket) {
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
 
@@ -30,9 +31,10 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
     socket.write(responseBattleLog);
 
+    const effectCode = await getMonsterEffect(monster.id);
     const actionSet = {
       animCode: 0,
-      effectCode: 3002,
+      effectCode,
     };
     const monsterAction = createResponse('response', 'S_MonsterAction', {
       actionMonsterIdx: index,
@@ -40,7 +42,35 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     });
     socket.write(monsterAction);
 
-    dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
-    dungeon.accTargetIdx();
+    // ------------- 플레이어 피격 코드 -------------
+    const player = dungeon.player;
+    const player_statInfo = player.playerInfo.statInfo;
+    player_statInfo.hp -= player_statInfo.hp > monster.power ? monster.power : player_statInfo.hp;
+
+    const playerHp = createResponse('response', 'S_SetPlayerHp', {
+      hp: player_statInfo.hp,
+    });
+    socket.write(playerHp);
+
+    // console.log('playerHp', player_statInfo.hp);
+
+    if (player_statInfo.hp > 0) {
+      dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
+      dungeon.accTargetIdx();
+      return;
+    }
+
+    const deadBattleLog = {
+      msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
+      typingAnimation: false,
+      btns,
+    };
+
+    const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
+      battleLog: deadBattleLog,
+    });
+    socket.write(responseDeadBattleLog);
+
+    dungeon.battleSceneStatus = config.sceneStatus.confirm;
   }
 }

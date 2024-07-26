@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js';
 import switchToMonsterDeadScene from './switchScene/monsterDead.switch.js';
 
-export default function playerAttackScene(responseCode, dungeon, socket) {
+export default async function playerAttackScene(responseCode, dungeon, socket) {
   if (responseCode == 1) {
     let index = dungeon.targetMonsterIdx;
     let monster = dungeon.monsters[index];

@@ -66,3 +66,27 @@ export const findJobById = async (jobId) => {
 
   return toCamelCase(rows[0]);
 };
+
+export const getCharacterBaseEffectCode = async (jobId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.GET_CHARACTER_BASE_EFFECT_CODE, [
+    jobId,
+  ]);
+
+  return toCamelCase(rows[0]).baseEffect;
+};
+
+export const getCharacterSingleEffectCode = async (jobId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.GET_CHARACTER_SINGLE_EFFECT_CODE, [
+    jobId,
+  ]);
+
+  return toCamelCase(rows[0]).singleEffect;
+};
+
+export const getCharacterWideEffectCode = async (jobId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.GET_CHARACTER_WIDE_EFFECT_CODE, [
+    jobId,
+  ]);
+
+  return toCamelCase(rows[0]).wideEffect;
+};
