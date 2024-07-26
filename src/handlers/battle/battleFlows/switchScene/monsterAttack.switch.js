@@ -1,5 +1,4 @@
 import { config } from '../../../../config/config.js';
-import { getMonsterEffect } from '../../../../db/game/game.db.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
 
@@ -57,20 +56,19 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     if (player_statInfo.hp > 0) {
       dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
       dungeon.accTargetIdx();
-      return;
+    } else {
+      const deadBattleLog = {
+        msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
+        typingAnimation: false,
+        btns,
+      };
+
+      const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
+        battleLog: deadBattleLog,
+      });
+      socket.write(responseDeadBattleLog);
+
+      dungeon.battleSceneStatus = config.sceneStatus.gameOverLose;
     }
-
-    const deadBattleLog = {
-      msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
-      typingAnimation: false,
-      btns,
-    };
-
-    const responseDeadBattleLog = createResponse('response', 'S_BattleLog', {
-      battleLog: deadBattleLog,
-    });
-    socket.write(responseDeadBattleLog);
-
-    dungeon.battleSceneStatus = config.sceneStatus.confirm;
   }
 }
