@@ -1,4 +1,5 @@
 import { config } from '../config/config.js';
+import { removeDungeon } from '../session/dungeon.session.js';
 import { getGameSession } from '../session/game.session.js';
 import { getUserBySocket, removeUser } from '../session/user.session.js';
 import CustomError from '../utils/error/customError.js';
