@@ -3,8 +3,13 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
-import { findMonsterByMonsters, findMonstersByDungeonMonsters } from '../../db/game/game.db.js';
+import {
+  findMonsterByMonsters,
+  findMonstersByDungeonMonsters,
+  getMonsterEffect,
+} from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
+import { getGameSession } from '../../session/game.session.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -12,8 +17,10 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const user = getUserBySocket(socket);
     const { nickname } = user;
 
+    const gameSession = getGameSession(config.session.townId);
+    const player = gameSession.getUser(user.playerId);
+    const dungeon = addDungeon(nickname, player);
     const characterClass = user.characterClass;
-    const dungeon = addDungeon(nickname);
 
     const userInDB = await findUserByUsername(nickname);
     const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
@@ -25,6 +32,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsters[Math.floor(Math.random() * monsters.length)].monsterId,
       );
       const { monsterId, monsterHp, monsterAttack, monsterName } = monsterDB;
+      const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
         monsterIdx: i,
@@ -34,7 +42,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       };
       monsterStatus.push(monster);
 
-      dungeon.addMonster(i, monsterId, monsterHp, monsterAttack, monsterName);
+      dungeon.addMonster(i, monsterId, monsterHp, monsterAttack, monsterName, effectCode);
     }
 
     const dungeonInfo = {
@@ -69,32 +77,34 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: config.screenColor.b,
     };
 
-    const message = `${nickname} 가 ${monsterStatus[0].monsterName}, ${monsterStatus[1].monsterName}, ${monsterStatus[2].monsterName}와 전투를 시작합니다.`;
+    const message = `${nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
 
     const screenText = {
       msg: message,
-      typingAnimation: true,
+      typingAnimation: false,
       alignment: screenTextAlignment,
       textColor: textColor,
       screenColor: screenColor,
     };
 
-    const BtnInfo = {
-      msg: 'btn_test',
-      enable: true,
-    };
+    const btns = [
+      {
+        msg: 'btn_test',
+        enable: false,
+      },
+    ];
 
-    const BattleLog = {
+    const battleLog = {
       msg: 'battle_log_test',
-      typingAnimation: true,
-      btns: BtnInfo,
+      typingAnimation: false,
+      btns,
     };
 
     const enterDungeonResponse = createResponse('response', 'S_EnterDungeon', {
-      dungeonInfo: dungeonInfo,
+      dungeonInfo,
       player: playerStatus,
-      screenText: screenText,
-      battleLog: BattleLog,
+      screenText,
+      battleLog,
     });
 
     socket.write(enterDungeonResponse);

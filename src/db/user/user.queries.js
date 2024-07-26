@@ -5,4 +5,10 @@ export const SQL_QUERIES = {
   FIND_CHARACTER_BY_USER_ID_AND_CLASS: 'SELECT * FROM Characters WHERE user_id = ? AND job_id = ?',
   INSERT_CHARACTER:
     'INSERT INTO Characters (user_id, character_name, job_id, job_name, max_hp, max_mp, cur_hp, cur_mp, attack, defense, magic, speed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  FIND_MONSTERS_BY_DUNGEON_MONSTERS: 'SELECT * FROM Dungeon_Monsters WHERE dungeon_id = ?',
+  FIND_MONSTER_BY_MONSTERS: 'SELECT * FROM Monsters WHERE monster_id = ?',
+  FIND_JOB_BY_ID: 'SELECT * FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_BASE_EFFECT_CODE: 'SELECT base_effect FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_SINGLE_EFFECT_CODE: 'SELECT single_effect FROM Jobs WHERE job_id = ?',
+  GET_CHARACTER_WIDE_EFFECT_CODE: 'SELECT wide_effect FROM Jobs WHERE job_id = ?',
 };

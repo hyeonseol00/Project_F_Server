@@ -17,3 +17,9 @@ export const findMonsterByMonsters = async (monsterId) => {
 
   return toCamelCase(rows[0]);
 };
+
+export const getMonsterEffect = async (monsterId) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MONSTER_EFFECT, [monsterId]);
+
+  return toCamelCase(rows[0]).monsterEffect;
+};

@@ -2,6 +2,7 @@ import { config } from '../../config/config.js';
 import {
   findCharacterByUserIdAndClass,
   findUserByUsername,
+  getJobInfo,
   insertCharacter,
   insertUserByUsername,
 } from '../../db/user/user.db.js';
@@ -15,16 +16,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     const { nickname } = payload;
     const characterClass = payload.class;
 
-    // 게임세션을 가져온다.
-    const gameSession = getGameSession(config.session.townId);
-
-    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-    const userExist = getUserBySocket(socket);
-    const curUser = userExist ? userExist : addUser(socket, nickname, characterClass);
-    if (!userExist) gameSession.addUser(curUser);
-
-    // DB
+    // DB에서 user, character 정보 가져오기
     let userInDB = await findUserByUsername(nickname);
     if (!userInDB) {
       await insertUserByUsername(nickname);
@@ -37,6 +29,35 @@ const enterTownHandler = async ({ socket, payload }) => {
       character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     }
 
+    // 게임세션을 가져온다.
+    const gameSession = getGameSession(config.session.townId);
+
+    const { curHp, curMp, attack, defense, magic, speed, characterLevel, experience } = character;
+    const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+
+    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
+    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
+    const userExist = getUserBySocket(socket);
+    const curUser = userExist
+      ? userExist
+      : addUser(
+          socket,
+          nickname,
+          characterClass,
+          curHp,
+          curMp,
+          attack,
+          defense,
+          magic,
+          speed,
+          characterLevel,
+          experience,
+          baseEffect,
+          singleEffect,
+          wideEffect,
+        );
+    if (!userExist) gameSession.addUser(curUser);
+
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9
       posY: 1.0,
@@ -44,7 +65,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       rot: Math.random() * 360, // 0 ~ 360
     };
     const statInfo = {
-      level: character.level,
+      level: character.characterLevel,
       hp: character.curHp,
       maxHp: character.maxHp,
       mp: character.curMp,

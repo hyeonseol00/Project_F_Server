@@ -25,7 +25,6 @@ const moveTownHandler = async ({ socket, payload }) => {
       // console.log("이동 패킷을 받는 다른 유저: ", user.playerId);
       user.socket.write(moveTownResponse);
     }
-
   } catch (err) {
     handleError(socket, err);
   }

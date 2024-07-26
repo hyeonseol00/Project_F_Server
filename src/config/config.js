@@ -1,4 +1,28 @@
-import { CHOOSE_TARGET, MESSAGE_WINDOW } from '../constants/battleSceneStatus.js';
+import {
+  BUTTON_COMMON_ATTACK,
+  BUTTON_SKILL_ATTACK,
+  BUTTON_RUNAWAY,
+} from '../constants/battle/actionSceneButton.js';
+import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
+import {
+  SCENE_CHOOSE_TARGET,
+  SCENE_MESSAGE_WINDOW,
+  SCENE_CHOOSE_ACTION,
+  SCENE_CONFIRM,
+  SCENE_CHOOSE_SKILL_TYPE,
+  SCENE_CHOOSE_TARGET_WITH_SKILL,
+  SCENE_PLAYER_ATTACK,
+  SCENE_ENEMY_ATTACK,
+  SCENE_MONSTER_DEAD,
+  SCENE_GAME_OVER_WIN,
+  SCENE_GAME_OVER_LOSE,
+} from '../constants/battle/battleSceneStatus.js';
+import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
+import {
+  BUTTON_SINGLE,
+  BUTTON_SKILL_CANCEL,
+  BUTTON_WIDE_AREA,
+} from '../constants/battle/skillSceneButton.js';
 import {
   PORT,
   HOST,
@@ -15,10 +39,18 @@ import {
   DB2_PORT,
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
+import {
+  SCREENCOLOR_B,
+  SCREENCOLOR_G,
+  SCREENCOLOR_R,
+  SCREENTEXTALIGNMENT_X,
+  SCREENTEXTALIGNMENT_Y,
+  TEXTCOLOR_B,
+  TEXTCOLOR_G,
+  TEXTCOLOR_R,
+} from '../constants/screenText.js';
 import { TOWN_SESSION_ID } from '../constants/session.js';
-import { SCREENTEXTALIGNMENT_X , SCREENTEXTALIGNMENT_Y } from '../constants/battleSceneStatus.js';
-import { TEXTCOLOR_R , TEXTCOLOR_G , TEXTCOLOR_B } from '../constants/battleSceneStatus.js';
-import { SCREENCOLOR_R , SCREENCOLOR_G , SCREENCOLOR_B } from '../constants/battleSceneStatus.js';
+
 export const config = {
   server: {
     port: PORT,
@@ -51,25 +83,51 @@ export const config = {
     },
   },
   sceneStatus: {
-    message: MESSAGE_WINDOW,
-    target: CHOOSE_TARGET,
-  },
+    message: SCENE_MESSAGE_WINDOW,
+    action: SCENE_CHOOSE_ACTION,
+    target: SCENE_CHOOSE_TARGET,
+    playerAtk: SCENE_PLAYER_ATTACK,
+    enemyAtk: SCENE_ENEMY_ATTACK,
+    skill: SCENE_CHOOSE_SKILL_TYPE,
+    targetSkill: SCENE_CHOOSE_TARGET_WITH_SKILL,
+    monsterDead: SCENE_MONSTER_DEAD,
 
+    gameOverWin: SCENE_GAME_OVER_WIN,
+    gameOverLose: SCENE_GAME_OVER_LOSE,
+
+    confirm: SCENE_CONFIRM,
+  },
+  actionButton: {
+    attack: BUTTON_COMMON_ATTACK,
+    skill: BUTTON_SKILL_ATTACK,
+    runaway: BUTTON_RUNAWAY,
+  },
+  confirmButton: {
+    confirm: BUTTON_CONFIRM,
+    cancel: BUTTON_CANCEL,
+  },
+  attackType: {
+    normal: NORMAL_HIT,
+    single: SINGLE_SKILL,
+    wide: WIDE_AREA_SKILL,
+  },
+  skillButton: {
+    single: BUTTON_SINGLE,
+    wide: BUTTON_WIDE_AREA,
+    cancel: BUTTON_SKILL_CANCEL,
+  },
   screenTextAlignment: {
     x: SCREENTEXTALIGNMENT_X,
     y: SCREENTEXTALIGNMENT_Y,
   },
-
   textColor: {
     r: TEXTCOLOR_R,
     g: TEXTCOLOR_G,
     b: TEXTCOLOR_B,
   },
-
   screenColor: {
     r: SCREENCOLOR_R,
     g: SCREENCOLOR_G,
     b: SCREENCOLOR_B,
-  }
-
+  },
 };

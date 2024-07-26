@@ -1,4 +1,5 @@
 import { config } from '../config/config.js';
+import { removeDungeon } from '../session/dungeon.session.js';
 import { getGameSession } from '../session/game.session.js';
 import { getUserBySocket, removeUser } from '../session/user.session.js';
 import CustomError from '../utils/error/customError.js';
@@ -11,6 +12,7 @@ export const onError = (socket) => (err) => {
   const gameSession = getGameSession(config.session.townId);
 
   gameSession.removeUser(user.playerId);
+  removeDungeon(user.nickname);
 
   console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
   console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
