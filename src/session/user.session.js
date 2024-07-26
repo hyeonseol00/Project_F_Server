@@ -13,6 +13,9 @@ export const addUser = (
   magic,
   speed,
   level,
+  baseEffect,
+  singleEffect,
+  wideEffect,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -26,6 +29,9 @@ export const addUser = (
     magic,
     speed,
     level,
+    baseEffect,
+    singleEffect,
+    wideEffect,
   );
   userSessions.push(user);
   return user;

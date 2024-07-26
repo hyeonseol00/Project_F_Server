@@ -11,8 +11,8 @@ class InstanceDungeon {
     this.currentAttackType = config.attackType.normal;
   }
 
-  addMonster(idx, id, hp, power, name) {
-    const monster = new Monster(idx, id, hp, power, name);
+  addMonster(idx, id, hp, power, name, effectCode) {
+    const monster = new Monster(idx, id, hp, power, name, effectCode);
     this.monsters.push(monster);
   }
 
