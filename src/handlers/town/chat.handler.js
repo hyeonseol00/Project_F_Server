@@ -20,10 +20,19 @@ const chatHandler = async ({ socket, payload }) => {
       const { commandType, message } = parseCommand(chatMsg);
 
       // 해당 커멘트에 맞는 핸들러를 가져오고 실행합니다.
-      const chatCommandHandler =  chatCommands.get(commandType);
+      const chatCommandHandler = chatCommands.get(commandType);
+      if(!chatCommandHandler){
+        const invalidCommandResponse = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] Invalid Command: Please check your command`,
+        });
+        socket.write(invalidCommandResponse);
+        return;
+      }
+      
       chatCommandHandler(user, message);
 
-      console.log(chatCommandHandler);
+      // console.log(chatCommandHandler);
     }
     else{
       // 전체 채팅 실행.
@@ -38,8 +47,16 @@ const chatHandler = async ({ socket, payload }) => {
 function parseCommand(command) {
 
   const firstSpaceIdx = command.indexOf(' ');
-  const commandType = command.substring(1, firstSpaceIdx); // /w, /team 같은 명령어 파싱
-  const message = command.substring(firstSpaceIdx + 1);                  
+
+  let commandType, message;
+
+  if(firstSpaceIdx === -1){
+    commandType = command.substring(1); // /w, /team 같은 명령어 파싱
+    message = "";
+    return {commandType, message};
+  }
+  commandType = command.substring(1, firstSpaceIdx); // /w, /team 같은 명령어 파싱
+  message = command.substring(firstSpaceIdx + 1);                  
   
   return { commandType, message }; 
 }
