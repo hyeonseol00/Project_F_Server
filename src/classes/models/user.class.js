@@ -18,6 +18,7 @@ class User {
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
     this.items = items;
+    this.experience = experience;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }
@@ -32,6 +33,11 @@ class User {
     this.z = z;
     this.rot = rot;
     this.lastUpdateTime = Date.now();
+  }
+
+  updateLevel(level, experience) {
+    this.level = level;
+    this.experience = experience;
   }
 }
 

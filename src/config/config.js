@@ -17,6 +17,8 @@ import {
   SCENE_MONSTER_DEAD,
   SCENE_GAME_OVER_WIN,
   SCENE_GAME_OVER_LOSE,
+  SCENE_GET_EXP,
+  SCENE_GO_TO_TOWN,
   SCENE_ITEM_SELECT,
   SCENE_ITEM_USING,
 } from '../constants/battle/battleSceneStatus.js';
@@ -94,6 +96,9 @@ export const config = {
     skill: SCENE_CHOOSE_SKILL_TYPE,
     targetSkill: SCENE_CHOOSE_TARGET_WITH_SKILL,
     monsterDead: SCENE_MONSTER_DEAD,
+    getExp: SCENE_GET_EXP,
+    goToTown: SCENE_GO_TO_TOWN,
+
     itemSelect: SCENE_ITEM_SELECT,
     itemUsing: SCENE_ITEM_USING,
     gameOverWin: SCENE_GAME_OVER_WIN,
@@ -135,4 +140,5 @@ export const config = {
     g: SCREENCOLOR_G,
     b: SCREENCOLOR_B,
   },
+  maxLevel: 20,
 };

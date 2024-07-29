@@ -4,4 +4,5 @@ export const SQL_GAME_QUERIES = {
   GET_MONSTER_EFFECT: 'SELECT monster_effect FROM Monsters WHERE monster_id = ?',
   GET_POTION_ITEMS: 'SELECT * FROM potion_items',
   GET_POTION_ITEM: 'SELECT * FROM potion_items WHERE potion_id = ?',
+  GET_LEVEL_TABLE: 'SELECT * FROM Levels WHERE level_id = ?',
 };
