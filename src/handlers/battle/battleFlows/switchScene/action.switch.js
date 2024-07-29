@@ -3,10 +3,12 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 
 export default function switchToActionScene(dungeon, socket) {
   const btns = [];
+  const player = dungeon.player;
+
   btns.push({ msg: '일반 공격', enable: true });
   btns.push({ msg: '스킬 사용', enable: true });
   btns.push({ msg: '도망치기', enable: true });
-  btns.push({ msg: '아이템 사용', enable: true });
+  btns.push({ msg: '아이템 사용', enable: player.items.length !== 0 });
 
   const battleLog = {
     msg: '무엇을 할까요?',
