@@ -90,3 +90,33 @@ export const getCharacterWideEffectCode = async (jobId) => {
 
   return toCamelCase(rows[0]).wideEffect;
 };
+
+export const updateCharacterStatus = async (
+  characterLevel,
+  experience,
+  curHp,
+  maxHp,
+  curMp,
+  maxMp,
+  attack,
+  defense,
+  magic,
+  speed,
+  userId,
+  jobId,
+) => {
+  await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
+    characterLevel,
+    experience,
+    curHp,
+    maxHp,
+    curMp,
+    maxMp,
+    attack,
+    defense,
+    magic,
+    speed,
+    userId,
+    jobId,
+  ]);
+};
