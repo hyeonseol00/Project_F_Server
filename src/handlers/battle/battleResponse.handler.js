@@ -17,7 +17,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
-
+  console.log('#### : ', dungeon.battleSceneStatus);
   switch (dungeon.battleSceneStatus) {
     case config.sceneStatus.message:
       messageWindowScene(responseCode, dungeon, socket);
@@ -44,6 +44,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
       monsterDeadScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.getExp:
+      console.log('@@@@ : ', responseCode);
       await getExpScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.gameOverWin:
