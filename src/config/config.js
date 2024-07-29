@@ -134,4 +134,5 @@ export const config = {
     g: SCREENCOLOR_G,
     b: SCREENCOLOR_B,
   },
+  maxLevel: 20,
 };
