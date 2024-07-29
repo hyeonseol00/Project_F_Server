@@ -73,7 +73,7 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     dungeon.initTargetIdx();
   } else {
     dungeon.setTargetIdx(responseCode - 1);
+    dungeon.currentAttackType = config.attackType.normal;
   }
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
-  dungeon.currentAttackType = config.attackType.normal;
 }
