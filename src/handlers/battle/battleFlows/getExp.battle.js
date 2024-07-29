@@ -55,7 +55,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
       battleLog = {
         msg: message,
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
     } else {
@@ -70,7 +70,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
       battleLog = {
         msg: `경험치 ${monsterExp}를 획득했습니다!`,
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
     }

@@ -1,14 +1,11 @@
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function chooseActionScene(
-  responseCode,
-  dungeon,
-  socket,
-  attackType = config.attackType.normal,
-) {
+export default function chooseActionScene(responseCode, dungeon, socket) {
   const btns = [];
   const player = dungeon.player;
+  const playerStatInfo = player.playerInfo.statInfo;
+  const attackType = dungeon.currentAttackType;
 
   switch (responseCode) {
     case config.actionButton.attack:
@@ -31,18 +28,17 @@ export default function chooseActionScene(
         dungeon.battleSceneStatus = config.sceneStatus.targetSkill;
       } else {
         dungeon.battleSceneStatus = config.sceneStatus.target;
+        dungeon.currentAttackType = config.attackType.normal;
       }
-
-      dungeon.currentAttackType = config.attackType.normal;
       break;
     case config.actionButton.skill:
-      const playerMp = player.mp;
+      const playerMp = playerStatInfo.mp;
       btns.push({ msg: '단일 스킬', enable: playerMp >= 25 });
       btns.push({ msg: '광역 스킬', enable: playerMp >= 50 });
       btns.push({ msg: '취소', enable: true });
       const skillBattleLog = {
         msg: '스킬 타입을 선택하세요!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 
@@ -68,6 +64,24 @@ export default function chooseActionScene(
       socket.write(runawayResponse);
 
       dungeon.battleSceneStatus = config.sceneStatus.confirm;
+      break;
+    case config.actionButton.item:
+      const items = player.items;
+      console.log(items);
+      for (const item of items) {
+        if (item.quantity < 1) btns.push({ msg: item.name + ` x0`, enable: false });
+        else btns.push({ msg: item.name + ` x${item.quantity}`, enable: true });
+      }
+      const itemsBattleLog = {
+        msg: '아이템을 선택하세요!',
+        typingAnimation: false,
+        btns,
+      };
+      const itemsResponse = createResponse('response', 'S_BattleLog', {
+        battleLog: itemsBattleLog,
+      });
+      socket.write(itemsResponse);
+      dungeon.battleSceneStatus = config.sceneStatus.itemSelect;
       break;
   }
 }

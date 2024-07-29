@@ -2,6 +2,7 @@ import {
   BUTTON_COMMON_ATTACK,
   BUTTON_SKILL_ATTACK,
   BUTTON_RUNAWAY,
+  BUTTON_ITEM,
 } from '../constants/battle/actionSceneButton.js';
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
@@ -18,6 +19,8 @@ import {
   SCENE_GAME_OVER_LOSE,
   SCENE_GET_EXP,
   SCENE_GO_TO_TOWN,
+  SCENE_ITEM_SELECT,
+  SCENE_ITEM_USING,
 } from '../constants/battle/battleSceneStatus.js';
 import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
 import {
@@ -96,6 +99,8 @@ export const config = {
     getExp: SCENE_GET_EXP,
     goToTown: SCENE_GO_TO_TOWN,
 
+    itemSelect: SCENE_ITEM_SELECT,
+    itemUsing: SCENE_ITEM_USING,
     gameOverWin: SCENE_GAME_OVER_WIN,
     gameOverLose: SCENE_GAME_OVER_LOSE,
 
@@ -105,6 +110,7 @@ export const config = {
     attack: BUTTON_COMMON_ATTACK,
     skill: BUTTON_SKILL_ATTACK,
     runaway: BUTTON_RUNAWAY,
+    item: BUTTON_ITEM,
   },
   confirmButton: {
     confirm: BUTTON_CONFIRM,

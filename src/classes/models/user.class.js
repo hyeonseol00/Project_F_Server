@@ -1,42 +1,23 @@
-import { config } from '../../config/config.js';
-
 class User {
   constructor(
     playerId,
     nickname,
     characterClass,
     socket,
-    hp,
-    maxHp,
-    mp,
-    maxMp,
-    attack,
-    defense,
-    magic,
-    speed,
-    level,
     experience,
     normalCode,
     singleSkillCode,
     wideSkillCode,
+    items,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
     this.socket = socket;
+    this.experience = experience;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
-    this.battleSceneStatus = config.sceneStatus.message;
-
-    this.hp = hp;
-    this.maxHp = maxHp;
-    this.mp = mp;
-    this.maxMp = maxMp;
-    this.attack = attack;
-    this.defense = defense;
-    this.magic = magic;
-    this.speed = speed;
-    this.level = level;
+    this.items = items;
     this.experience = experience;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
