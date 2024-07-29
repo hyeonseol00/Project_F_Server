@@ -8,9 +8,10 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     const btns = [{ msg: '다음', enable: true }];
     let battleLog = {};
 
-    const player = dungeon.player;
-    const level = player.level;
-    const levelTable = await getLevelTable(level + 1);
+    const player = dungeon.player; // user 클래스
+    const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
+    const playerLevel = playerStatus.level; // 유저의 현재 레벨
+    const levelTable = await getLevelTable(playerLevel + 1);
     const { levelId, requiredExp, hp, mp, attack, defense, magic, speed, skillPoint } = levelTable;
 
     let monsterExp = 0;
@@ -20,28 +21,29 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     }
 
     const playerExp = monsterExp + player.experience;
-    if (requiredExp <= playerExp) {
-      player.updateLevel(level + 1, playerExp - requiredExp);
+    // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 20보다 작을 경우
+    if (requiredExp <= playerExp && playerLevel < 20) {
+      player.updateLevel(playerLevel + 1, playerExp - requiredExp);
 
       await updateCharacterStatus(
         levelId,
         playerExp - requiredExp,
-        player.maxHp + hp,
-        player.maxHp + hp,
-        player.maxMp + mp,
-        player.maxMp + mp,
-        player.attack + attack,
-        player.defense + defense,
-        player.magic + magic,
-        player.speed + speed,
+        playerStatus.maxHp + hp,
+        playerStatus.maxHp + hp,
+        playerStatus.maxMp + mp,
+        playerStatus.maxMp + mp,
+        playerStatus.atk + attack,
+        playerStatus.def + defense,
+        playerStatus.magic + magic,
+        playerStatus.speed + speed,
         player.nickname,
         player.characterClass,
       );
-      player.hp = player.maxHp + hp;
-      player.mp = player.maxMp + mp;
+      playerStatus.hp = playerStatus.maxHp + hp;
+      playerStatus.mp = playerStatus.maxMp + mp;
 
       const message = ` 경험치 ${monsterExp}를 획득했습니다!\n
-      레벨 ${level}이 되었습니다!\n
+      레벨 ${playerLevel + 1}이 되었습니다!\n
       최대체력 +${hp} , 최대마나 +${mp}가 증가되었습니다!\n
       공격력 +${attack} , 방어력 +${defense} , 마력 +${magic} , 스피드 +${speed}이 증가되었습니다!\n`;
 
@@ -54,8 +56,8 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       player.experience += monsterExp;
       await updateCharacterCurStatus(
         player.experience,
-        player.hp,
-        player.mp,
+        playerStatus.hp,
+        playerStatus.mp,
         player.nickname,
         player.characterClass,
       );
