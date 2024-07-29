@@ -21,7 +21,7 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
   // S_BattleLog 패킷
   const battleLog = {
     msg: msg[attackType],
-    typingAnimation: true,
+    typingAnimation: false,
     btns,
   };
   const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });

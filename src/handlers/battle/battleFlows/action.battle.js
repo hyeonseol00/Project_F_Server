@@ -30,7 +30,6 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
         dungeon.battleSceneStatus = config.sceneStatus.target;
         dungeon.currentAttackType = config.attackType.normal;
       }
-
       break;
     case config.actionButton.skill:
       const playerMp = playerStatInfo.mp;
@@ -39,7 +38,7 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       btns.push({ msg: '취소', enable: true });
       const skillBattleLog = {
         msg: '스킬 타입을 선택하세요!',
-        typingAnimation: true,
+        typingAnimation: false,
         btns,
       };
 
