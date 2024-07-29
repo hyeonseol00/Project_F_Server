@@ -49,6 +49,11 @@ class User {
     this.rot = rot;
     this.lastUpdateTime = Date.now();
   }
+
+  updateLevel(level, experience) {
+    this.level = level;
+    this.experience = experience;
+  }
 }
 
 export default User;

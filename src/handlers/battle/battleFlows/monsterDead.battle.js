@@ -17,6 +17,7 @@ export default function monsterDeadScene(responseCode, dungeon, socket) {
       socket.write(responseBattleLog);
 
       dungeon.battleSceneStatus = config.sceneStatus.getExp;
+
     } else {
       switch (dungeon.currentAttackType) {
         case config.attackType.normal:

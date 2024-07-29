@@ -13,7 +13,7 @@ import gameOverWinScene from './battleFlows/gameOverWin.battle.js';
 import gameOverLoseScene from './battleFlows/gameOverLose.battle.js';
 import getExpScene from './battleFlows/getExp.battle.js';
 
-const battleResponseHandler = ({ socket, payload }) => {
+const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
@@ -44,7 +44,7 @@ const battleResponseHandler = ({ socket, payload }) => {
       monsterDeadScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.getExp:
-      getExpScene(responseCode, dungeon, socket);
+      await getExpScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.gameOverWin:
       gameOverWinScene(responseCode, dungeon, socket);
