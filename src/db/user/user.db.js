@@ -102,7 +102,7 @@ export const updateCharacterStatus = async (
   defense,
   magic,
   speed,
-  userId,
+  characterName,
   jobId,
 ) => {
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
@@ -116,7 +116,17 @@ export const updateCharacterStatus = async (
     defense,
     magic,
     speed,
-    userId,
+    characterName,
+    jobId,
+  ]);
+};
+
+export const updateCharacterCurStatus = async (experience, curHp, curMp, characterName, jobId) => {
+  await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_CUR_STATUS, [
+    experience,
+    curHp,
+    curMp,
+    characterName,
     jobId,
   ]);
 };
