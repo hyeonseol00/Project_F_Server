@@ -1,15 +1,12 @@
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function targetMonsterScene(
-  responseCode,
-  dungeon,
-  socket,
-  attackType = config.attackType.normal,
-) {
+export default function targetMonsterScene(responseCode, dungeon, socket) {
   const btns = [{ msg: '다음', enable: true }];
 
   const player = dungeon.player;
+  const playerStatInfo = player.playerInfo.statInfo;
+  const attackType = dungeon.currentAttackType;
   const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
   const targetMonster = dungeon.monsters[targetMonsterIdx[attackType]];
   const msg = [
@@ -18,7 +15,7 @@ export default function targetMonsterScene(
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
   const effectCode = [player.effectCode.normal, player.effectCode.single, player.effectCode.wide];
-  const decreaseHp = [player.attack, player.magic, player.magic];
+  const decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
   const decreaseMp = [0, 25, 50];
 
   // S_BattleLog 패킷
@@ -31,14 +28,16 @@ export default function targetMonsterScene(
   socket.write(responseBattleLog);
 
   // S_SetPlayerMp 패킷
-  player.mp -= decreaseMp[attackType];
-  const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
+  playerStatInfo.mp -= decreaseMp[attackType];
+  const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', {
+    mp: playerStatInfo.mp,
+  });
   socket.write(responseSetPlayerMp);
 
   // S_PlayerAction 패킷
   const actionSet = {
     animCode: 0,
-    effectCode: effectCode[attackType] + player.level - 1,
+    effectCode: effectCode[attackType],
   };
   const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
     targetMonsterIdx: targetMonsterIdx[attackType],
@@ -68,4 +67,5 @@ export default function targetMonsterScene(
     dungeon.setTargetIdx(responseCode - 1);
   }
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
+  dungeon.currentAttackType = config.attackType.normal;
 }
