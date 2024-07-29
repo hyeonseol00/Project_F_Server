@@ -32,7 +32,18 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const { curHp, curMp, attack, defense, magic, speed, characterLevel, experience } = character;
+    const {
+      curHp,
+      maxHp,
+      curMp,
+      maxMp,
+      attack,
+      defense,
+      magic,
+      speed,
+      characterLevel,
+      experience,
+    } = character;
     const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
@@ -45,7 +56,9 @@ const enterTownHandler = async ({ socket, payload }) => {
           nickname,
           characterClass,
           curHp,
+          maxHp,
           curMp,
+          maxMp,
           attack,
           defense,
           magic,

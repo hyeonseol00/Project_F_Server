@@ -1,7 +1,7 @@
 import { getLevelTable } from '../../../db/game/game.db.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
-import switchToGameOverWin from './switchScene/gameOverWin.switch.js';
 import { updateCharacterStatus } from '../../../db/user/user.db.js';
+import { config } from '../../../config/config.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
@@ -26,10 +26,10 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       await updateCharacterStatus(
         levelId,
         playerExp - requiredExp,
-        player.hp + hp,
-        player.hp + hp,
-        player.mp + mp,
-        player.mp + mp,
+        player.maxHp + hp,
+        player.maxHp + hp,
+        player.maxMp + mp,
+        player.maxMp + mp,
         player.attack + attack,
         player.defense + defense,
         player.magic + magic,
@@ -37,8 +37,8 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         player.playerId,
         player.characterClass,
       );
-      player.hp = player.hp + hp;
-      player.mp = player.mp + mp;
+      player.hp = player.maxHp + hp;
+      player.mp = player.maxMp + mp;
 
       const message = ` 경험치 ${monsterExp}를 획득했습니다!\n 
       공격력 +${attack} , 방어력 +${defense} , 마력 +${magic} , 스피드 +${speed}이 증가되었습니다!\n
@@ -50,11 +50,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         typingAnimation: true,
         btns,
       };
-      const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
-
-      socket.write(responseBattleLog);
     } else {
-      console.log('Game Over');
       battleLog = {
         msg: `경험치 ${monsterExp}를 획득했습니다!`,
         typingAnimation: true,
@@ -66,6 +62,6 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
     socket.write(responseBattleLog);
 
-    switchToGameOverWin(dungeon, socket);
+    dungeon.battleSceneStatus = config.sceneStatus.goToTown;
   }
 }

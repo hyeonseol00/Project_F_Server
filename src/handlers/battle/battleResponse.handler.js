@@ -12,12 +12,14 @@ import monsterDeadScene from './battleFlows/monsterDead.battle.js';
 import gameOverWinScene from './battleFlows/gameOverWin.battle.js';
 import gameOverLoseScene from './battleFlows/gameOverLose.battle.js';
 import getExpScene from './battleFlows/getExp.battle.js';
+import goToTownScene from './battleFlows/goToTown.battle.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
-  console.log('#### : ', dungeon.battleSceneStatus);
+  console.log('#### : ', responseCode);
+  console.log('@@@@ : ', dungeon.battleSceneStatus);
   switch (dungeon.battleSceneStatus) {
     case config.sceneStatus.message:
       messageWindowScene(responseCode, dungeon, socket);
@@ -44,8 +46,10 @@ const battleResponseHandler = async ({ socket, payload }) => {
       monsterDeadScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.getExp:
-      console.log('@@@@ : ', responseCode);
       await getExpScene(responseCode, dungeon, socket);
+      break;
+    case config.sceneStatus.getExp:
+      goToTownScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.gameOverWin:
       gameOverWinScene(responseCode, dungeon, socket);

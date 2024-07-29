@@ -7,7 +7,9 @@ class User {
     characterClass,
     socket,
     hp,
+    maxHp,
     mp,
+    maxMp,
     attack,
     defense,
     magic,
@@ -27,7 +29,9 @@ class User {
     this.battleSceneStatus = config.sceneStatus.message;
 
     this.hp = hp;
+    this.maxHp = maxHp;
     this.mp = mp;
+    this.maxMp = maxMp;
     this.attack = attack;
     this.defense = defense;
     this.magic = magic;
