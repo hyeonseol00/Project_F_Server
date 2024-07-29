@@ -20,8 +20,10 @@ const chatHandler = async ({ socket, payload }) => {
       const { commandType, message } = parseCommand(chatMsg);
 
       // 해당 커멘트에 맞는 핸들러를 가져오고 실행합니다.
-      const chatHandler =  chatCommands.get(commandType);
-      chatHandler(user, message);
+      const chatCommandHandler =  chatCommands.get(commandType);
+      chatCommandHandler(user, message);
+
+      console.log(chatCommandHandler);
     }
     else{
       // 전체 채팅 실행.
@@ -36,7 +38,7 @@ const chatHandler = async ({ socket, payload }) => {
 function parseCommand(command) {
 
   const firstSpaceIdx = command.indexOf(' ');
-  const commandType = command.substring(1, firstSpaceIdx).toLowerCase(); // /w, /team 같은 명령어 파싱
+  const commandType = command.substring(1, firstSpaceIdx); // /w, /team 같은 명령어 파싱
   const message = command.substring(firstSpaceIdx + 1);                  
   
   return { commandType, message }; 

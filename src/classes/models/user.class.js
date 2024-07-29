@@ -49,6 +49,11 @@ class User {
     this.rot = rot;
     this.lastUpdateTime = Date.now();
   }
+
+  setTeam(isOwner, teamId) {
+    this.isOwner = isOwner;
+    this.teamId = teamId;
+  }
 }
 
 export default User;
