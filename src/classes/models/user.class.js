@@ -17,6 +17,7 @@ class User {
     normalCode,
     singleSkillCode,
     wideSkillCode,
+    items,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
@@ -34,6 +35,7 @@ class User {
     this.speed = speed;
     this.level = level;
     this.experience = experience;
+    this.items = items;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }

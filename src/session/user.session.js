@@ -17,6 +17,7 @@ export const addUser = (
   baseEffect,
   singleEffect,
   wideEffect,
+  items,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -34,6 +35,7 @@ export const addUser = (
     baseEffect,
     singleEffect,
     wideEffect,
+    items,
   );
   userSessions.push(user);
   return user;
