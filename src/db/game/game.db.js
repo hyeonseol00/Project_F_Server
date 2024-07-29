@@ -23,3 +23,9 @@ export const getMonsterEffect = async (monsterId) => {
 
   return toCamelCase(rows[0]).monsterEffect;
 };
+
+export const getLevelTable = async (level) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_LEVEL_TABLE, [level]);
+
+  return toCamelCase(rows[0]);
+};

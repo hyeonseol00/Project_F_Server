@@ -35,11 +35,19 @@ export default function targetMonsterScene(
   const responseSetPlayerMp = createResponse('response', 'S_SetPlayerMp', { mp: player.mp });
   socket.write(responseSetPlayerMp);
 
+  let changeEffect;
+  if (attackType === 2) {
+    changeEffect = player.level > 5 ? (player.level > 10 ? (player.level > 15 ? 3 : 2) : 1) : 0;
+  } else {
+    changeEffect = player.level > 10 ? 1 : 0;
+  }
+
   // S_PlayerAction 패킷
   const actionSet = {
     animCode: 0,
-    effectCode: effectCode[attackType] + player.level - 1,
+    effectCode: effectCode[attackType] + changeEffect,
   };
+
   const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
     targetMonsterIdx: targetMonsterIdx[attackType],
     actionSet,

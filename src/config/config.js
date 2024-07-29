@@ -16,6 +16,8 @@ import {
   SCENE_MONSTER_DEAD,
   SCENE_GAME_OVER_WIN,
   SCENE_GAME_OVER_LOSE,
+  SCENE_GET_EXP,
+  SCENE_GO_TO_TOWN,
 } from '../constants/battle/battleSceneStatus.js';
 import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
 import {
@@ -91,6 +93,8 @@ export const config = {
     skill: SCENE_CHOOSE_SKILL_TYPE,
     targetSkill: SCENE_CHOOSE_TARGET_WITH_SKILL,
     monsterDead: SCENE_MONSTER_DEAD,
+    getExp: SCENE_GET_EXP,
+    goToTown: SCENE_GO_TO_TOWN,
 
     gameOverWin: SCENE_GAME_OVER_WIN,
     gameOverLose: SCENE_GAME_OVER_LOSE,
