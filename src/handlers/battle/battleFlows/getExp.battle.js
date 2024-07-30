@@ -13,7 +13,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     const playerLevel = playerStatus.level; // 유저의 현재 레벨
 
     let levelTable;
-    if (playerLevel > config.maxLevel) {
+    if (playerLevel < config.maxLevel) {
       levelTable = getLevelById(playerLevel + 1);
     } else {
       levelTable = getLevelById(1);
