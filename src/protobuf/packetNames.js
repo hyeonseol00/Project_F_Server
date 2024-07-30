@@ -7,6 +7,8 @@ export const packetNames = {
     S_Chat: 'response.S_Chat',
     S_EnterDungeon: 'response.S_EnterDungeon',
     S_Despawn: 'response.S_Despawn',
+    S_Register: 'response.S_Register',
+    S_LogIn: 'response.S_LogIn',
     S_LeaveDungeon: 'response.S_LeaveDungeon',
     S_ScreenText: 'response.S_ScreenText',
     S_ScreenDone: 'response.S_ScreenDone',
@@ -23,6 +25,8 @@ export const packetNames = {
     C_Animation: 'town.C_Animation',
     C_Chat: 'town.C_Chat',
     C_EnterDungeon: 'town.C_EnterDungeon',
+    C_Register: 'town.C_Register',
+    C_LogIn: 'town.C_LogIn',
   },
   battle: {
     C_PlayerResponse: 'battle.C_PlayerResponse',
