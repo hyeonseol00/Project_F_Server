@@ -1,10 +1,13 @@
-import level from "../classes/models/level.class";
-import { levelTable } from "./sessions";
+import { getLevelTable } from "../db/game/game.db.js";
+import { levelTable } from "./sessions.js";
 
 export const getLevelById = (levelId) => {
   return levelTable.find((level) => level.levelId === levelId);
 };
 
-export const addLevel = (level) => {
+export const loadLevelTable = async () => {
+  const levelComponet = await getLevelTable();
+  levelComponet.forEach((level) => {
     levelTable.push(level);
+  });
 };
