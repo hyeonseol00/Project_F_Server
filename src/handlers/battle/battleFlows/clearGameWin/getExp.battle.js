@@ -1,7 +1,7 @@
-import { createResponse } from '../../../utils/response/createResponse.js';
-import { updateCharacterCurStatus, updateCharacterStatus } from '../../../db/user/user.db.js';
-import { config } from '../../../config/config.js';
-import { getLevelById } from '../../../session/level.session.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import { updateCharacterCurStatus, updateCharacterStatus } from '../../../../db/user/user.db.js';
+import { config } from '../../../../config/config.js';
+import { getLevelById } from '../../../../session/level.session.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
