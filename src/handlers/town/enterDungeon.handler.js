@@ -19,7 +19,8 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const gameSession = getGameSession(config.session.townId);
     const player = gameSession.getUser(user.playerId);
-    const dungeon = addDungeon(nickname, player);
+    const dungeon = addDungeon(nickname, player, dungeonCode);
+
     const characterClass = user.characterClass;
 
     const userInDB = await findUserByUsername(nickname);
