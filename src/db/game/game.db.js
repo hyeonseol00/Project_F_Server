@@ -24,6 +24,7 @@ export const getMonsterEffect = async (monsterId) => {
   return toCamelCase(rows[0]).monsterEffect;
 };
 
+
 export const getPotionItems = async () => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_POTION_ITEMS, []);
 
@@ -36,8 +37,8 @@ export const getPotionItem = async (potionId) => {
   return toCamelCase(rows[0]);
 };
 
-export const getLevelTable = async (level) => {
-  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_LEVEL_TABLE, [level]);
-
-  return toCamelCase(rows[0]);
+export const getLevelTable = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_LEVEL_TABLE , []);
+  
+  return toCamelCase(rows);
 };
