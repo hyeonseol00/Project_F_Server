@@ -4,36 +4,24 @@ import { getRegistCount } from './GaApplication.session.js';
 
 export const addUser = (
   socket,
-  playerId,
+  nickname,
   characterClass,
-  hp,
-  mp,
-  attack,
-  defense,
-  magic,
-  speed,
-  level,
   experience,
   baseEffect,
   singleEffect,
   wideEffect,
+  items,
 ) => {
   const user = new User(
     getRegistCount(),
-    playerId,
+    nickname,
     characterClass,
     socket,
-    hp,
-    mp,
-    attack,
-    defense,
-    magic,
-    speed,
-    level,
     experience,
     baseEffect,
     singleEffect,
     wideEffect,
+    items,
   );
   userSessions.push(user);
   return user;

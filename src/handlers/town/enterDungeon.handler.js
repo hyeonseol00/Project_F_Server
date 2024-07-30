@@ -31,7 +31,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       const monsterDB = await findMonsterByMonsters(
         monsters[Math.floor(Math.random() * monsters.length)].monsterId,
       );
-      const { monsterId, monsterHp, monsterAttack, monsterName } = monsterDB;
+      const { monsterId, monsterHp, monsterAttack, monsterName, monsterExp } = monsterDB;
       const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
@@ -42,7 +42,15 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       };
       monsterStatus.push(monster);
 
-      dungeon.addMonster(i, monsterId, monsterHp, monsterAttack, monsterName, effectCode);
+      dungeon.addMonster(
+        i,
+        monsterId,
+        monsterHp,
+        monsterAttack,
+        monsterName,
+        effectCode,
+        monsterExp,
+      );
     }
 
     const dungeonInfo = {

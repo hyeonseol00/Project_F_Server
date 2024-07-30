@@ -7,11 +7,11 @@ export default function chooseSkillTypeScene(responseCode, dungeon, socket) {
   switch (responseCode) {
     case config.skillButton.single:
       dungeon.currentAttackType = config.attackType.single;
-      chooseActionScene(responseCode, dungeon, socket, config.attackType.single);
+      chooseActionScene(responseCode, dungeon, socket);
       break;
     case config.skillButton.wide:
       dungeon.currentAttackType = config.attackType.wide;
-      targetMonsterScene(responseCode, dungeon, socket, config.attackType.wide);
+      targetMonsterScene(responseCode, dungeon, socket);
       break;
     case config.skillButton.cancel:
       switchToActionScene(dungeon, socket);
