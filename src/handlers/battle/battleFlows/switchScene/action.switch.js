@@ -8,7 +8,8 @@ export default function switchToActionScene(dungeon, socket) {
   btns.push({ msg: '일반 공격', enable: true });
   btns.push({ msg: '스킬 사용', enable: true });
   btns.push({ msg: '도망치기', enable: true });
-  btns.push({ msg: '아이템 사용', enable: player.items.length !== 0 });
+  btns.push({ msg: '아이템 사용', enable: player.getItemsAccount() !== 0 });
+  console.log(player.getItemsAccount());
 
   const battleLog = {
     msg: '무엇을 할까요?',
