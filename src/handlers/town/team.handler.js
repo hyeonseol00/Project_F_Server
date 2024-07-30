@@ -143,34 +143,84 @@ export const leaveTeamHandler = (sender, message) => {
   }
 };
 
+
+
 export const inviteTeamHandler = (sender, message) => {
   const invitedNickname = message;
-
   const targetUser = getUserByNickname(invitedNickname);
+  
 
-  // 예외처리: 찾는 유저가 없는 경우
-  if (notFoundUser(sender, targetUser)) {
+  console.log(`targetUser: ${targetUser.nickname}`);
+
+  // 예외처리: 찾는 유저가 없는 경우, 유저가 이미 초대를 받은 경우
+  if (notFoundUser(sender, targetUser) || targetUser.invitedTeams?.includes(sender.teamId)) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: `[System] This user has already been invited or doesn't exist.`,
+    });
+    sender.socket.write(response);
     return;
   }
 
+  // 초대 목록이 없는 경우 초기화합니다.
+  if (!targetUser.invitedTeams) {
+    targetUser.invitedTeams = [];
+  }
+  targetUser.invitedTeams.push(sender.teamId);
+  
+  console.log(`invitedTeams: ${targetUser.invitedTeams}`);
+
+  
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: `${sender.nickname} invite you in team.`,
+    chatMsg: `${sender.nickname} invite you to team.`,
   });
   targetUser.socket.write(response);
 }
 
-// 아직 구현 안했음. 그냥 샘플임 ㅇㅇ
 export const acceptTeamHandler = (sender, message) => {
+  const teamId = message;
+
+  // 예외처리: 이미 팀에 속해 있는 경우, 초대받지 않은 경우
+  if (sender.teamId || !sender.invitedTeams?.includes(teamId)) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: '[System] You either already have a team or were not invited to this team.',
+    });
+    sender.socket.write(response);
+    return;
+  }
+
+  // 팀에 합류
   sender.teamId = teamId;
-  const acceptTeamMessage = `Accept team: ${teamId}`;
   sender.isOwner = false;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: acceptTeamMessage,
-  }); 
+    chatMsg: '[System] Team join successfully!',
+  });
   sender.socket.write(response);
+
+  // 초대 목록에서 제거합니다.
+  sender.invitedTeams = sender.invitedTeams.filter(id => id !== teamId);
+
+  // 팀 멤버들에게 본인이 들어왔다는 메시지를 전송합니다.
+  const teamMembers = getAllUsersInTeam(teamId);
+  for (const member of teamMembers) {
+    const joinResponse = createResponse('response', 'S_Chat', {
+      playerId: member.playerId,
+      chatMsg: `[System] ${sender.nickname} joined your team!`,
+    });
+    member.socket.write(joinResponse);
+  }
 }
+  //   const acceptTeamMessage = `Accept team: ${teamId}`;
+//   sender.isOwner = false;
+//   const response = createResponse('response', 'S_Chat', {
+//     playerId: sender.playerId,
+//     chatMsg: acceptTeamMessage,
+//   }); 
+//   sender.socket.write(response);
+// }
 
 export const kickMemberHandler = (sender, message) => {
   const nickname = message;
