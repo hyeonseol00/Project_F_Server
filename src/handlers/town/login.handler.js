@@ -3,6 +3,7 @@ import { handleError } from '../../utils/error/errorHandler.js';
 const loginHandler = async ({ socket, payload }) => {
   try {
     const { nickname, password } = payload;
+    let response;
     let flag = true;
 
     // DB에서 user, character 정보 가져오기
