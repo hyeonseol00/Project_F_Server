@@ -9,20 +9,24 @@ const registerHandler = async ({ socket, payload }) => {
     let message;
     let flag = true;
 
-    // DB에서 nickname 중복 체크
-    if (nickname !== null) {
+    if (
+      nickname === null ||
+      nickname.trim() === '' ||
+      password === null ||
+      password.trim() === ''
+    ) {
+      message = '아이디와 비밀번호를 모두 입력하세요.';
+      flag = false;
+    } else {
       const userInDB = await findUserByUsername(nickname);
-      if (!userInDB) {
-        await insertUser(nickname, password);
-      }
-      // DB 에 중복된 nickname 이 있다.
-      else {
+      if (userInDB) {
         flag = false;
+        message = '중복된 아이디입니다.';
       }
 
       if (nickname.trim().length === 0) {
         flag = false;
-        message = '아이디를 입력하세요.';
+        message = '공백은 입력할 수 없습니다.';
       } else if (nickname.length < 2) {
         flag = false;
         message = '아이디는 2자 이상으로 입력하세요.';
@@ -30,31 +34,26 @@ const registerHandler = async ({ socket, payload }) => {
         flag = false;
         message = '아이디는 10자 이하로 입력하세요.';
       }
-    } else if (password !== null) {
+
       if (password.trim().length === 0) {
         flag = false;
-        message = '비밀번호를 입력하세요.';
+        message = '공백은 입력할 수 없습니다.';
       } else if (password.length < 6) {
         flag = false;
         message = '비밀번호는 6자 이상으로 입력하세요.';
       }
-    } else {
-      flag = false;
-      message = '아이디, 비밀번호를 입력하세요.';
+
+      if (flag) {
+        await insertUser(nickname, password);
+        message = '회원가입을 성공했습니다.';
+      }
     }
 
     // 성공시 response 전달
-    if (flag) {
-      response = createResponse('response', 'S_Register', {
-        success: true,
-        message: '회원가입을 성공했습니다.',
-      });
-    } else {
-      response = createResponse('response', 'S_Register', {
-        success: false,
-        message: message,
-      });
-    }
+    response = createResponse('response', 'S_Register', {
+      success: flag,
+      message: message,
+    });
 
     socket.write(response);
   } catch (err) {

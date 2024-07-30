@@ -7,29 +7,32 @@ const loginHandler = async ({ socket, payload }) => {
     const { nickname, password } = payload;
     let response;
     let flag = true;
+    let message;
 
     // DB에서 user, character 정보 가져오기
-    if (nickname !== null) {
+    if (
+      nickname === null ||
+      nickname.trim() === '' ||
+      password === null ||
+      password.trim() === ''
+    ) {
+      flag = false;
+      message = '아이디와 비밀번호를 모두 입력하세요.';
+    } else {
       const userInDB = await findUserByUsername(nickname);
       if (!userInDB || userInDB.password !== password) {
         flag = false;
+        message = '아이디 또는 비밀번호가 틀렸습니다.';
+      } else {
+        message = '로그인을 성공했습니다.';
       }
-    } else if (password !== null) {
-      flag = false;
     }
 
-    // 성공시 response 전달
-    if (flag) {
-      response = createResponse('response', 'S_LogIn', {
-        success: true,
-        message: '로그인을 성공했습니다.',
-      });
-    } else {
-      response = createResponse('response', 'S_LogIn', {
-        success: false,
-        message: '아이디 또는 비밀번호가 틀렸습니다.',
-      });
-    }
+    // 응답 생성
+    response = createResponse('response', 'S_LogIn', {
+      success: flag,
+      message: message,
+    });
 
     socket.write(response);
   } catch (err) {
