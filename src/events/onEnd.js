@@ -8,7 +8,7 @@ export const onEnd = (socket) => async () => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
 
-  if (gameSession.getUser(user.playerId)) {
+  if (gameSession.getUser(user)) {
     gameSession.removeUser(user.playerId);
   }
   removeDungeon(user.nickname);
