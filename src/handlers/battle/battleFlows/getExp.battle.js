@@ -1,7 +1,7 @@
-import { getLevelTable } from '../../../db/game/game.db.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { updateCharacterCurStatus, updateCharacterStatus } from '../../../db/user/user.db.js';
 import { config } from '../../../config/config.js';
+import { getLevelById } from '../../../session/level.session.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
@@ -14,9 +14,9 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
     let levelTable;
     if (playerLevel > config.maxLevel) {
-      levelTable = await getLevelTable(playerLevel + 1);
+      levelTable = getLevelById(playerLevel + 1);
     } else {
-      levelTable = await getLevelTable(1);
+      levelTable = getLevelById(1);
     }
     const { levelId, requiredExp, hp, mp, attack, defense, magic, speed, skillPoint } = levelTable;
 
