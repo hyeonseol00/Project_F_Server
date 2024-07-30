@@ -11,7 +11,9 @@ export const onError = (socket) => (err) => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
 
-  gameSession.removeUser(user.playerId);
+  if (gameSession.getUser(user.playerId)) {
+    gameSession.removeUser(user.playerId);
+  }
   removeDungeon(user.nickname);
 
   console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
