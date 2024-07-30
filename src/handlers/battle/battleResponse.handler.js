@@ -15,6 +15,8 @@ import selectItemScene from './battleFlows/selectItem.battle.js';
 import usingItemScene from './battleFlows/usingItem.battle.js';
 import getExpScene from './battleFlows/getExp.battle.js';
 import goToTownScene from './battleFlows/goToTown.battle.js';
+import chooseItemScene from './battleFlows/clearGame/chooseItem.clearGame.js';
+import dropItemScene from './battleFlows/clearGame/dropItem.clearGame.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
@@ -66,6 +68,12 @@ const battleResponseHandler = async ({ socket, payload }) => {
       break;
     case config.sceneStatus.itemUsing:
       usingItemScene(responseCode, dungeon, socket);
+      break;
+    case config.sceneStatus.itemChoose:
+      chooseItemScene(responseCode, dungeon, socket);
+      break;
+    case config.sceneStatus.itemDrop:
+      dropItemScene(responseCode, dungeon, socket);
       break;
   }
 };

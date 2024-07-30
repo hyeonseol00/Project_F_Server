@@ -10,6 +10,8 @@ export const SCENE_ITEM_SELECT = 8;
 export const SCENE_ITEM_USING = 9;
 export const SCENE_GET_EXP = 10;
 export const SCENE_GO_TO_TOWN = 11;
+export const SCENE_ITEM_CHOOSE = 12;
+export const SCENE_ITEM_DROP = 13;
 
 export const SCENE_GAME_OVER_WIN = 51;
 export const SCENE_GAME_OVER_LOSE = 52;

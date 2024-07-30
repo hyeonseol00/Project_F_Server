@@ -21,6 +21,8 @@ import {
   SCENE_GO_TO_TOWN,
   SCENE_ITEM_SELECT,
   SCENE_ITEM_USING,
+  SCENE_ITEM_DROP,
+  SCENE_ITEM_CHOOSE,
 } from '../constants/battle/battleSceneStatus.js';
 import { BUTTON_CONFIRM, BUTTON_CANCEL } from '../constants/battle/confirmSceneButton.js';
 import {
@@ -101,6 +103,9 @@ export const config = {
 
     itemSelect: SCENE_ITEM_SELECT,
     itemUsing: SCENE_ITEM_USING,
+    itemChoose: SCENE_ITEM_CHOOSE,
+    itemDrop: SCENE_ITEM_DROP,
+
     gameOverWin: SCENE_GAME_OVER_WIN,
     gameOverLose: SCENE_GAME_OVER_LOSE,
 

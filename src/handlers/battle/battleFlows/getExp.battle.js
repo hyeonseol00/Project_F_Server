@@ -79,6 +79,6 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
     socket.write(responseBattleLog);
 
-    dungeon.battleSceneStatus = config.sceneStatus.goToTown;
+    dungeon.battleSceneStatus = config.sceneStatus.itemChoose;
   }
 }
