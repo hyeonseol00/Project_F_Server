@@ -1,4 +1,4 @@
-import { handleError } from '../../utils/error/errorHandler';
+import { handleError } from '../../utils/error/errorHandler.js';
 
 const loginHandler = async ({ socket, payload }) => {
   try {
