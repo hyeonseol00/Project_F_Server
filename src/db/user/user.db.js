@@ -8,8 +8,8 @@ export const findUserByUsername = async (username) => {
   return toCamelCase(rows[0]);
 };
 
-export const insertUserByUsername = async (username) => {
-  await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_USER, [username]);
+export const insertUser = async (username, password) => {
+  await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_USER, [username, password]);
 };
 
 export const findCharacterByUserIdAndClass = async (userId, jobId) => {

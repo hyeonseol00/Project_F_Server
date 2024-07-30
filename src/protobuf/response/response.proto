@@ -44,6 +44,16 @@ message S_Despawn {
   repeated int32 playerIds = 2;
 }
 
+// 회원가입
+message S_Register{
+  bool success = 1;
+}
+
+// 로그인
+message S_LogIn{
+  bool success = 1;
+}
+
 
 // 던전
 // 던전 나가기

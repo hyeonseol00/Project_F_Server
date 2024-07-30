@@ -24,4 +24,8 @@ export const PACKET_TYPE = {
   S_SetMonsterHp: 23,
   S_PlayerAction: 24,
   S_MonsterAction: 25,
+  C_Register: 26,
+  S_Register: 27,
+  C_LogIn: 28,
+  S_LogIn: 29,
 };

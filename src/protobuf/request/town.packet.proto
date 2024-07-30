@@ -29,3 +29,15 @@ message C_Chat{
 message C_EnterDungeon{
   int32 dungeonCode = 1;
 }
+
+// 회원가입
+message C_Register{
+  string nickname = 1;
+  string password = 2;
+}
+
+// 로그인
+message C_LogIn{
+  string nickname = 1;
+  string password = 2;
+}
