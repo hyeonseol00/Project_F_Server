@@ -40,3 +40,16 @@ export const getUserById = (id) => {
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
 };
+export const getUserByNickname = (nickname) => {
+  return userSessions.find((user) => user.nickname === nickname);
+};
+
+export const getAllUsersInTeam = (teamId) => {
+  return userSessions.filter((user) => user.teamId === teamId);
+};
+
+export const getAllUsers = () => {
+  return userSessions;
+};
+
+

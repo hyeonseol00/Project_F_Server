@@ -35,6 +35,10 @@ class User {
     this.lastUpdateTime = Date.now();
   }
 
+  setTeam(isOwner, teamId) {
+    this.isOwner = isOwner;
+    this.teamId = teamId;
+  ]
   updateLevel(level, experience) {
     this.level = level;
     this.experience = experience;
