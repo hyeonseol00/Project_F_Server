@@ -1,5 +1,5 @@
-import { sendDirectMessage } from './town/chatCommand.handler.js';
 import {
+  sendDirectMessage, 
   sendMessageToTeam,
   createTeamHandler,
   joinTeamHandler,
@@ -7,7 +7,8 @@ import {
   inviteTeamHandler,
   acceptTeamHandler,
   kickMemberHandler,
-} from './town/team.handler.js';
+} from './town/chatCommand.handler.js';
+
 
 const chatCommands = new Map([
   ['w', sendDirectMessage],
