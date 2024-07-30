@@ -9,8 +9,12 @@ const loginHandler = async ({ socket, payload }) => {
     let flag = true;
 
     // DB에서 user, character 정보 가져오기
-    const userInDB = await findUserByUsername(nickname);
-    if (!userInDB || userInDB.password !== password) {
+    if (nickname !== null) {
+      const userInDB = await findUserByUsername(nickname);
+      if (!userInDB || userInDB.password !== password) {
+        flag = false;
+      }
+    } else if (password !== null) {
       flag = false;
     }
 

@@ -10,32 +10,37 @@ const registerHandler = async ({ socket, payload }) => {
     let flag = true;
 
     // DB에서 nickname 중복 체크
-    const userInDB = await findUserByUsername(nickname);
-    if (!userInDB) {
-      await insertUser(nickname, password);
-    }
-    // DB 에 중복된 nickname 이 있다.
-    else {
-      flag = false;
-    }
+    if (nickname !== null) {
+      const userInDB = await findUserByUsername(nickname);
+      if (!userInDB) {
+        await insertUser(nickname, password);
+      }
+      // DB 에 중복된 nickname 이 있다.
+      else {
+        flag = false;
+      }
 
-    if (nickname.trim().length === 0) {
+      if (nickname.trim().length === 0) {
+        flag = false;
+        message = '아이디를 입력하세요.';
+      } else if (nickname.length < 2) {
+        flag = false;
+        message = '아이디는 2자 이상으로 입력하세요.';
+      } else if (nickname.length > 10) {
+        flag = false;
+        message = '아이디는 10자 이하로 입력하세요.';
+      }
+    } else if (password !== null) {
+      if (password.trim().length === 0) {
+        flag = false;
+        message = '비밀번호를 입력하세요.';
+      } else if (password.length < 6) {
+        flag = false;
+        message = '비밀번호는 6자 이상으로 입력하세요.';
+      }
+    } else {
       flag = false;
-      message = '아이디를 입력하세요.';
-    } else if (nickname.length < 2) {
-      flag = false;
-      message = '아이디는 2자 이상으로 입력하세요.';
-    } else if (nickname.length > 10) {
-      flag = false;
-      message = '아이디는 10자 이하로 입력하세요.';
-    }
-
-    if (password.trim().length === 0) {
-      flag = false;
-      message = '비밀번호를 입력하세요.';
-    } else if (password.length < 6) {
-      flag = false;
-      message = '비밀번호는 6자 이상으로 입력하세요.';
+      message = '아이디, 비밀번호를 입력하세요.';
     }
 
     // 성공시 response 전달
