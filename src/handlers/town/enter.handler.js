@@ -1,4 +1,7 @@
+import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
+import { getPotionItem } from '../../db/game/game.db.js';
+import { getUserPotionItemsByCharacterId } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
   findUserByUsername,
@@ -32,19 +35,21 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const {
-      curHp,
-      maxHp,
-      curMp,
-      maxMp,
-      attack,
-      defense,
-      magic,
-      speed,
-      characterLevel,
-      experience,
-    } = character;
+    const { experience } = character;
     const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+    const potions = await getUserPotionItemsByCharacterId(character.characterId);
+    const items = [];
+    for (const potion of potions) {
+      const potionInfo = await getPotionItem(potion.itemId);
+      const item = new Item(
+        potionInfo.name,
+        potionInfo.hpHealingAmount,
+        potionInfo.mpHealingAmount,
+        potionInfo.expHealingAmount,
+        potion.quantity,
+      );
+      items.push(item);
+    }
 
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
     // 그렇지 않으면 유저세션, 게임세션에 추가한다.
@@ -55,19 +60,11 @@ const enterTownHandler = async ({ socket, payload }) => {
           socket,
           nickname,
           characterClass,
-          curHp,
-          maxHp,
-          curMp,
-          maxMp,
-          attack,
-          defense,
-          magic,
-          speed,
-          characterLevel,
           experience,
           baseEffect,
           singleEffect,
           wideEffect,
+          items,
         );
     if (!userExist) gameSession.addUser(curUser);
 
