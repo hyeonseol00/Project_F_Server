@@ -1,12 +1,17 @@
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getAllUsersInTeam, getUserByNickname } from '../../session/user.session.js';
 
-const notFoundTeam = (sender) => {
-  // 해당 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
-  if (!sender.teamId) {
+const notFoundTeam = (sender, targetUser = undefined) => {
+  let chatMsg = targetUser
+    ? `[System] ${targetUser.nickname} don't have team...`
+    : `[System] You don't have team...`;
+  targetUser = targetUser || sender;
+
+  // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
+  if (!targetUser.teamId) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] You don't have team...`,
+      chatMsg,
     });
     sender.socket.write(rejectResponse);
 
@@ -16,12 +21,32 @@ const notFoundTeam = (sender) => {
   return false;
 };
 
-const notFoundUser = (sender, targetUser) => {
-  // 해당 유저가 없다면, 해당 사실을 해당 유저에게 전송합니다.
+const alreadyHaveTeam = (sender, targetUser = undefined) => {
+  let chatMsg = targetUser
+    ? `[System] ${targetUser.nickname} have already team...`
+    : `[System] You have already team...`;
+  targetUser = targetUser || sender;
+
+  // 해당 유저가 팀이 있으면, 해당 사실을 해당 유저에게 전송합니다.
+  if (targetUser.teamId) {
+    const rejectResponse = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg,
+    });
+    sender.socket.write(rejectResponse);
+
+    return true;
+  }
+
+  return false;
+};
+
+const notFoundUser = (sender, targetUser = undefined) => {
+  // 해당 유저를 찾을 수 없다면, 해당 사실을 해당 유저에게 전송합니다.
   if (!targetUser) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] This user is not exist...`,
+      chatMsg: `[System] The user cannot be found`,
     });
     sender.socket.write(rejectResponse);
 
@@ -31,12 +56,17 @@ const notFoundUser = (sender, targetUser) => {
   return false;
 };
 
-const existTeam = (sender) => {
-  // 해당 유저가 팀이 있으면, 해당 사실을 해당 유저에게 전송합니다.
-  if (sender.teamId) {
+const notFoundUserInTeam = (sender, targetUser = undefined) => {
+  const teamMembers = getAllUsersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
+  const foundTargetUser = teamMembers
+    .map((member) => member.nickname)
+    .includes(targetUser.nickname);
+
+  // 해당 유저를 찾을 수 없다면, 해당 사실을 해당 유저에게 전송합니다.
+  if (!foundTargetUser) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] You have already team...`,
+      chatMsg: `[System] The user cannot be found in team`,
     });
     sender.socket.write(rejectResponse);
 
@@ -50,6 +80,7 @@ export const sendMessageToTeam = (sender, message) => {
   // 팀 멤버들을 불러옵니다.
   const teamMembers = getAllUsersInTeam(sender.teamId);
 
+  // 예외처리: 1. 팀이 없는 경우
   if (notFoundTeam(sender)) {
     return;
   }
@@ -67,7 +98,8 @@ export const sendMessageToTeam = (sender, message) => {
 export const createTeamHandler = (sender, message) => {
   const teamId = `TeamName ${Date.now()}`;
 
-  if (existTeam(sender)) {
+  // 예외처리: 1. 팀에 이미 들어간 경우
+  if (alreadyHaveTeam(sender)) {
     return;
   }
 
@@ -81,19 +113,22 @@ export const createTeamHandler = (sender, message) => {
 };
 
 export const joinTeamHandler = (sender, message) => {
-
   const nickname = message;
-  const user = getUserByNickname(nickname);
+  const targetUser = getUserByNickname(nickname);
 
-  // 예외처리: 1. 팀에 이미 들어간 경우, 2. 해당 유저가 없거나 팀이 없는 경우
-  if (existTeam(sender) || !notFoundTeam(sender) || notFoundUser(sender, user)) {
+  // 예외처리: 1. 팀에 이미 들어간 경우, 2. 해당 유저가 없는경우, 3. 해당 유저가 팀이 없는 경우
+  if (
+    alreadyHaveTeam(sender) ||
+    notFoundUser(sender, targetUser) ||
+    notFoundTeam(sender, targetUser)
+  ) {
     return;
   }
 
-  const teamMembers = getAllUsersInTeam(user.teamId); // 팀 멤버들을 불러옵니다.
+  const teamMembers = getAllUsersInTeam(targetUser.teamId); // 팀 멤버들을 불러옵니다.
 
   // 본인을 팀에 넣습니다.
-  sender.teamId = user.teamId;
+  sender.teamId = targetUser.teamId;
   sender.isOwner = false;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
@@ -116,10 +151,9 @@ export const leaveTeamHandler = (sender, message) => {
   const teamId = sender.teamId;
 
   // 예외처리: 떠날 팀이 없는 경우
-  if (!existTeam(sender)) {
+  if (notFoundTeam(sender)) {
     return;
   }
-  // ------------------------
 
   // 본인을 팀에서 제외합니다.
   sender.teamId = undefined;
@@ -178,7 +212,7 @@ export const inviteTeamHandler = (sender, message) => {
     chatMsg: `${sender.nickname} invited you to join their team.`,
   });
   targetUser.socket.write(response);
-}
+};
 
 export const acceptTeamHandler = (sender, message) => {
   const teamId = message;
@@ -254,6 +288,15 @@ export const kickMemberHandler = (sender, message) => {
   const nickname = message;
   const targetUser = getUserByNickname(nickname);
 
+  // 예외처리: 1. 팀이 없는 경우, 2. 해당 유저가 없는경우, 3. 해당 유저가 팀에 없는 경우
+  if (
+    notFoundTeam(sender) ||
+    notFoundUser(sender, targetUser) ||
+    notFoundUserInTeam(sender, targetUser)
+  ) {
+    return;
+  }
+
   // 타켓 유저를 팀에서 강퇴합니다.
   targetUser.teamId = undefined;
   targetUser.isOwner = undefined;
@@ -274,4 +317,4 @@ export const kickMemberHandler = (sender, message) => {
     });
     member.socket.write(response);
   }
-}
+};
