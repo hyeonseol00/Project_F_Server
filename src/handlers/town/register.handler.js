@@ -32,6 +32,8 @@ const registerHandler = async ({ socket, payload }) => {
         success: false,
       });
     }
+
+    socket.write(response);
   } catch (err) {
     handleError(socket, err);
   }
