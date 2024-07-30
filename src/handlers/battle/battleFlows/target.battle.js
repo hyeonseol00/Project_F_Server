@@ -58,7 +58,8 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     const monster = dungeon.monsters[monsterIdx];
 
     if (attackType === config.attackType.wide || monster === targetMonster) {
-      monster.hp -= decreaseHp[attackType];
+      monster.hp =
+        monster.hp - decreaseHp[attackType] < 0 ? 0 : monster.hp - decreaseHp[attackType];
 
       const responseSetMonsterHp = createResponse('response', 'S_SetMonsterHp', {
         monsterIdx,
