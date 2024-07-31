@@ -41,7 +41,7 @@ message S_EnterDungeon{
 
 //마을 나가기
 message S_Despawn {
-  repeated int32 playerIds = 2;
+  repeated int32 playerIds = 1;
 }
 
 // 회원가입
