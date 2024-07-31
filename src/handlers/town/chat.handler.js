@@ -66,7 +66,7 @@ function sendGlobalMessage(sender, message) {
 
   const chatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: message,
+    chatMsg: `[All] ${sender.nickname}: ${message}`,
   });
 
   allUsers.forEach(user => {
