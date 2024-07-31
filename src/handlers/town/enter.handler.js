@@ -38,9 +38,10 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    // 소비 아이템 가져오기
-    const { experience, critical, criticalAttack, avoidAbility } = character;
+    const { experience, critical, criticalAttack, avoidAbility, gold } = character;
     const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+
+    // 소비 아이템 가져오기
     const potions = await getUserPotionItemsByCharacterId(character.characterId);
     const userPotions = [];
     for (const potion of potions) {
@@ -92,6 +93,7 @@ const enterTownHandler = async ({ socket, payload }) => {
           critical,
           criticalAttack,
           avoidAbility,
+          gold,
         );
     if (!userExist) gameSession.addUser(curUser);
 

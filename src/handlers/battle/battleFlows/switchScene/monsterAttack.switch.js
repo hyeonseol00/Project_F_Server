@@ -8,8 +8,28 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
-
+  
   if (playerStatInfo.hp <= 0) {
+    const actionSet = {
+      animCode: 3,
+      effectCode: -1,
+    };
+    const monsterAction = createResponse('response', 'S_MonsterAction', {
+      actionMonsterIdx: index - 1 < 0 ? 0 : index - 1,
+      actionSet,
+    });
+    socket.write(monsterAction);
+
+    const playerActionSet = {
+      animCode: 1,
+      effectCode: -1,
+    };
+    const playerAction = createResponse('response', 'S_PlayerAction', {
+      targetMonsterIdx: -1,
+      actionSet: playerActionSet,
+    });
+    socket.write(playerAction);
+
     const btns = [{ msg: '마을로 귀환', enable: true }];
     const deadBattleLog = {
       msg: `플레이어 ${player.nickname}이(가) 사망했습니다!`,
@@ -53,7 +73,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     if (isAvoid <= player.avoidAbility) {
       message = `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!\n ${player.nickname}은(는) ${monster.name}의 공격을 회피했습니다!`;
       finalDamage = 0;
-      effectCode = 0;
+      effectCode = -1;
     }
 
     const battleLog = {
