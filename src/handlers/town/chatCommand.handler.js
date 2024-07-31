@@ -355,4 +355,24 @@ export const kickMemberHandler = (sender, message) => {
     member.socket.write(response);
   }
 };
+// 팀원 리스트 불러오기
+export const sendTeamList = (sender) => {
+  if (!sender.teamId) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: `[System] You don't have a team...`,
+    });
+    sender.socket.write(response);
+    return;
+  }
+
+  const teamMembers = getAllUsersInTeam(sender.teamId);
+  const memberList = teamMembers.map(member => member.nickname).join(', ');
+  const response = createResponse('response', 'S_Chat', {
+    playerId: sender.playerId,
+    chatMsg: `[System] Team members: ${memberList}`,
+  });
+  sender.socket.write(response);
+};
+
 
