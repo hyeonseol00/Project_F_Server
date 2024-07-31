@@ -39,8 +39,8 @@ export default function selectItemScene(responseCode, dungeon, socket) {
   if (msg === `${usedItem.name}을 사용하여\n`) {
     // 회복할 스탯이 없다면
     usedItem.quantity++;
-    if (usedItem.hp) msg = `이미 hp가 가득 찬 상태입니다.        \n`;
-    if (usedItem.mp) msg = `이미 mp가 가득 찬 상태입니다.         \n`;
+    if (usedItem.hp) msg = `이미 hp가 가득 찬 상태입니다.\n`;
+    if (usedItem.mp) msg = `이미 mp가 가득 찬 상태입니다.\n`;
     if (usedItem.hp && usedItem.mp) msg = `이미 hp, mp가 가득 찬 상태입니다.\n`;
   }
 

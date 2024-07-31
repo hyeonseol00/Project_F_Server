@@ -41,3 +41,9 @@ export const getLevelTable = async () => {
 
   return toCamelCase(rows);
 };
+
+export const getDungeonItems = async (dungeonCode) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_DUNGEON_ITEMS, [dungeonCode]);
+
+  return toCamelCase(rows);
+};

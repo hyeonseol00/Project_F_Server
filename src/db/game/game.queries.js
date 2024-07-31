@@ -5,4 +5,5 @@ export const SQL_GAME_QUERIES = {
   GET_POTION_ITEMS: 'SELECT * FROM potion_items',
   GET_POTION_ITEM: 'SELECT * FROM potion_items WHERE potion_id = ?',
   GET_LEVEL_TABLE: 'SELECT * FROM Levels',
+  GET_DUNGEON_ITEMS: 'SELECT * FROM Dungeon_Items WHERE dungeon_id = ?',
 };

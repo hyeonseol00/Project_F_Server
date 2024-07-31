@@ -39,9 +39,27 @@ class User {
     this.isOwner = isOwner;
     this.teamId = teamId;
   }
+
   updateLevel(level, experience) {
     this.level = level;
     this.experience = experience;
+  }
+
+  getItemIdx(name) {
+    for (const itemIdx in this.items) {
+      if (this.items[itemIdx].name === name) {
+        return itemIdx;
+      }
+    }
+    return -1;
+  }
+
+  getItemsAccount() {
+    let count = 0;
+    for (const item of this.items) {
+      count += item.quantity;
+    }
+    return count;
   }
 }
 
