@@ -16,10 +16,9 @@ export default function switchToMonsterDeadScene(dungeon, socket) {
     monster.isDead = true;
 
     //몬스터 죽는 모션 구현
-    const effectCode = monster.effectCode;
     const actionSet = {
       animCode: 4,
-      effectCode,
+      effectCode: 0,
     };
     const monsterAction = createResponse('response', 'S_MonsterAction', {
       actionMonsterIdx: index,
