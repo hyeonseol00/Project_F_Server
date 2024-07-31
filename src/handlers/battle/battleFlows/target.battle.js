@@ -20,7 +20,12 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
 
   const isCritical = Math.floor(Math.random() * 101);
   if (isCritical <= player.critical) {
-    decreaseHp *= player.criticalAttack / 100;
+    const criticalRate = player.criticalAttack / 100;
+    decreaseHp = [
+      playerStatInfo.atk * criticalRate,
+      playerStatInfo.magic * criticalRate,
+      playerStatInfo.magic * criticalRate,
+    ];
     msg = [
       `크리티컬으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
       `단일 스킬이 크리티컬 공격으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,

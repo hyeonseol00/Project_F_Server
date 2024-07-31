@@ -35,9 +35,8 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const { experience } = character;
-    const { critical, criticalAttack, avoidAbility, baseEffect, singleEffect, wideEffect } =
-      await getJobInfo(character.jobId);
+    const { experience, critical, criticalAttack, avoidAbility } = character;
+    const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
     const potions = await getUserPotionItemsByCharacterId(character.characterId);
     const items = [];
     for (const potion of potions) {
