@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { getDungeonItems, getPotionItem } from '../../db/game/game.db.js';
+import { getDungeonItems, getMountingItem, getPotionItem } from '../../db/game/game.db.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
@@ -57,12 +57,14 @@ class InstanceDungeon {
 
   async pushDungeonItems(dungeonCode) {
     this.items = [];
+
     const dungeonItems = await getDungeonItems(dungeonCode + 5000);
     for (const item of dungeonItems) {
       item.isPotion = item.isPotion && item.isPotion[0] === 1;
       if (item.isPotion) {
         const potionInfo = await getPotionItem(item.itemId);
         const potion = new Item(
+          true,
           potionInfo.name,
           potionInfo.hpHealingAmount,
           potionInfo.mpHealingAmount,
@@ -70,9 +72,20 @@ class InstanceDungeon {
           dungeonCode, // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
         );
         this.items.push(potion);
+      } else {
+        const itemInfo = await getMountingItem(item.itemId);
+        const mountingItem = new Item(
+          false,
+          itemInfo.itemName,
+          itemInfo.itemHp,
+          itemInfo.itemMp,
+          itemInfo.requireLevel,
+          1,
+          itemInfo,
+        );
+        this.items.push(mountingItem);
       }
     }
-    console.log(this.items);
   }
 
   getRandomItem() {

@@ -1,7 +1,10 @@
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
-import { getPotionItem } from '../../db/game/game.db.js';
-import { getUserPotionItemsByCharacterId } from '../../db/user/items/items.db.js';
+import { getMountingItem, getPotionItem } from '../../db/game/game.db.js';
+import {
+  getUserMountingItemsByCharacterId,
+  getUserPotionItemsByCharacterId,
+} from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
   findUserByUsername,
@@ -35,21 +38,41 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
+    // 소비 아이템 가져오기
     const { experience, critical, criticalAttack, avoidAbility } = character;
     const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
     const potions = await getUserPotionItemsByCharacterId(character.characterId);
-    const items = [];
+    const userPotions = [];
     for (const potion of potions) {
       const potionInfo = await getPotionItem(potion.itemId);
       const item = new Item(
+        true,
         potionInfo.name,
         potionInfo.hpHealingAmount,
         potionInfo.mpHealingAmount,
         potionInfo.expHealingAmount,
         potion.quantity,
       );
-      items.push(item);
+      userPotions.push(item);
     }
+
+    // 장착 아이템 가져오기
+    const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
+    const userMountingItems = [];
+    for (const mountingItem of mountingItems) {
+      const itemInfo = await getMountingItem(mountingItem.itemId);
+      const item = new Item(
+        false,
+        itemInfo.itemName,
+        itemInfo.itemHp,
+        itemInfo.itemMp,
+        itemInfo.requireLevel,
+        mountingItem.quantity,
+        itemInfo,
+      );
+      userMountingItems.push(item);
+    }
+    console.log('userMountingItems: ', userMountingItems);
 
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
     // 그렇지 않으면 유저세션, 게임세션에 추가한다.
@@ -64,7 +87,8 @@ const enterTownHandler = async ({ socket, payload }) => {
           baseEffect,
           singleEffect,
           wideEffect,
-          items,
+          userPotions,
+          userMountingItems,
           critical,
           criticalAttack,
           avoidAbility,
