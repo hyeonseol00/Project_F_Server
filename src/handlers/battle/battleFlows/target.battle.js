@@ -9,14 +9,29 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
   const attackType = dungeon.currentAttackType;
   const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
   const targetMonster = dungeon.monsters[targetMonsterIdx[attackType]];
-  const msg = [
+  let msg = [
     `${targetMonster.name}을(를) 공격합니다!`,
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
   const effectCode = [player.effectCode.normal, player.effectCode.single, player.effectCode.wide];
-  const decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
+  let decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
   const decreaseMp = [0, 25, 50];
+
+  const isCritical = Math.floor(Math.random() * 101);
+  if (isCritical <= player.critical) {
+    const criticalRate = player.criticalAttack / 100;
+    decreaseHp = [
+      playerStatInfo.atk * criticalRate,
+      playerStatInfo.magic * criticalRate,
+      playerStatInfo.magic * criticalRate,
+    ];
+    msg = [
+      `크리티컬으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
+      `단일 스킬이 크리티컬 공격으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
+      `광역 스킬이 크리티컬 공격으로 강화되어 몬스터들을 공격합니다!`,
+    ];
+  }
 
   // S_BattleLog 패킷
   const battleLog = {

@@ -9,6 +9,9 @@ class User {
     singleSkillCode,
     wideSkillCode,
     items,
+    critical,
+    criticalAttack,
+    avoidAbility,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
@@ -19,6 +22,9 @@ class User {
     this.playerInfo = {};
     this.items = items;
     this.experience = experience;
+    this.critical = critical;
+    this.criticalAttack = criticalAttack;
+    this.avoidability = avoidAbility;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }

@@ -11,6 +11,9 @@ export const addUser = (
   singleEffect,
   wideEffect,
   items,
+  critical,
+  criticalAttack,
+  avoidAbility,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -22,6 +25,9 @@ export const addUser = (
     singleEffect,
     wideEffect,
     items,
+    critical,
+    criticalAttack,
+    avoidAbility,
   );
   userSessions.push(user);
   return user;
@@ -51,5 +57,3 @@ export const getAllUsersInTeam = (teamId) => {
 export const getAllUsers = () => {
   return userSessions;
 };
-
-

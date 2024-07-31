@@ -1,6 +1,6 @@
 -- 외래키 문제로 데이터 먼저 삭제
 SET FOREIGN_KEY_CHECKS = 0;
-DELETE FROM Jobs;
+DROP TABLE Jobs;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS Jobs
@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS Jobs
   base_defense FLOAT NOT NULL,
   base_magic FLOAT NOT NULL,
   base_speed FLOAT NOT NULL,
+  base_critical FLOAT NOT NULL,
+  base_critical_attack FLOAT NOT NULL,
+  base_avoid_ability FLOAT NOT NULL,
   base_effect INTEGER NOT NULL,
   single_effect INTEGER NOT NULL,
   wide_effect INTEGER NOT NULL,
@@ -25,6 +28,7 @@ CREATE TABLE IF NOT EXISTS Users
 (
   user_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -47,6 +51,9 @@ CREATE TABLE IF NOT EXISTS Characters
   defense FLOAT NOT NULL,
   magic FLOAT NOT NULL,
   speed FLOAT NOT NULL,
+  critical FLOAT NOT NULL,
+  critical_attack FLOAT NOT NULL,
+  avoid_ability FLOAT NOT NULL,
   
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -71,9 +78,9 @@ CREATE TABLE IF NOT EXISTS Character_Items
 -- 데이터 삽입
 
 -- Jobs 데이터 삽입
-INSERT INTO Jobs (job_id , job_name , base_hp, base_mp, base_attack, base_defense, base_magic, base_speed, wide_effect, base_effect, single_effect ) VALUE 
-( 1001, "섭르탄" , 1000, 40 , 50 , 80 , 100 , 10 , 3024, 3004, 3012 ),
-( 1002, "클르탄" , 500, 60 , 80 , 40 , 100 , 10 , 3024 , 3004 , 3001),
-( 1003, "디르탄" , 600 , 90 , 40, 60 , 100 , 10 , 3024, 3004, 3015),
-( 1004, "큐르탄" , 800, 80 , 30 ,70 , 100 , 10, 3024, 3004, 3018),
-( 1005, "기르탄" , 650 , 80, 50 , 60 , 100 , 10, 3024, 3004, 3008);
+INSERT INTO Jobs (job_id , job_name , base_hp, base_mp, base_attack, base_defense, base_magic, base_speed, base_critical, base_critical_attack, base_avoid_ability, wide_effect, base_effect, single_effect ) VALUE 
+( 1001, "섭르탄" , 1000, 40 , 50 , 80 , 100 , 10 , 5, 150, 5, 3024, 3004, 3012 ),
+( 1002, "클르탄" , 500, 60 , 80 , 40 , 100 , 10 , 5, 150, 5, 3024 , 3004 , 3001),
+( 1003, "디르탄" , 600 , 90 , 40, 60 , 100 , 10 , 5, 150, 5, 3024, 3004, 3015),
+( 1004, "큐르탄" , 800, 80 , 30 ,70 , 100 , 10, 5, 150, 5, 3024, 3004, 3018),
+( 1005, "기르탄" , 650 , 80, 50 , 60 , 100 , 10, 5, 150, 5, 3024, 3004, 3008);
