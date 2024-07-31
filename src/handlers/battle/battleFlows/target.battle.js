@@ -15,11 +15,11 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
   const effectCode = [player.effectCode.normal, player.effectCode.single, player.effectCode.wide];
-  const isCritical = Math.floor(Math.random() * 101);
   let decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
   const decreaseMp = [0, 25, 50];
 
-  if(isCritical <= player.critical){
+  const isCritical = Math.floor(Math.random() * 101);
+  if (isCritical <= player.critical) {
     decreaseHp *= player.criticalAttack / 100;
     msg = [
       `크리티컬으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
