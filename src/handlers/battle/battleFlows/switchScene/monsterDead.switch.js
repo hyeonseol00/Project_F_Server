@@ -15,6 +15,18 @@ export default function switchToMonsterDeadScene(dungeon, socket) {
   if (hp <= 0 && isDead === false && index < 3) {
     monster.isDead = true;
 
+    //몬스터 죽는 모션 구현
+    const effectCode = monster.effectCode;
+    const actionSet = {
+      animCode: 4,
+      effectCode,
+    };
+    const monsterAction = createResponse('response', 'S_MonsterAction', {
+      actionMonsterIdx: index,
+      actionSet,
+    });
+    socket.write(monsterAction);
+
     const btns = [{ msg: '다음', enable: true }];
     const battleLog = {
       msg: `몬스터 ${monster.name}이(가) 사망했습니다!`,
