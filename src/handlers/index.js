@@ -7,13 +7,15 @@ import moveTownHandler from './town/move.handler.js';
 import enterDungeonHandler from './town/enterDungeon.handler.js';
 import animHandler from './town/anim.handler.js';
 import chatHandler from './town/chat.handler.js';
+import registerHandler from './town/register.handler.js';
+import loginHandler from './town/login.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
     handler: enterTownHandler,
     protoType: 'town.C_Enter',
   },
-  [PACKET_TYPE.C_Move]:{
+  [PACKET_TYPE.C_Move]: {
     handler: moveTownHandler,
     protoType: 'town.C_Move',
   },
@@ -32,6 +34,14 @@ const handlers = {
   [PACKET_TYPE.C_Chat]: {
     handler: chatHandler,
     protoType: 'town.C_Chat',
+  },
+  [PACKET_TYPE.C_Register]: {
+    handler: registerHandler,
+    protoType: 'town.C_Register',
+  },
+  [PACKET_TYPE.C_LogIn]: {
+    handler: loginHandler,
+    protoType: 'town.C_LogIn',
   },
 };
 

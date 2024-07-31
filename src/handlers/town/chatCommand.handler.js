@@ -102,6 +102,7 @@ const notFoundInvitation = (sender, targetUser = undefined) => {
 
   return false;
 }
+
 export const sendDirectMessage = (sender, message) => {
 
   const firstSpaceIdx = message.indexOf(' ');
@@ -117,13 +118,12 @@ export const sendDirectMessage = (sender, message) => {
 
   const senderChatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    //chatMsg: `[To.${sender.nickname}] ${msg}`,
-    chatMsg: message,
+    chatMsg: `[DM] To_${recipient.nickname}: ${msg}`,
   });
 
   const recipientChatResponse = createResponse('response', 'S_Chat', {
-    playerId: sender.playerId,
-    chatMsg: `[From.${sender.nickname}] ${msg}`,
+    playerId: recipient.playerId,
+    chatMsg: `[DM] ${sender.nickname}: ${msg}`,
   });
 
   try {
@@ -134,6 +134,7 @@ export const sendDirectMessage = (sender, message) => {
     console.error(`Failed to send message to recipient: ${error.msg}`);
   }
 };
+
 export const sendMessageToTeam = (sender, message) => {
   // 팀 멤버들을 불러옵니다.
   const teamMembers = getAllUsersInTeam(sender.teamId);
@@ -257,7 +258,7 @@ export const inviteTeamHandler = (sender, message) => {
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: `${sender.nickname} invited you to join their team.`,
+    chatMsg: `[System] ${sender.nickname} invited you to join their team.`,
   });
   targetUser.socket.write(response);
 };
