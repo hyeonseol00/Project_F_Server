@@ -1,10 +1,10 @@
 -- 외래키 문제로 데이터 먼저 삭제
 SET FOREIGN_KEY_CHECKS = 0;
-DELETE FROM Levels;
-DELETE FROM Dungeons;
-DELETE FROM Dungeon_Monsters;
-DELETE FROM Effects;
-DELETE FROM Monsters;
+DROP TABLE Levels;
+DROP TABLE Dungeons;
+DROP TABLE Dungeon_Monsters;
+DROP TABLE Effects;
+DROP TABLE Monsters;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS Levels
   speed FLOAT NOT NULL,
   critical FLOAT NOT NULL,
   critical_attack FLOAT NOT NULL,
-  avoidability FLOAT NOT NULL,
+  avoid_ability FLOAT NOT NULL,
   skill_point INTEGER NOT NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS Levels
 -- 데이터 삽입
 
 -- 레벨 데이터 삽입
-INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, critical, critical_attack, avoidability, skill_point) VALUES 
+INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, critical, critical_attack, avoid_ability, skill_point) VALUES 
 (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2, 100, 10, 10, 2, 2, 2, 2, 1, 1, 1, 1),
 (3, 250, 10, 10, 2, 2, 2, 2, 1, 1, 1, 1),
