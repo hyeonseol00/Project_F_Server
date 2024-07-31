@@ -15,8 +15,8 @@ class InstanceDungeon {
     this.selectItem = null;
   }
 
-  addMonster(idx, id, hp, power, name, effectCode, exp) {
-    const monster = new Monster(idx, id, hp, power, name, effectCode, exp);
+  addMonster(idx, id, hp, power, name, effectCode, exp , gold) {
+    const monster = new Monster(idx, id, hp, power, name, effectCode, exp , gold);
     this.monsters.push(monster);
   }
 

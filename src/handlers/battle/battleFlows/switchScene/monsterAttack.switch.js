@@ -8,7 +8,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
-  console.log(index);
+  
   if (playerStatInfo.hp <= 0) {
     const actionSet = {
       animCode: 3,
