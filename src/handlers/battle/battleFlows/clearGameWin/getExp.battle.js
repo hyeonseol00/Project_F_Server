@@ -18,7 +18,20 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     } else {
       levelTable = getLevelById(1);
     }
-    const { levelId, requiredExp, hp, mp, attack, defense, magic, speed, skillPoint } = levelTable;
+    const {
+      levelId,
+      requiredExp,
+      hp,
+      mp,
+      attack,
+      defense,
+      magic,
+      speed,
+      critical,
+      criticalAttack,
+      avoidAbility,
+      skillPoint,
+    } = levelTable;
 
     let monsterExp = 0;
     for (let i = 0; i < dungeon.monsters.length; i++) {
@@ -42,6 +55,9 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         playerStatus.def + defense,
         playerStatus.magic + magic,
         playerStatus.speed + speed,
+        playerStatus.critical + critical,
+        playerStatus.criticalAttack + criticalAttack,
+        playerStatus.avoidAbility + avoidAbility,
         player.nickname,
         player.characterClass,
       );

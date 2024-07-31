@@ -106,6 +106,9 @@ export const updateCharacterStatus = async (
   defense,
   magic,
   speed,
+  critical,
+  criticalAttack,
+  avoidAbility,
   characterName,
   jobId,
 ) => {
@@ -120,6 +123,9 @@ export const updateCharacterStatus = async (
     defense,
     magic,
     speed,
+    critical,
+    criticalAttack,
+    avoidAbility,
     characterName,
     jobId,
   ]);
