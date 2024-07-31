@@ -23,6 +23,7 @@ const chatCommands = new Map([
   ['inviteTeam', inviteTeamHandler],
   ['acceptTeam', acceptTeamHandler],
   ['kickMember', kickMemberHandler],
+  ['memlist', sendTeamList],
   // ---------team end------------
 
 
