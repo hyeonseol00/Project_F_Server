@@ -26,8 +26,18 @@ export const findCharacterByUserIdAndClass = async (userId, jobId) => {
 };
 
 export const insertCharacter = async (user, jobId) => {
-  const { jobName, baseHp, baseMp, baseAttack, baseDefense, baseMagic, baseSpeed } =
-    await getJobInfo(jobId);
+  const {
+    jobName,
+    baseHp,
+    baseMp,
+    baseAttack,
+    baseDefense,
+    baseMagic,
+    baseSpeed,
+    baseCritical,
+    baseCriticalAttack,
+    baseAvoidAbility,
+  } = await getJobInfo(jobId);
 
   await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_CHARACTER, [
     user.userId,
@@ -42,6 +52,9 @@ export const insertCharacter = async (user, jobId) => {
     baseDefense,
     baseMagic,
     baseSpeed,
+    baseCritical,
+    baseCriticalAttack,
+    baseAvoidAbility,
   ]);
 };
 
