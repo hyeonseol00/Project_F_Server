@@ -42,16 +42,28 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     switchToActionScene(dungeon, socket);
     dungeon.initTargetIdx();
   } else {
+    // ------------- 플레이어 피격 코드 -------------
     const btns = [{ msg: '다음', enable: true }];
+
+    let finalDamage = monster.power / (1 + playerStatInfo.def * 0.01); // LOL 피해량 공식
+    let message = `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!`;
+    let effectCode = monster.effectCode;
+
+    const isAvoid = Math.floor(Math.random() * 101);
+    if (isAvoid <= player.avoidAbility) {
+      message = `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!\n ${player.nickname}은(는) ${monster.name}의 공격을 회피했습니다!`;
+      finalDamage = 0;
+      effectCode = 0;
+    }
+
     const battleLog = {
-      msg: `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!`,
+      msg: message,
       typingAnimation: false,
       btns,
     };
     const responseBattleLog = createResponse('response', 'S_BattleLog', { battleLog });
     socket.write(responseBattleLog);
 
-    const effectCode = monster.effectCode;
     const actionSet = {
       animCode: 0,
       effectCode,
@@ -62,8 +74,6 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     });
     socket.write(monsterAction);
 
-    // ------------- 플레이어 피격 코드 -------------
-    const finalDamage = monster.power / (1 + playerStatInfo.def * 0.01); // LOL 피해량 공식
     playerStatInfo.hp -= playerStatInfo.hp > finalDamage ? finalDamage : playerStatInfo.hp;
 
     const playerHp = createResponse('response', 'S_SetPlayerHp', {
