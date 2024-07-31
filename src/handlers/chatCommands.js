@@ -1,5 +1,6 @@
 import {
   sendDirectMessage, 
+  sendMyStat,
   sendMessageToTeam,
   createTeamHandler,
   joinTeamHandler,
@@ -11,7 +12,9 @@ import {
 
 
 const chatCommands = new Map([
+  // ---------common cmd begin------------
   ['w', sendDirectMessage],
+  ['myStat', sendMyStat],
   // ---------team begin------------
   ['t', sendMessageToTeam],
   ['createTeam', createTeamHandler],
@@ -21,6 +24,8 @@ const chatCommands = new Map([
   ['acceptTeam', acceptTeamHandler],
   ['kickMember', kickMemberHandler],
   // ---------team end------------
+
+
 ]);
 
 export default chatCommands;
