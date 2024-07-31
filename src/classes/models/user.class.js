@@ -24,7 +24,7 @@ class User {
     this.experience = experience;
     this.critical = critical;
     this.criticalAttack = criticalAttack;
-    this.avoidability = avoidAbility;
+    this.avoidAbility = avoidAbility;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }
