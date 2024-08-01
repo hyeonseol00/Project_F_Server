@@ -4,6 +4,8 @@ import { getMountingItem, getPotionItem } from '../../db/game/game.db.js';
 import {
   getUserMountingItemsByCharacterId,
   getUserPotionItemsByCharacterId,
+  updateCharacterMountingItems,
+  updateCharacterPotions,
 } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
@@ -11,6 +13,7 @@ import {
   getJobInfo,
   insertCharacter,
   insertUserByUsername,
+  updateCharacterStatus,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
@@ -21,81 +24,85 @@ const enterTownHandler = async ({ socket, payload }) => {
   try {
     const { nickname } = payload;
     const characterClass = payload.class;
-
-    // DB에서 user, character 정보 가져오기
-    let userInDB = await findUserByUsername(nickname);
-    if (!userInDB) {
-      await insertUserByUsername(nickname);
-      userInDB = await findUserByUsername(nickname);
-    }
-
-    let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-    if (!character) {
-      await insertCharacter(userInDB, characterClass);
-      character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-    }
+    const userExist = getUserBySocket(socket);
+    let curUser, statInfo;
 
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
-    const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+    // 첫 입장에서만 DB에서 정보 불러오기
+    if (!userExist) {
+      // DB에서 user, character 정보 가져오기
+      let userInDB = await findUserByUsername(nickname);
+      if (!userInDB) {
+        await insertUserByUsername(nickname);
+        userInDB = await findUserByUsername(nickname);
+      }
 
-    // 소비 아이템 가져오기
-    const potions = await getUserPotionItemsByCharacterId(character.characterId);
-    const userPotions = [];
-    for (const potion of potions) {
-      const potionInfo = await getPotionItem(potion.itemId);
-      const item = new Item(
-        true,
-        potionInfo.name,
-        potionInfo.hpHealingAmount,
-        potionInfo.mpHealingAmount,
-        potionInfo.expHealingAmount,
-        potion.quantity,
-      );
-      userPotions.push(item);
-    }
+      let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+      if (!character) {
+        await insertCharacter(userInDB, characterClass);
+        character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+      }
 
-    // 장착 아이템 가져오기
-    const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
-    const userMountingItems = [];
-    for (const mountingItem of mountingItems) {
-      const itemInfo = await getMountingItem(mountingItem.itemId);
-      const item = new Item(
-        false,
-        itemInfo.itemName,
-        itemInfo.itemHp,
-        itemInfo.itemMp,
-        itemInfo.requireLevel,
-        mountingItem.quantity,
-        itemInfo,
-      );
-      userMountingItems.push(item);
-    }
+      const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
+      const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
-    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-    const userExist = getUserBySocket(socket);
-    const curUser = userExist
-      ? userExist
-      : addUser(
-          socket,
-          nickname,
-          characterClass,
-          experience,
-          baseEffect,
-          singleEffect,
-          wideEffect,
-          userPotions,
-          userMountingItems,
-          critical,
-          criticalAttack,
-          avoidAbility,
-          gold,
-          worldLevel,
+      // 소비 아이템 가져오기
+      const potions = await getUserPotionItemsByCharacterId(character.characterId);
+      const userPotions = [];
+      for (const potion of potions) {
+        const potionInfo = await getPotionItem(potion.itemId);
+        const item = new Item(
+          potion.itemId,
+          true,
+          potionInfo.name,
+          potionInfo.hpHealingAmount,
+          potionInfo.mpHealingAmount,
+          potionInfo.expHealingAmount,
+          potion.quantity,
         );
-    if (!userExist) gameSession.addUser(curUser);
+        userPotions.push(item);
+      }
+
+      // 장착 아이템 가져오기
+      const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
+      const userMountingItems = [];
+      for (const mountingItem of mountingItems) {
+        const itemInfo = await getMountingItem(mountingItem.itemId);
+        const item = new Item(
+          mountingItem.itemId,
+          false,
+          itemInfo.itemName,
+          itemInfo.itemHp,
+          itemInfo.itemMp,
+          itemInfo.requireLevel,
+          mountingItem.quantity,
+          itemInfo,
+        );
+        userMountingItems.push(item);
+      }
+
+      // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
+      // 그렇지 않으면 유저세션, 게임세션에 추가한다.
+      curUser = addUser(
+        socket,
+        nickname,
+        characterClass,
+        character.characterId,
+        experience,
+        baseEffect,
+        singleEffect,
+        wideEffect,
+        userPotions,
+        userMountingItems,
+        critical,
+        criticalAttack,
+        avoidAbility,
+        gold,
+        worldLevel,
+      );
+      if (!userExist) gameSession.addUser(curUser);
 
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9
@@ -134,7 +141,6 @@ const enterTownHandler = async ({ socket, payload }) => {
       statInfo,
       inven
     };
-    
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });

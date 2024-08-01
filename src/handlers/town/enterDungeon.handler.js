@@ -2,7 +2,6 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
-import { findCharacterByUserIdAndClass, findUserByUsername } from '../../db/user/user.db.js';
 import {
   findMonsterByMonsters,
   findMonstersByDungeonMonsters,
@@ -21,10 +20,6 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const player = gameSession.getUser(user.playerId);
     const dungeon = addDungeon(nickname, player, dungeonCode);
 
-    const characterClass = user.characterClass;
-
-    const userInDB = await findUserByUsername(nickname);
-    const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     const monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
 
     let hpRating = 0;
@@ -109,13 +104,13 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: character.jobId,
-      playerLevel: character.characterLevel,
-      playerName: character.characterName,
-      playerFullHp: character.maxHp,
-      playerFullMp: character.maxMp,
-      playerCurHp: character.curHp,
-      playerCurMp: character.curMp,
+      playerClass: player.characterClass,
+      playerLevel: player.playerInfo.statInfo.level,
+      playerName: player.nickname,
+      playerFullHp: player.playerInfo.statInfo.maxHp,
+      playerFullMp: player.playerInfo.statInfo.maxMp,
+      playerCurHp: player.playerInfo.statInfo.hp,
+      playerCurMp: player.playerInfo.statInfo.mp,
     };
 
     const screenTextAlignment = {
