@@ -120,26 +120,13 @@ const enterTownHandler = async ({ socket, payload }) => {
       def: character.defense,
       magic: character.magic,
       speed: character.speed,
-      critRate: character.critical,
-      critDmg: character.criticalAttack,
-      avoidRate: character.avoidAbility,
-      exp: character.experience,
     };
-
-    const items = [];
-    const inven = {
-      items
-    };
-
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
       class: characterClass,
-      gold: character.gold,
-
       transform: transformInfo,
       statInfo,
-      inven
     };
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
