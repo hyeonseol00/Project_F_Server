@@ -101,3 +101,10 @@ message S_MonsterAction {
   int32 actionMonsterIdx = 1;
   ActionSet actionSet = 2;
 }
+
+message S_EnterHatchery{
+  PlayerInfo player = 1;
+}
+
+message S_SpawnPlayerHatchery{
+}
