@@ -104,30 +104,91 @@ const enterTownHandler = async ({ socket, payload }) => {
       );
       if (!userExist) gameSession.addUser(curUser);
 
+      statInfo = {
+        level: character.characterLevel,
+        hp: character.curHp,
+        maxHp: character.maxHp,
+        mp: character.curMp,
+        maxMp: character.maxMp,
+        atk: character.attack,
+        def: character.defense,
+        magic: character.magic,
+        speed: character.speed,
+        critRate: character.critical,
+        critDmg: character.criticalAttack,
+        avoidRate: character.avoidAbility,
+        exp: character.experience,
+      };
+    } else {
+      // 첫 접속이 아닌 town으로 다시 돌아온 경우 (session이 있음) DB에 저장
+      curUser = userExist;
+      const playerStatus = curUser.playerInfo.statInfo;
+      // user 현재 상태 DB에 저장
+      await updateCharacterStatus(
+        playerStatus.level,
+        curUser.experience,
+        playerStatus.hp,
+        playerStatus.maxHp,
+        playerStatus.mp,
+        playerStatus.maxMp,
+        playerStatus.atk,
+        playerStatus.def,
+        playerStatus.magic,
+        playerStatus.speed,
+        curUser.critical,
+        curUser.criticalAttack,
+        curUser.avoidAbility,
+        curUser.gold,
+        curUser.nickname,
+        curUser.characterClass,
+      );
+
+      // user 포션 저장
+      await updateCharacterPotions(curUser.characterId, curUser.potions);
+
+      // user 장착 아이템 저장
+      await updateCharacterMountingItems(curUser.characterId, curUser.mountingItems);
+
+      statInfo = {
+        level: curUser.playerInfo.statInfo.level,
+        hp: curUser.playerInfo.statInfo.hp,
+        maxHp: curUser.playerInfo.statInfo.maxHp,
+        mp: curUser.playerInfo.statInfo.mp,
+        maxMp: curUser.playerInfo.statInfo.maxMp,
+        atk: curUser.playerInfo.statInfo.atk,
+        def: curUser.playerInfo.statInfo.def,
+        magic: curUser.playerInfo.statInfo.magic,
+        speed: curUser.playerInfo.statInfo.speed,
+        critRate: curUser.critical,
+        critDmg: curUser.criticalAttack,
+        avoidRate: curUser.avoidAbility,
+        exp: curUser.experience,
+      };
+    }
+
+    const items = curUser.mountingItems;
+    // console.log(items);
+    const inven = {
+      items,
+    };
+
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9
       posY: 1.0,
       posZ: Math.random() * 16 - 8, // -8 ~ 8
       rot: Math.random() * 360, // 0 ~ 360
     };
-    const statInfo = {
-      level: character.characterLevel,
-      hp: character.curHp,
-      maxHp: character.maxHp,
-      mp: character.curMp,
-      maxMp: character.maxMp,
-      atk: character.attack,
-      def: character.defense,
-      magic: character.magic,
-      speed: character.speed,
-    };
+
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
       class: characterClass,
+      gold: curUser.gold,
       transform: transformInfo,
       statInfo,
+      inven,
     };
+
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });

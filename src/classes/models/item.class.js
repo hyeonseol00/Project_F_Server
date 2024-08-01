@@ -11,16 +11,18 @@ class Item {
       this.exp = exp;
     } else {
       // mounting items
-      this.addHp = hp;
-      this.addMp = mp;
+      this.id = itemId;
+      this.description = itemInfo.itemDescription;
+      this.type = itemInfo.itemType;
+      this.hp = hp;
+      this.mp = mp;
+      this.atk = itemInfo.itemAttack;
+      this.def = itemInfo.itemDefense;
+      this.magic = itemInfo.itemMagic;
+      this.speed = itemInfo.itemSpeed;
       this.requireLevel = exp;
-      this.addAttack = itemInfo.itemAttack;
-      this.addDefense = itemInfo.itemDefense;
-      this.addMagic = itemInfo.itemMagic;
-      this.addSpeed = itemInfo.itemSpeed;
-      this.cost = itemInfo.itemCost;
-      this.addAvoidance = itemInfo.itemAvoidance;
-      this.addCritical = itemInfo.itemCritical;
+      this.avoidRate = itemInfo.itemAvoidance;
+      this.critRate = itemInfo.itemCritical;
     }
   }
 }
