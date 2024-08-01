@@ -8,6 +8,7 @@ import {
   inviteTeamHandler,
   acceptTeamHandler,
   kickMemberHandler,
+  sendTeamList,
 } from './town/chatCommand.handler.js';
 
 

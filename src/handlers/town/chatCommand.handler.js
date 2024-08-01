@@ -139,7 +139,7 @@ export const sendMyStat = async (sender, message) => {
   const userInDB = await findUserByUsername(sender.nickname);
   const character = await findCharacterByUserIdAndClass(userInDB.userId, sender.characterClass);
  
-  const msg = ` 이름: ${character.characterName}
+  const msg = `이름: ${character.characterName}
   레벨: ${character.characterLevel}
   경험치: ${character.characterLevel}
   직업: ${character.jobName}
@@ -149,8 +149,7 @@ export const sendMyStat = async (sender, message) => {
   주문력: ${character.magic}
   치명타 확률: ${character.critical}%
   치명타 피해: +${character.criticalAttack}%
-  소지금: ${character.gold}
-  `;
+  소지금: ${character.gold}`;
 
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
