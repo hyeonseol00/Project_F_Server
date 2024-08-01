@@ -45,6 +45,7 @@ import {
   DB2_HOST,
   DB2_PORT,
 } from '../constants/env.js';
+import { BOSS_ID } from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 import {
   SCREENCOLOR_B,
@@ -144,6 +145,9 @@ export const config = {
     r: SCREENCOLOR_R,
     g: SCREENCOLOR_G,
     b: SCREENCOLOR_B,
+  },
+  hatchery: {
+    bossId: BOSS_ID,
   },
   maxLevel: 20,
 };
