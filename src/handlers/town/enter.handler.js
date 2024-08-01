@@ -4,6 +4,8 @@ import { getMountingItem, getPotionItem } from '../../db/game/game.db.js';
 import {
   getUserMountingItemsByCharacterId,
   getUserPotionItemsByCharacterId,
+  updateCharacterMountingItems,
+  updateCharacterPotions,
 } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
@@ -11,6 +13,7 @@ import {
   getJobInfo,
   insertCharacter,
   insertUserByUsername,
+  updateCharacterStatus,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
@@ -21,81 +24,139 @@ const enterTownHandler = async ({ socket, payload }) => {
   try {
     const { nickname } = payload;
     const characterClass = payload.class;
-
-    // DB에서 user, character 정보 가져오기
-    let userInDB = await findUserByUsername(nickname);
-    if (!userInDB) {
-      await insertUserByUsername(nickname);
-      userInDB = await findUserByUsername(nickname);
-    }
-
-    let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-    if (!character) {
-      await insertCharacter(userInDB, characterClass);
-      character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-    }
+    const userExist = getUserBySocket(socket);
+    let curUser, statInfo;
 
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
-    const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+    // 첫 입장에서만 DB에서 정보 불러오기
+    if (!userExist) {
+      // DB에서 user, character 정보 가져오기
+      let userInDB = await findUserByUsername(nickname);
+      if (!userInDB) {
+        await insertUserByUsername(nickname);
+        userInDB = await findUserByUsername(nickname);
+      }
 
-    // 소비 아이템 가져오기
-    const potions = await getUserPotionItemsByCharacterId(character.characterId);
-    const userPotions = [];
-    for (const potion of potions) {
-      const potionInfo = await getPotionItem(potion.itemId);
-      const item = new Item(
-        true,
-        potionInfo.name,
-        potionInfo.hpHealingAmount,
-        potionInfo.mpHealingAmount,
-        potionInfo.expHealingAmount,
-        potion.quantity,
-      );
-      userPotions.push(item);
-    }
+      let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+      if (!character) {
+        await insertCharacter(userInDB, characterClass);
+        character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+      }
 
-    // 장착 아이템 가져오기
-    const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
-    const userMountingItems = [];
-    for (const mountingItem of mountingItems) {
-      const itemInfo = await getMountingItem(mountingItem.itemId);
-      const item = new Item(
-        false,
-        itemInfo.itemName,
-        itemInfo.itemHp,
-        itemInfo.itemMp,
-        itemInfo.requireLevel,
-        mountingItem.quantity,
-        itemInfo,
-      );
-      userMountingItems.push(item);
-    }
+      const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
+      const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
-    // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-    // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-    const userExist = getUserBySocket(socket);
-    const curUser = userExist
-      ? userExist
-      : addUser(
-          socket,
-          nickname,
-          characterClass,
-          experience,
-          baseEffect,
-          singleEffect,
-          wideEffect,
-          userPotions,
-          userMountingItems,
-          critical,
-          criticalAttack,
-          avoidAbility,
-          gold,
-          worldLevel,
+      // 소비 아이템 가져오기
+      const potions = await getUserPotionItemsByCharacterId(character.characterId);
+      const userPotions = [];
+      for (const potion of potions) {
+        const potionInfo = await getPotionItem(potion.itemId);
+        const item = new Item(
+          potion.itemId,
+          true,
+          potionInfo.name,
+          potionInfo.hpHealingAmount,
+          potionInfo.mpHealingAmount,
+          potionInfo.expHealingAmount,
+          potion.quantity,
         );
-    if (!userExist) gameSession.addUser(curUser);
+        userPotions.push(item);
+      }
+
+      // 장착 아이템 가져오기
+      const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
+      const userMountingItems = [];
+      for (const mountingItem of mountingItems) {
+        const itemInfo = await getMountingItem(mountingItem.itemId);
+        const item = new Item(
+          mountingItem.itemId,
+          false,
+          itemInfo.itemName,
+          itemInfo.itemHp,
+          itemInfo.itemMp,
+          itemInfo.requireLevel,
+          mountingItem.quantity,
+          itemInfo,
+        );
+        userMountingItems.push(item);
+      }
+
+      // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
+      // 그렇지 않으면 유저세션, 게임세션에 추가한다.
+      curUser = addUser(
+        socket,
+        nickname,
+        characterClass,
+        character.characterId,
+        experience,
+        baseEffect,
+        singleEffect,
+        wideEffect,
+        userPotions,
+        userMountingItems,
+        critical,
+        criticalAttack,
+        avoidAbility,
+        gold,
+        worldLevel,
+      );
+      if (!userExist) gameSession.addUser(curUser);
+
+      statInfo = {
+        level: character.characterLevel,
+        hp: character.curHp,
+        maxHp: character.maxHp,
+        mp: character.curMp,
+        maxMp: character.maxMp,
+        atk: character.attack,
+        def: character.defense,
+        magic: character.magic,
+        speed: character.speed,
+      };
+    } else {
+      // 첫 접속이 아닌 town으로 다시 돌아온 경우 (session이 있음) DB에 저장
+      curUser = userExist;
+      const playerStatus = curUser.playerInfo.statInfo;
+      // user 현재 상태 DB에 저장
+      await updateCharacterStatus(
+        playerStatus.level,
+        curUser.experience,
+        playerStatus.hp,
+        playerStatus.maxHp,
+        playerStatus.mp,
+        playerStatus.maxMp,
+        playerStatus.atk,
+        playerStatus.def,
+        playerStatus.magic,
+        playerStatus.speed,
+        curUser.critical,
+        curUser.criticalAttack,
+        curUser.avoidAbility,
+        curUser.gold,
+        curUser.nickname,
+        curUser.characterClass,
+      );
+
+      // user 포션 저장
+      await updateCharacterPotions(curUser.characterId, curUser.potions);
+
+      // user 장착 아이템 저장
+      await updateCharacterMountingItems(curUser.characterId, curUser.mountingItems);
+
+      statInfo = {
+        level: curUser.playerInfo.statInfo.level,
+        hp: curUser.playerInfo.statInfo.hp,
+        maxHp: curUser.playerInfo.statInfo.maxHp,
+        mp: curUser.playerInfo.statInfo.mp,
+        maxMp: curUser.playerInfo.statInfo.maxMp,
+        atk: curUser.playerInfo.statInfo.atk,
+        def: curUser.playerInfo.statInfo.def,
+        magic: curUser.playerInfo.statInfo.magic,
+        speed: curUser.playerInfo.statInfo.speed,
+      };
+    }
 
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9
@@ -103,17 +164,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       posZ: Math.random() * 16 - 8, // -8 ~ 8
       rot: Math.random() * 360, // 0 ~ 360
     };
-    const statInfo = {
-      level: character.characterLevel,
-      hp: character.curHp,
-      maxHp: character.maxHp,
-      mp: character.curMp,
-      maxMp: character.maxMp,
-      atk: character.attack,
-      def: character.defense,
-      magic: character.magic,
-      speed: character.speed,
-    };
+
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
@@ -121,6 +172,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       transform: transformInfo,
       statInfo,
     };
+
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
