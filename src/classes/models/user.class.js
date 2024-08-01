@@ -41,6 +41,10 @@ class User {
     this.playerInfo = playerInfo;
   }
 
+  getPlayerInfo() {
+    return { ...this.playerInfo };
+  }
+
   updatePosition(x, y, z, rot) {
     this.x = x;
     this.y = y;
