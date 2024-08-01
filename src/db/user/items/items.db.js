@@ -53,7 +53,6 @@ export const updateCharacterPotions = async (characterId, potions) => {
 };
 
 export const updateCharacterMountingItems = async (characterId, mountingItems) => {
-  console.log(mountingItems);
   for (const item of mountingItems) {
     if (await existItem(characterId, item.itemId, false)) {
       // item 목록이 있다면 update
