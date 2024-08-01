@@ -32,7 +32,16 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       const monsterDB = await findMonsterByMonsters(
         monsters[Math.floor(Math.random() * monsters.length)].monsterId,
       );
-      const { monsterId, monsterHp, monsterAttack, monsterName, monsterExp ,monsterGold } = monsterDB;
+      const {
+        monsterId,
+        monsterHp,
+        monsterAttack,
+        monsterName,
+        monsterExp,
+        monsterGold,
+        monsterCritical,
+        monsterCriticalAttack,
+      } = monsterDB;
       const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
@@ -52,6 +61,8 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         effectCode,
         monsterExp,
         monsterGold,
+        monsterCritical,
+        monsterCriticalAttack,
       );
     }
 
