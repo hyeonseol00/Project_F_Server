@@ -51,9 +51,16 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
 
   let changeEffect;
   if (attackType === 2) {
-    changeEffect = player.level > 5 ? (player.level > 10 ? (player.level > 15 ? 3 : 2) : 1) : 0;
+    changeEffect =
+      playerStatInfo.level > 5
+        ? playerStatInfo.level > 10
+          ? playerStatInfo.level > 15
+            ? 3
+            : 2
+          : 1
+        : 0;
   } else {
-    changeEffect = player.level > 10 ? 1 : 0;
+    changeEffect = playerStatInfo.level > 10 ? 1 : 0;
   }
 
   // S_PlayerAction 패킷

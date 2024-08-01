@@ -1,5 +1,4 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
-import { updateCharacterCurStatus, updateCharacterStatus } from '../../../../db/user/user.db.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../session/level.session.js';
 
@@ -44,27 +43,18 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.maxLevel) {
       player.updateLevel(playerLevel + 1, playerExp - requiredExp);
-
-      await updateCharacterStatus(
-        levelId,
-        playerExp - requiredExp,
-        playerStatus.maxHp + hp,
-        playerStatus.maxHp + hp,
-        playerStatus.maxMp + mp,
-        playerStatus.maxMp + mp,
-        playerStatus.atk + attack,
-        playerStatus.def + defense,
-        playerStatus.magic + magic,
-        playerStatus.speed + speed,
-        player.critical + critical,
-        player.criticalAttack + criticalAttack,
-        player.avoidAbility + avoidAbility,
-        player.gold + gold,
-        player.nickname,
-        player.characterClass,
-      );
-      playerStatus.hp = playerStatus.maxHp + hp;
-      playerStatus.mp = playerStatus.maxMp + mp;
+      playerStatus.maxHp += hp;
+      playerStatus.maxMp += mp;
+      playerStatus.hp = playerStatus.maxHp;
+      playerStatus.mp = playerStatus.maxMp;
+      playerStatus.atk += attack;
+      playerStatus.def += defense;
+      playerStatus.magic += magic;
+      playerStatus.speed += speed;
+      player.critical += critical;
+      player.criticalAttack += criticalAttack;
+      player.avoidAbility += avoidAbility;
+      player.gold += gold;
 
       const message = `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!\n
 레벨 ${playerLevel + 1}이 되었습니다!\n
@@ -78,14 +68,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       };
     } else {
       player.experience += monsterExp;
-      await updateCharacterCurStatus(
-        player.experience,
-        playerStatus.hp,
-        playerStatus.mp,
-        player.gold + gold,
-        player.nickname,
-        player.characterClass,
-      );
+      player.gold += gold;
 
       battleLog = {
         msg: `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!`,

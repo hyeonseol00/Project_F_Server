@@ -77,6 +77,7 @@ class InstanceDungeon {
       if (item.isPotion) {
         const potionInfo = await getPotionItem(item.itemId);
         const potion = new Item(
+          item.itemId,
           true,
           potionInfo.name,
           potionInfo.hpHealingAmount,
@@ -89,6 +90,7 @@ class InstanceDungeon {
       } else {
         const itemInfo = await getMountingItem(item.itemId);
         const mountingItem = new Item(
+          item.itemId,
           false,
           itemInfo.itemName,
           itemInfo.itemHp,

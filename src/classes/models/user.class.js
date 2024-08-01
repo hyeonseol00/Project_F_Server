@@ -3,6 +3,7 @@ class User {
     playerId,
     nickname,
     characterClass,
+    characterId,
     socket,
     experience,
     normalCode,
@@ -19,6 +20,7 @@ class User {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
+    this.characterId = characterId;
     this.socket = socket;
     this.experience = experience;
     this.lastUpdateTime = Date.now();
@@ -53,7 +55,7 @@ class User {
   }
 
   updateLevel(level, experience) {
-    this.level = level;
+    this.playerInfo.statInfo.level = level;
     this.experience = experience;
   }
 
