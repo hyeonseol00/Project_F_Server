@@ -38,7 +38,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    const { experience, critical, criticalAttack, avoidAbility, gold } = character;
+    const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
     const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
     // 소비 아이템 가져오기
@@ -93,6 +93,7 @@ const enterTownHandler = async ({ socket, payload }) => {
           criticalAttack,
           avoidAbility,
           gold,
+          worldLevel,
         );
     if (!userExist) gameSession.addUser(curUser);
 

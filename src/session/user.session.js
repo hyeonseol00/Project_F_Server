@@ -16,6 +16,7 @@ export const addUser = (
   criticalAttack,
   avoidAbility,
   gold,
+  worldLevel,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -32,6 +33,7 @@ export const addUser = (
     criticalAttack,
     avoidAbility,
     gold,
+    worldLevel,
   );
   userSessions.push(user);
   return user;
