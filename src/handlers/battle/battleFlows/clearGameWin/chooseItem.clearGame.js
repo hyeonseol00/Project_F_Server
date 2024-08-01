@@ -6,6 +6,9 @@ export default async function chooseItemScene(responseCode, dungeon, socket) {
     { msg: 'A', enable: true },
     { msg: 'B', enable: true },
     { msg: 'C', enable: true },
+    { msg: 'D', enable: true },
+    { msg: 'E', enable: true },
+    { msg: 'F', enable: true },
   ];
   const battleLog = {
     msg: `보상을 선택하세요!`,

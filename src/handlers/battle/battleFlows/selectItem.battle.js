@@ -5,7 +5,7 @@ export default function selectItemScene(responseCode, dungeon, socket) {
   const usedItemIdx = responseCode - 1;
   const player = dungeon.player;
   const playerStatInfo = player.playerInfo.statInfo;
-  const usedItem = player.items[usedItemIdx];
+  const usedItem = player.potions[usedItemIdx];
 
   let msg = `${usedItem.name}을 사용하여\n`;
   usedItem.quantity--;
