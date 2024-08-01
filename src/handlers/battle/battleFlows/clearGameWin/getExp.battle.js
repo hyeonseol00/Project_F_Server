@@ -34,11 +34,12 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     } = levelTable;
 
     let monsterExp = 0;
+    let gold = 0;
     for (let i = 0; i < dungeon.monsters.length; i++) {
       const monster = dungeon.monsters[i];
       monsterExp += monster.exp;
+      gold += monster.gold;
     }
-
     const playerExp = monsterExp + player.experience;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.maxLevel) {
@@ -55,19 +56,20 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         playerStatus.def + defense,
         playerStatus.magic + magic,
         playerStatus.speed + speed,
-        playerStatus.critical + critical,
-        playerStatus.criticalAttack + criticalAttack,
-        playerStatus.avoidAbility + avoidAbility,
+        player.critical + critical,
+        player.criticalAttack + criticalAttack,
+        player.avoidAbility + avoidAbility,
+        player.gold + gold,
         player.nickname,
         player.characterClass,
       );
       playerStatus.hp = playerStatus.maxHp + hp;
       playerStatus.mp = playerStatus.maxMp + mp;
 
-      const message = ` 경험치 ${monsterExp}를 획득했습니다!\n
-      레벨 ${playerLevel + 1}이 되었습니다!\n
-      최대체력 +${hp} , 최대마나 +${mp}가 증가되었습니다!\n
-      공격력 +${attack} , 방어력 +${defense} , 마력 +${magic} , 스피드 +${speed}이 증가되었습니다!\n`;
+      const message = `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!\n
+레벨 ${playerLevel + 1}이 되었습니다!\n
+최대체력 +${hp} , 최대마나 +${mp}가 증가되었습니다!\n
+공격력 +${attack} , 방어력 +${defense} , 마력 +${magic} , 스피드 +${speed}이 증가되었습니다!`;
 
       battleLog = {
         msg: message,
@@ -80,12 +82,13 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         player.experience,
         playerStatus.hp,
         playerStatus.mp,
+        player.gold + gold,
         player.nickname,
         player.characterClass,
       );
 
       battleLog = {
-        msg: `경험치 ${monsterExp}를 획득했습니다!`,
+        msg: `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!`,
         typingAnimation: false,
         btns,
       };

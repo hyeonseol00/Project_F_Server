@@ -47,3 +47,15 @@ export const getDungeonItems = async (dungeonCode) => {
 
   return toCamelCase(rows);
 };
+
+export const getMountingItems = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MOUNTING_ITEMS, []);
+
+  return toCamelCase(rows);
+};
+
+export const getMountingItem = async (itemId) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MOUNTING_ITEM, [itemId]);
+
+  return toCamelCase(rows[0]);
+};

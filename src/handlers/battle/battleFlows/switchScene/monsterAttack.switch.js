@@ -8,7 +8,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
-  console.log(index);
+
   if (playerStatInfo.hp <= 0) {
     const actionSet = {
       animCode: 3,
@@ -65,13 +65,19 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     // ------------- 플레이어 피격 코드 -------------
     const btns = [{ msg: '다음', enable: true }];
 
-    let finalDamage = monster.power / (1 + playerStatInfo.def * 0.01); // LOL 피해량 공식
-    let message = `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!`;
+    let finalDamage = Math.floor(monster.power / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
+    let message = `몬스터 ${monster.name}이(가) ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${finalDamage} 데미지를 입었습니다.`;
     let effectCode = monster.effectCode;
+
+    const isCritical = Math.floor(Math.random() * 101);
+    if (isCritical <= monster.critical) {
+      finalDamage = finalDamage * (monster.criticalAttack / 100);
+      message = `몬스터 ${monster.name}이(가) 강화된 공격으로 ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${finalDamage} 데미지를 입었습니다.`;
+    }
 
     const isAvoid = Math.floor(Math.random() * 101);
     if (isAvoid <= player.avoidAbility) {
-      message = `몬스터 ${monster.name}이(가) 플레이어를 공격합니다!\n ${player.nickname}은(는) ${monster.name}의 공격을 회피했습니다!`;
+      message = `몬스터 ${monster.name}이(가) ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${monster.name}의 공격을 회피했습니다!`;
       finalDamage = 0;
       effectCode = -1;
     }

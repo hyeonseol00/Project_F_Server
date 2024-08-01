@@ -1,5 +1,5 @@
 class Monster {
-  constructor(idx, id, hp, power, name, effectCode, exp) {
+  constructor(idx, id, hp, power, name, effectCode, exp, gold, critical, criticalAttack) {
     this.idx = idx;
     this.id = id;
     this.hp = hp;
@@ -8,6 +8,9 @@ class Monster {
     this.isDead = false;
     this.effectCode = effectCode;
     this.exp = exp;
+    this.gold = gold;
+    this.critical = critical;
+    this.criticalAttack = criticalAttack;
   }
 }
 

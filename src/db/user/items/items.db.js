@@ -10,6 +10,11 @@ export const getUserPotionItemsByCharacterId = async (characterId) => {
   return toCamelCase(rows);
 };
 
-// export const insertUserByUsername = async (username) => {
-//   await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_USER, [username]);
-// };
+export const getUserMountingItemsByCharacterId = async (characterId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(
+    SQL_QUERIES.GET_USER_MOUNTING_ITEMS_BY_CHARACTER_ID,
+    [characterId],
+  );
+
+  return toCamelCase(rows);
+};

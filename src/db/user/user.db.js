@@ -122,6 +122,7 @@ export const updateCharacterStatus = async (
   critical,
   criticalAttack,
   avoidAbility,
+  gold,
   characterName,
   jobId,
 ) => {
@@ -139,16 +140,18 @@ export const updateCharacterStatus = async (
     critical,
     criticalAttack,
     avoidAbility,
+    gold,
     characterName,
     jobId,
   ]);
 };
 
-export const updateCharacterCurStatus = async (experience, curHp, curMp, characterName, jobId) => {
+export const updateCharacterCurStatus = async (experience, curHp, curMp, gold, characterName, jobId) => {
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_CUR_STATUS, [
     experience,
     curHp,
     curMp,
+    gold,
     characterName,
     jobId,
   ]);

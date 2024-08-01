@@ -8,10 +8,13 @@ class User {
     normalCode,
     singleSkillCode,
     wideSkillCode,
-    items,
+    potions,
+    mountingItems,
     critical,
     criticalAttack,
     avoidAbility,
+    gold,
+    worldLevel,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
@@ -20,11 +23,14 @@ class User {
     this.experience = experience;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
-    this.items = items;
+    this.potions = potions;
+    this.mountingItems = mountingItems;
     this.experience = experience;
     this.critical = critical;
     this.criticalAttack = criticalAttack;
     this.avoidAbility = avoidAbility;
+    this.gold = gold;
+    this.worldLevel = worldLevel;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }
@@ -51,21 +57,30 @@ class User {
     this.experience = experience;
   }
 
-  getItemIdx(name) {
-    for (const itemIdx in this.items) {
-      if (this.items[itemIdx].name === name) {
-        return itemIdx;
+  getPotionIdx(name) {
+    for (const potionIdx in this.potions) {
+      if (this.potions[potionIdx].name === name) {
+        return potionIdx;
       }
     }
     return -1;
   }
 
-  getItemsAccount() {
+  getPotionsAccount() {
     let count = 0;
-    for (const item of this.items) {
-      count += item.quantity;
+    for (const potion of this.potions) {
+      count += potion.quantity;
     }
     return count;
+  }
+
+  getItemIdx(name) {
+    for (const itemIdx in this.mountingItems) {
+      if (this.mountingItems[itemIdx].name === name) {
+        return itemIdx;
+      }
+    }
+    return -1;
   }
 }
 

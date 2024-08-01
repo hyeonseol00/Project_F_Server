@@ -66,8 +66,7 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       dungeon.battleSceneStatus = config.sceneStatus.confirm;
       break;
     case config.actionButton.item:
-      const items = player.items;
-      console.log(items);
+      const items = player.potions;
       for (const item of items) {
         if (item.quantity < 1) btns.push({ msg: item.name + ` x0`, enable: false });
         else btns.push({ msg: item.name + ` x${item.quantity}`, enable: true });

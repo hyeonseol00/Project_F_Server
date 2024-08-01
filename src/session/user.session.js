@@ -10,10 +10,13 @@ export const addUser = (
   baseEffect,
   singleEffect,
   wideEffect,
-  items,
+  potions,
+  mountingItems,
   critical,
   criticalAttack,
   avoidAbility,
+  gold,
+  worldLevel,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -24,10 +27,13 @@ export const addUser = (
     baseEffect,
     singleEffect,
     wideEffect,
-    items,
+    potions,
+    mountingItems,
     critical,
     criticalAttack,
     avoidAbility,
+    gold,
+    worldLevel,
   );
   userSessions.push(user);
   return user;

@@ -27,30 +27,79 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
     const monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
 
+    let hpRating = 0;
+    let attackRating = 0;
+    let expRating = 0;
+    let goldRating = 0;
+    switch (player.worldLevel) {
+      case 1:
+        hpRating = 1;
+        attackRating = 1;
+        expRating = 1;
+        goldRating = 1;
+        break;
+      case 2:
+        hpRating = 1.2;
+        attackRating = 1.2;
+        expRating = 1.2;
+        goldRating = 1.2;
+        break;
+      case 3:
+        hpRating = 1.5;
+        attackRating = 1.5;
+        expRating = 1.5;
+        goldRating = 1.5;
+        break;
+      case 4:
+        hpRating = 2;
+        attackRating = 2;
+        expRating = 2;
+        goldRating = 2;
+        break;
+      case 5:
+        hpRating = 3;
+        attackRating = 3;
+        expRating = 3;
+        goldRating = 3;
+        break;
+    }
+
     const monsterStatus = [];
     for (let i = 0; i < 3; i++) {
       const monsterDB = await findMonsterByMonsters(
         monsters[Math.floor(Math.random() * monsters.length)].monsterId,
       );
-      const { monsterId, monsterHp, monsterAttack, monsterName, monsterExp } = monsterDB;
+      const {
+        monsterId,
+        monsterHp,
+        monsterAttack,
+        monsterName,
+        monsterExp,
+        monsterGold,
+        monsterCritical,
+        monsterCriticalAttack,
+      } = monsterDB;
       const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
         monsterIdx: i,
         monsterModel: monsterId,
         monsterName: monsterName,
-        monsterHp: monsterHp,
+        monsterHp: monsterHp * hpRating,
       };
       monsterStatus.push(monster);
 
       dungeon.addMonster(
         i,
         monsterId,
-        monsterHp,
-        monsterAttack,
+        monsterHp * hpRating,
+        monsterAttack * attackRating,
         monsterName,
         effectCode,
-        monsterExp,
+        monsterExp * expRating,
+        monsterGold * goldRating,
+        monsterCritical,
+        monsterCriticalAttack,
       );
     }
 
