@@ -73,7 +73,6 @@ const enterTownHandler = async ({ socket, payload }) => {
       );
       userMountingItems.push(item);
     }
-    console.log('userMountingItems: ', userMountingItems);
 
     // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
     // 그렇지 않으면 유저세션, 게임세션에 추가한다.

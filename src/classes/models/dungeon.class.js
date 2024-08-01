@@ -15,8 +15,8 @@ class InstanceDungeon {
     this.selectItem = null;
   }
 
-  addMonster(idx, id, hp, power, name, effectCode, exp , gold) {
-    const monster = new Monster(idx, id, hp, power, name, effectCode, exp , gold);
+  addMonster(idx, id, hp, power, name, effectCode, exp, gold) {
+    const monster = new Monster(idx, id, hp, power, name, effectCode, exp, gold);
     this.monsters.push(monster);
   }
 
@@ -57,6 +57,8 @@ class InstanceDungeon {
 
   async pushDungeonItems(dungeonCode) {
     this.items = [];
+    this.mountingItems = []; // random mounting item list
+    this.potions = []; // random potion list
 
     const dungeonItems = await getDungeonItems(dungeonCode + 5000);
     for (const item of dungeonItems) {
@@ -71,6 +73,7 @@ class InstanceDungeon {
           potionInfo.expHealingAmount,
           dungeonCode, // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
         );
+        this.potions.push(this.items.length); // items에 저장될 idx
         this.items.push(potion);
       } else {
         const itemInfo = await getMountingItem(item.itemId);
@@ -83,15 +86,24 @@ class InstanceDungeon {
           1,
           itemInfo,
         );
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.mountingItems.push(this.items.length); // items에 저장될 idx
+        }
         this.items.push(mountingItem);
       }
     }
   }
 
   getRandomItem() {
-    const itemIdx = Math.floor(Math.random() * this.items.length);
-
-    return this.items[itemIdx];
+    const potionOrItem = Math.floor(Math.random() * 10); // 0 ~ 9
+    if (potionOrItem < 7) {
+      // 70% 확률로 포션중 하나
+      return this.items[this.potions[Math.floor(Math.random() * this.potions.length)]];
+    } else {
+      // 30% 확률로 아이템중 하나(이미 확률적으로 들어있음)
+      return this.items[this.mountingItems[Math.floor(Math.random() * this.mountingItems.length)]];
+    }
   }
 }
 
