@@ -4,7 +4,7 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 export default function switchToGameOverWin(dungeon, socket) {
   const item = dungeon.selectItem;
   const player = dungeon.player;
-  if (item.isPotion) {
+  if (item.itemType === 'potion') {
     // 보상이 소비 아이템일 경우
     const potionIdx = player.getPotionIdx(item.name);
     if (potionIdx === -1) {

@@ -67,10 +67,14 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       break;
     case config.actionButton.item:
       const items = player.potions;
+      items.sort((a, b) => a.itemId - b.itemId);
       for (const item of items) {
         if (item.quantity < 1) btns.push({ msg: item.name + ` x0`, enable: false });
-        else btns.push({ msg: item.name + ` x${item.quantity}`, enable: true });
+        else if (item.requireLevel > playerStatInfo.level) {
+          btns.push({ msg: item.name + ` x${item.quantity}`, enable: false });
+        } else btns.push({ msg: item.name + ` x${item.quantity}`, enable: true });
       }
+      btns.push({ msg: '취소', enable: true });
       const itemsBattleLog = {
         msg: '아이템을 선택하세요!',
         typingAnimation: false,

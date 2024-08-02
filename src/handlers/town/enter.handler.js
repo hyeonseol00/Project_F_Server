@@ -1,12 +1,7 @@
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
-import { getMountingItem, getPotionItem } from '../../db/game/game.db.js';
-import {
-  getUserMountingItemsByCharacterId,
-  getUserPotionItemsByCharacterId,
-  updateCharacterMountingItems,
-  updateCharacterPotions,
-} from '../../db/user/items/items.db.js';
+import { getItem } from '../../db/game/game.db.js';
+import { getUserItemsByCharacterId, updateCharacterItems } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
   findUserByUsername,
@@ -60,40 +55,28 @@ const enterTownHandler = async ({ socket, payload }) => {
       } = character;
       const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
-      // 소비 아이템 가져오기
-      const potions = await getUserPotionItemsByCharacterId(character.characterId);
+      const userItems = await getUserItemsByCharacterId(character.characterId);
       const userPotions = [];
-      for (const potion of potions) {
-        const potionInfo = await getPotionItem(potion.itemId);
-        const item = new Item(
-          potion.itemId,
-          true,
-          potionInfo.name,
-          potionInfo.hpHealingAmount,
-          potionInfo.mpHealingAmount,
-          potionInfo.expHealingAmount,
-          potion.quantity,
-        );
-        userPotions.push(item);
-      }
-
-      // 장착 아이템 가져오기
-      const mountingItems = await getUserMountingItemsByCharacterId(character.characterId);
       const userMountingItems = [];
-      for (const mountingItem of mountingItems) {
-        const itemInfo = await getMountingItem(mountingItem.itemId);
+      for (const userItem of userItems) {
+        const itemInfo = await getItem(userItem.itemId);
         const item = new Item(
-          mountingItem.itemId,
+          itemInfo.itemId,
           itemInfo.itemType,
-          false,
           itemInfo.itemName,
           itemInfo.itemHp,
           itemInfo.itemMp,
           itemInfo.requireLevel,
-          mountingItem.quantity,
+          userItem.quantity,
           itemInfo,
         );
-        userMountingItems.push(item);
+        if (itemInfo.itemType === 'potion') {
+          // 소비 아이템
+          userPotions.push(item);
+        } else {
+          // 장착 아이템
+          userMountingItems.push(item);
+        }
       }
 
       // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
@@ -162,11 +145,25 @@ const enterTownHandler = async ({ socket, payload }) => {
         curUser.characterClass,
       );
 
-      // user 포션 저장
-      await updateCharacterPotions(curUser.characterId, curUser.potions);
+      // user items 저장
+      await updateCharacterItems(curUser.characterId, curUser.potions);
+      await updateCharacterItems(curUser.characterId, curUser.mountingItems);
 
-      // user 장착 아이템 저장
-      await updateCharacterMountingItems(curUser.characterId, curUser.mountingItems);
+      // user 세션의 potions중 quantity 0인 potion 삭제
+      for (let i = curUser.potions.length - 1; i >= 0; i--) {
+        const potion = curUser.potions[i];
+        if (potion.quantity === 0) {
+          curUser.potions.splice(i, 1);
+        }
+      }
+
+      // user 세션의 mountingItems중 quantity 0인 item 삭제
+      for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
+        const item = curUser.mountingItems[i];
+        if (item.quantity === 0) {
+          curUser.mountingItems.splice(i, 1);
+        }
+      }
 
       statInfo = {
         level: curUser.playerInfo.statInfo.level,

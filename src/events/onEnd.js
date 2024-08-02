@@ -4,16 +4,14 @@ import { getUserBySocket, removeUser } from '../session/user.session.js';
 import leaveTownHandler from '../handlers/town/leave.handler.js';
 import { removeDungeon } from '../session/dungeon.session.js';
 import { updateCharacterStatus } from '../db/user/user.db.js';
-import { updateCharacterMountingItems } from '../db/user/items/items.db.js';
+import { updateCharacterItems } from '../db/user/items/items.db.js';
 import { getHatcherySession } from '../session/hatchery.session.js';
-
 
 export const onEnd = (socket) => async () => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
   const playerStatus = user.playerInfo.statInfo;
   const hatcherySession = getHatcherySession();
-
 
   if (user) {
     await updateCharacterStatus(
@@ -40,7 +38,7 @@ export const onEnd = (socket) => async () => {
       user.characterClass,
     );
 
-    await updateCharacterMountingItems(user.characterId, user.mountingItems);
+    await updateCharacterItems(user.characterId, user.mountingItems);
 
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
