@@ -1,5 +1,5 @@
 import {
-  sendDirectMessage, 
+  sendDirectMessage,
   sendMessageToTeam,
   createTeamHandler,
   joinTeamHandler,
@@ -8,7 +8,7 @@ import {
   acceptTeamHandler,
   kickMemberHandler,
 } from './town/chatCommand.handler.js';
-
+import { equipHandler } from './town/equip.handler.js';
 
 const chatCommands = new Map([
   ['w', sendDirectMessage],
@@ -21,6 +21,7 @@ const chatCommands = new Map([
   ['acceptTeam', acceptTeamHandler],
   ['kickMember', kickMemberHandler],
   // ---------team end------------
+  ['equip', equipHandler],
 ]);
 
 export default chatCommands;
