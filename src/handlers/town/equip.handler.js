@@ -52,476 +52,480 @@ export const equipHandler = (user, message) => {
   }
 
   let statInfo;
-  if (itemType === 'weapon') {
-    if (weapon !== 0) {
-      const curWeaponInfo = getItemById(weapon);
-      user.updateItemId(itemType, itemId);
+  switch (itemType) {
+    case 'weapon':
+      if (weapon !== 0) {
+        const curWeaponInfo = getItemById(weapon);
+        user.updateItemId(itemType, itemId);
 
-      statInfo = {
-        level,
-        hp: maxHp + addHp - curWeaponInfo.itemHp < hp ? maxHp + addHp - curWeaponInfo.itemHp : hp,
-        maxHp: maxHp + addHp - curWeaponInfo.itemHp,
-        mp: maxMp + addMp - curWeaponInfo.itemMp < mp ? maxMp + addMp - curWeaponInfo.itemMp : mp,
-        maxMp: maxMp + addMp - curWeaponInfo.itemMp,
-        atk: atk + addAttack - curWeaponInfo.itemAttack,
-        def: def + addDefense - curWeaponInfo.itemDefense,
-        magic: magic + addMagic - curWeaponInfo.itemMagic,
-        speed: speed + addSpeed - curWeaponInfo.itemSpeed,
-      };
+        statInfo = {
+          level,
+          hp: maxHp + addHp - curWeaponInfo.itemHp < hp ? maxHp + addHp - curWeaponInfo.itemHp : hp,
+          maxHp: maxHp + addHp - curWeaponInfo.itemHp,
+          mp: maxMp + addMp - curWeaponInfo.itemMp < mp ? maxMp + addMp - curWeaponInfo.itemMp : mp,
+          maxMp: maxMp + addMp - curWeaponInfo.itemMp,
+          atk: atk + addAttack - curWeaponInfo.itemAttack,
+          def: def + addDefense - curWeaponInfo.itemDefense,
+          magic: magic + addMagic - curWeaponInfo.itemMagic,
+          speed: speed + addSpeed - curWeaponInfo.itemSpeed,
+        };
 
-      const updateCritical = critical + addCritical - curWeaponInfo.itemCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance - curWeaponInfo.itemAvoidance;
+        const updateCritical = critical + addCritical - curWeaponInfo.itemCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance - curWeaponInfo.itemAvoidance;
 
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-      const isInven = user.findItemByInven(weapon);
-      const itemInfo = getItemById(weapon);
-      if (!isInven) {
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          false,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
-        user.pushMountingItem(item);
+        const isInven = user.findItemByInven(weapon);
+        const itemInfo = getItemById(weapon);
+        if (!isInven) {
+          const item = new Item(
+            itemInfo.itemId,
+            itemInfo.itemType,
+            false,
+            itemInfo.itemName,
+            itemInfo.itemHp,
+            itemInfo.itemMp,
+            itemInfo.requireLevel,
+            1,
+            itemInfo,
+          );
+          user.pushMountingItem(item);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        } else {
+          user.addMountingItem(isInven.itemId);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${curWeaponInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
+      } else {
+        user.updateItemId(itemType, itemId);
+
+        statInfo = {
+          level,
+          hp: hp + addHp,
+          maxHp: maxHp + addHp,
+          mp: mp + addMp,
+          maxMp: maxMp + addMp,
+          atk: atk + addAttack,
+          def: def + addDefense,
+          magic: magic + addMagic,
+          speed: speed + addSpeed,
+        };
+
+        const updateCritical = critical + addCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance;
+
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
+
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId);
         }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
+      }
+      break;
+    case 'armor':
+      if (armor !== 0) {
+        const curArmorInfo = getItemById(armor);
+        user.updateItemId(itemType, itemId);
+
+        statInfo = {
+          level,
+          hp: maxHp + addHp - curArmorInfo.itemHp < hp ? maxHp + addHp - curArmorInfo.itemHp : hp,
+          maxHp: maxHp + addHp - curArmorInfo.itemHp,
+          mp: maxMp + addMp - curArmorInfo.itemMp < mp ? maxMp + addMp - curArmorInfo.itemMp : mp,
+          maxMp: maxMp + addMp - curArmorInfo.itemMp,
+          atk: atk + addAttack - curArmorInfo.itemAttack,
+          def: def + addDefense - curArmorInfo.itemDefense,
+          magic: magic + addMagic - curArmorInfo.itemMagic,
+          speed: speed + addSpeed - curArmorInfo.itemSpeed,
+        };
+
+        const updateCritical = critical + addCritical - curArmorInfo.itemCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance - curArmorInfo.itemAvoidance;
+
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
+
+        const isInven = user.findItemByInven(armor);
+        const itemInfo = getItemById(armor);
+        if (!isInven) {
+          const item = new Item(
+            itemInfo.itemId,
+            itemInfo.itemType,
+            false,
+            itemInfo.itemName,
+            itemInfo.itemHp,
+            itemInfo.itemMp,
+            itemInfo.requireLevel,
+            1,
+            itemInfo,
+          );
+          user.pushMountingItem(item);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        } else {
+          user.addMountingItem(isInven.itemId);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${curArmorInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       } else {
-        user.addMountingItem(isInven.itemId);
+        user.updateItemId(itemType, itemId);
+
+        statInfo = {
+          level,
+          hp: hp + addHp,
+          maxHp: maxHp + addHp,
+          mp: mp + addMp,
+          maxMp: maxMp + addMp,
+          atk: atk + addAttack,
+          def: def + addDefense,
+          magic: magic + addMagic,
+          speed: speed + addSpeed,
+        };
+
+        const updateCritical = critical + addCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance;
+
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
+
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId);
         }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       }
+      break;
+    case 'gloves':
+      if (gloves !== 0) {
+        const curGlovesInfo = getItemById(gloves);
+        user.updateItemId(itemType, itemId);
+        statInfo = {
+          level,
+          hp: maxHp + addHp - curGlovesInfo.itemHp < hp ? maxHp + addHp - curGlovesInfo.itemHp : hp,
+          maxHp: maxHp + addHp - curGlovesInfo.itemHp,
+          mp: maxMp + addMp - curGlovesInfo.itemMp < mp ? maxMp + addMp - curGlovesInfo.itemMp : mp,
+          maxMp: maxMp + addMp - curGlovesInfo.itemMp,
+          atk: atk + addAttack - curGlovesInfo.itemAttack,
+          def: def + addDefense - curGlovesInfo.itemDefense,
+          magic: magic + addMagic - curGlovesInfo.itemMagic,
+          speed: speed + addSpeed - curGlovesInfo.itemSpeed,
+          critical: critical + addCritical - curGlovesInfo.itemCritical,
+          avoidAbility: avoidAbility + addAvoidance - curGlovesInfo.itemAvoidance,
+        };
 
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${curWeaponInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    } else {
-      user.updateItemId(itemType, itemId);
+        const updateCritical = critical + addCritical - curGlovesInfo.itemCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance - curGlovesInfo.itemAvoidance;
 
-      statInfo = {
-        level,
-        hp: hp + addHp,
-        maxHp: maxHp + addHp,
-        mp: mp + addMp,
-        maxMp: maxMp + addMp,
-        atk: atk + addAttack,
-        def: def + addDefense,
-        magic: magic + addMagic,
-        speed: speed + addSpeed,
-      };
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-      const updateCritical = critical + addCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance;
+        const isInven = user.findItemByInven(gloves);
+        const itemInfo = getItemById(gloves);
+        if (!isInven) {
+          const item = new Item(
+            itemInfo.itemId,
+            itemInfo.itemType,
+            false,
+            itemInfo.itemName,
+            itemInfo.itemHp,
+            itemInfo.itemMp,
+            itemInfo.requireLevel,
+            1,
+            itemInfo,
+          );
+          user.pushMountingItem(item);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        } else {
+          user.addMountingItem(isInven.itemId);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        }
 
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${curGlovesInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       } else {
-        user.decMountingItem(itemId);
-      }
+        user.updateItemId(itemType, itemId);
 
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    }
-  }
-  if (itemType === 'armor') {
-    if (armor !== 0) {
-      const curArmorInfo = getItemById(armor);
-      user.updateItemId(itemType, itemId);
+        statInfo = {
+          level,
+          hp: hp + addHp,
+          maxHp: maxHp + addHp,
+          mp: mp + addMp,
+          maxMp: maxMp + addMp,
+          atk: atk + addAttack,
+          def: def + addDefense,
+          magic: magic + addMagic,
+          speed: speed + addSpeed,
+          critical: critical + addCritical,
+          avoidAbility: avoidAbility + addAvoidance,
+        };
 
-      statInfo = {
-        level,
-        hp: maxHp + addHp - curArmorInfo.itemHp < hp ? maxHp + addHp - curArmorInfo.itemHp : hp,
-        maxHp: maxHp + addHp - curArmorInfo.itemHp,
-        mp: maxMp + addMp - curArmorInfo.itemMp < mp ? maxMp + addMp - curArmorInfo.itemMp : mp,
-        maxMp: maxMp + addMp - curArmorInfo.itemMp,
-        atk: atk + addAttack - curArmorInfo.itemAttack,
-        def: def + addDefense - curArmorInfo.itemDefense,
-        magic: magic + addMagic - curArmorInfo.itemMagic,
-        speed: speed + addSpeed - curArmorInfo.itemSpeed,
-      };
+        const updateCritical = critical + addCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance;
 
-      const updateCritical = critical + addCritical - curArmorInfo.itemCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance - curArmorInfo.itemAvoidance;
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      const isInven = user.findItemByInven(armor);
-      const itemInfo = getItemById(armor);
-      if (!isInven) {
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          false,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
-        user.pushMountingItem(item);
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId);
         }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
+      }
+      break;
+    case 'shoes':
+      if (shoes !== 0) {
+        const curShoesInfo = getItemById(shoes);
+        user.updateItemId(itemType, itemId);
+
+        statInfo = {
+          level,
+          hp: maxHp + addHp - curShoesInfo.itemHp < hp ? maxHp + addHp - curShoesInfo.itemHp : hp,
+          maxHp: maxHp + addHp - curShoesInfo.itemHp,
+          mp: maxMp + addMp - curShoesInfo.itemMp < mp ? maxMp + addMp - curShoesInfo.itemMp : mp,
+          maxMp: maxMp + addMp - curShoesInfo.itemMp,
+          atk: atk + addAttack - curShoesInfo.itemAttack,
+          def: def + addDefense - curShoesInfo.itemDefense,
+          magic: magic + addMagic - curShoesInfo.itemMagic,
+          speed: speed + addSpeed - curShoesInfo.itemSpeed,
+          critical: critical + addCritical - curShoesInfo.itemCritical,
+          avoidAbility: avoidAbility + addAvoidance - curShoesInfo.itemAvoidance,
+        };
+
+        const updateCritical = critical + addCritical - curShoesInfo.itemCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance - curShoesInfo.itemAvoidance;
+
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
+
+        const isInven = user.findItemByInven(shoes);
+        const itemInfo = getItemById(shoes);
+        if (!isInven) {
+          const item = new Item(
+            itemInfo.itemId,
+            itemInfo.itemType,
+            false,
+            itemInfo.itemName,
+            itemInfo.itemHp,
+            itemInfo.itemMp,
+            itemInfo.requireLevel,
+            1,
+            itemInfo,
+          );
+          user.pushMountingItem(item);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        } else {
+          user.addMountingItem(isInven.itemId);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${curShoesInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       } else {
-        user.addMountingItem(isInven.itemId);
+        user.updateItemId(itemType, itemId);
+
+        statInfo = {
+          level,
+          hp: hp + addHp,
+          maxHp: maxHp + addHp,
+          mp: mp + addMp,
+          maxMp: maxMp + addMp,
+          atk: atk + addAttack,
+          def: def + addDefense,
+          magic: magic + addMagic,
+          speed: speed + addSpeed,
+          critical: critical + addCritical,
+          avoidAbility: avoidAbility + addAvoidance,
+        };
+
+        const updateCritical = critical + addCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance;
+
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
+
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId);
         }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       }
+      break;
+    case 'accessory':
+      if (accessory !== 0) {
+        const curAccessoryInfo = getItemById(accessory);
+        user.updateItemId(itemType, itemId);
 
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${curArmorInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    } else {
-      user.updateItemId(itemType, itemId);
+        statInfo = {
+          level,
+          hp:
+            maxHp + addHp - curAccessoryInfo.itemHp < hp
+              ? maxHp + addHp - curAccessoryInfo.itemHp
+              : hp,
+          maxHp: maxHp + addHp - curAccessoryInfo.itemHp,
+          mp:
+            maxMp + addMp - curAccessoryInfo.itemMp < mp
+              ? maxMp + addMp - curAccessoryInfo.itemMp
+              : mp,
+          maxMp: maxMp + addMp - curAccessoryInfo.itemMp,
+          atk: atk + addAttack - curAccessoryInfo.itemAttack,
+          def: def + addDefense - curAccessoryInfo.itemDefense,
+          magic: magic + addMagic - curAccessoryInfo.itemMagic,
+          speed: speed + addSpeed - curAccessoryInfo.itemSpeed,
+          critical: critical + addCritical - curAccessoryInfo.itemCritical,
+          avoidAbility: avoidAbility + addAvoidance - curAccessoryInfo.itemAvoidance,
+        };
 
-      statInfo = {
-        level,
-        hp: hp + addHp,
-        maxHp: maxHp + addHp,
-        mp: mp + addMp,
-        maxMp: maxMp + addMp,
-        atk: atk + addAttack,
-        def: def + addDefense,
-        magic: magic + addMagic,
-        speed: speed + addSpeed,
-      };
+        const updateCritical = critical + addCritical - curAccessoryInfo.itemCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance - curAccessoryInfo.itemAvoidance;
 
-      const updateCritical = critical + addCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance;
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
+        const isInven = user.findItemByInven(accessory);
+        const itemInfo = getItemById(accessory);
+        if (!isInven) {
+          const item = new Item(
+            itemInfo.itemId,
+            itemInfo.itemType,
+            false,
+            itemInfo.itemName,
+            itemInfo.itemHp,
+            itemInfo.itemMp,
+            itemInfo.requireLevel,
+            1,
+            itemInfo,
+          );
+          user.pushMountingItem(item);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        } else {
+          user.addMountingItem(isInven.itemId);
+          if (user.getItemQuantity(itemId) === 1) {
+            user.deleteMountingItem(itemId);
+          } else {
+            user.decMountingItem(itemId);
+          }
+        }
 
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${curAccessoryInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       } else {
-        user.decMountingItem(itemId);
-      }
+        user.updateItemId(itemType, itemId);
 
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    }
-  }
-  if (itemType === 'gloves') {
-    if (gloves !== 0) {
-      const curGlovesInfo = getItemById(gloves);
-      user.updateItemId(itemType, itemId);
-      statInfo = {
-        level,
-        hp: maxHp + addHp - curGlovesInfo.itemHp < hp ? maxHp + addHp - curGlovesInfo.itemHp : hp,
-        maxHp: maxHp + addHp - curGlovesInfo.itemHp,
-        mp: maxMp + addMp - curGlovesInfo.itemMp < mp ? maxMp + addMp - curGlovesInfo.itemMp : mp,
-        maxMp: maxMp + addMp - curGlovesInfo.itemMp,
-        atk: atk + addAttack - curGlovesInfo.itemAttack,
-        def: def + addDefense - curGlovesInfo.itemDefense,
-        magic: magic + addMagic - curGlovesInfo.itemMagic,
-        speed: speed + addSpeed - curGlovesInfo.itemSpeed,
-        critical: critical + addCritical - curGlovesInfo.itemCritical,
-        avoidAbility: avoidAbility + addAvoidance - curGlovesInfo.itemAvoidance,
-      };
+        statInfo = {
+          level,
+          hp: hp + addHp,
+          maxHp: maxHp + addHp,
+          mp: mp + addMp,
+          maxMp: maxMp + addMp,
+          atk: atk + addAttack,
+          def: def + addDefense,
+          magic: magic + addMagic,
+          speed: speed + addSpeed,
+          critical: critical + addCritical,
+          avoidAbility: avoidAbility + addAvoidance,
+        };
 
-      const updateCritical = critical + addCritical - curGlovesInfo.itemCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance - curGlovesInfo.itemAvoidance;
+        const updateCritical = critical + addCritical;
+        const updateAvoidAbility = avoidAbility + addAvoidance;
 
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
+        user.updateStatInfo(statInfo);
+        user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-      const isInven = user.findItemByInven(gloves);
-      const itemInfo = getItemById(gloves);
-      if (!isInven) {
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          false,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
-        user.pushMountingItem(item);
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId);
         }
-      } else {
-        user.addMountingItem(isInven.itemId);
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId);
-        }
+
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+        });
+        user.socket.write(response);
       }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${curGlovesInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    } else {
-      user.updateItemId(itemType, itemId);
-
-      statInfo = {
-        level,
-        hp: hp + addHp,
-        maxHp: maxHp + addHp,
-        mp: mp + addMp,
-        maxMp: maxMp + addMp,
-        atk: atk + addAttack,
-        def: def + addDefense,
-        magic: magic + addMagic,
-        speed: speed + addSpeed,
-        critical: critical + addCritical,
-        avoidAbility: avoidAbility + addAvoidance,
-      };
-
-      const updateCritical = critical + addCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance;
-
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
-      } else {
-        user.decMountingItem(itemId);
-      }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    }
-  }
-  if (itemType === 'shoes') {
-    if (shoes !== 0) {
-      const curShoesInfo = getItemById(shoes);
-      user.updateItemId(itemType, itemId);
-
-      statInfo = {
-        level,
-        hp: maxHp + addHp - curShoesInfo.itemHp < hp ? maxHp + addHp - curShoesInfo.itemHp : hp,
-        maxHp: maxHp + addHp - curShoesInfo.itemHp,
-        mp: maxMp + addMp - curShoesInfo.itemMp < mp ? maxMp + addMp - curShoesInfo.itemMp : mp,
-        maxMp: maxMp + addMp - curShoesInfo.itemMp,
-        atk: atk + addAttack - curShoesInfo.itemAttack,
-        def: def + addDefense - curShoesInfo.itemDefense,
-        magic: magic + addMagic - curShoesInfo.itemMagic,
-        speed: speed + addSpeed - curShoesInfo.itemSpeed,
-        critical: critical + addCritical - curShoesInfo.itemCritical,
-        avoidAbility: avoidAbility + addAvoidance - curShoesInfo.itemAvoidance,
-      };
-
-      const updateCritical = critical + addCritical - curShoesInfo.itemCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance - curShoesInfo.itemAvoidance;
-
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      const isInven = user.findItemByInven(shoes);
-      const itemInfo = getItemById(shoes);
-      if (!isInven) {
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          false,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
-        user.pushMountingItem(item);
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId);
-        }
-      } else {
-        user.addMountingItem(isInven.itemId);
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId);
-        }
-      }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${curShoesInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    } else {
-      user.updateItemId(itemType, itemId);
-
-      statInfo = {
-        level,
-        hp: hp + addHp,
-        maxHp: maxHp + addHp,
-        mp: mp + addMp,
-        maxMp: maxMp + addMp,
-        atk: atk + addAttack,
-        def: def + addDefense,
-        magic: magic + addMagic,
-        speed: speed + addSpeed,
-        critical: critical + addCritical,
-        avoidAbility: avoidAbility + addAvoidance,
-      };
-
-      const updateCritical = critical + addCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance;
-
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
-      } else {
-        user.decMountingItem(itemId);
-      }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    }
-  }
-  if (itemType === 'accessory') {
-    if (accessory !== 0) {
-      const curAccessoryInfo = getItemById(accessory);
-      user.updateItemId(itemType, itemId);
-
-      statInfo = {
-        level,
-        hp:
-          maxHp + addHp - curAccessoryInfo.itemHp < hp
-            ? maxHp + addHp - curAccessoryInfo.itemHp
-            : hp,
-        maxHp: maxHp + addHp - curAccessoryInfo.itemHp,
-        mp:
-          maxMp + addMp - curAccessoryInfo.itemMp < mp
-            ? maxMp + addMp - curAccessoryInfo.itemMp
-            : mp,
-        maxMp: maxMp + addMp - curAccessoryInfo.itemMp,
-        atk: atk + addAttack - curAccessoryInfo.itemAttack,
-        def: def + addDefense - curAccessoryInfo.itemDefense,
-        magic: magic + addMagic - curAccessoryInfo.itemMagic,
-        speed: speed + addSpeed - curAccessoryInfo.itemSpeed,
-        critical: critical + addCritical - curAccessoryInfo.itemCritical,
-        avoidAbility: avoidAbility + addAvoidance - curAccessoryInfo.itemAvoidance,
-      };
-
-      const updateCritical = critical + addCritical - curAccessoryInfo.itemCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance - curAccessoryInfo.itemAvoidance;
-
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      const isInven = user.findItemByInven(accessory);
-      const itemInfo = getItemById(accessory);
-      if (!isInven) {
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          false,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
-        user.pushMountingItem(item);
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId);
-        }
-      } else {
-        user.addMountingItem(isInven.itemId);
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId);
-        }
-      }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${curAccessoryInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    } else {
-      user.updateItemId(itemType, itemId);
-
-      statInfo = {
-        level,
-        hp: hp + addHp,
-        maxHp: maxHp + addHp,
-        mp: mp + addMp,
-        maxMp: maxMp + addMp,
-        atk: atk + addAttack,
-        def: def + addDefense,
-        magic: magic + addMagic,
-        speed: speed + addSpeed,
-        critical: critical + addCritical,
-        avoidAbility: avoidAbility + addAvoidance,
-      };
-
-      const updateCritical = critical + addCritical;
-      const updateAvoidAbility = avoidAbility + addAvoidance;
-
-      user.updateStatInfo(statInfo);
-      user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
-      } else {
-        user.decMountingItem(itemId);
-      }
-
-      const response = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${name}을(를) 장착했습니다.`,
-      });
-      user.socket.write(response);
-    }
+      break;
+    default:
+      break;
   }
 };
