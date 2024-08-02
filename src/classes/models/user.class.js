@@ -16,6 +16,11 @@ class User {
     avoidAbility,
     gold,
     worldLevel,
+    weapon,
+    armor,
+    gloves,
+    shoes,
+    accessory,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
@@ -33,6 +38,11 @@ class User {
     this.avoidAbility = avoidAbility;
     this.gold = gold;
     this.worldLevel = worldLevel;
+    this.weapon = weapon;
+    this.armor = armor;
+    this.gloves = gloves;
+    this.shoes = shoes;
+    this.accessory = accessory;
 
     this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
   }
@@ -87,6 +97,72 @@ class User {
       }
     }
     return -1;
+  }
+
+  findItemByInven(itemId) {
+    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
+
+    return findItem;
+  }
+
+  updateCriAvoid(critical, avoidAbility) {
+    this.critical = critical;
+    this.avoidAbility = avoidAbility;
+  }
+
+  pushMountingItem(item) {
+    this.mountingItems.push(item);
+  }
+
+  deleteMountingItem(itemId) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    if (findIdx !== -1) {
+      this.mountingItems.splice(findIdx, 1);
+    }
+  }
+
+  decMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity -= quantity;
+  }
+
+  addMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity += quantity;
+  }
+
+  updateItemId(itemType, itemId) {
+    switch (itemType) {
+      case 'weapon':
+        this.weapon = itemId;
+        break;
+      case 'armor':
+        this.armor = itemId;
+        break;
+      case 'gloves':
+        this.gloves = itemId;
+        break;
+      case 'shoes':
+        this.shoes = itemId;
+        break;
+      case 'accessory':
+        this.accessory = itemId;
+        break;
+      default:
+        break;
+    }
+  }
+
+  updateStatInfo(statInfo) {
+    this.playerInfo.statInfo = statInfo;
+  }
+
+  getItemQuantity(itemId) {
+    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
+    if (findItem) {
+      return findItem.quantity;
+    }
+    return 0;
   }
 }
 

@@ -40,7 +40,19 @@ const enterTownHandler = async ({ socket, payload }) => {
         character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
       }
 
-      const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
+      const {
+        experience,
+        critical,
+        criticalAttack,
+        avoidAbility,
+        gold,
+        worldLevel,
+        weapon,
+        armor,
+        gloves,
+        shoes,
+        accessory,
+      } = character;
       const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
       const userItems = await getUserItemsByCharacterId(character.characterId);
@@ -85,6 +97,11 @@ const enterTownHandler = async ({ socket, payload }) => {
         avoidAbility,
         gold,
         worldLevel,
+        weapon,
+        armor,
+        gloves,
+        shoes,
+        accessory,
       );
       if (!userExist) gameSession.addUser(curUser);
 
@@ -123,6 +140,11 @@ const enterTownHandler = async ({ socket, payload }) => {
         curUser.criticalAttack,
         curUser.avoidAbility,
         curUser.gold,
+        curUser.weapon,
+        curUser.armor,
+        curUser.gloves,
+        curUser.shoes,
+        curUser.accessory,
         curUser.nickname,
         curUser.characterClass,
       );
@@ -130,6 +152,22 @@ const enterTownHandler = async ({ socket, payload }) => {
       // user items 저장
       await updateCharacterItems(curUser.characterId, curUser.potions);
       await updateCharacterItems(curUser.characterId, curUser.mountingItems);
+
+      // user 세션의 potions중 quantity 0인 potion 삭제
+      for (let i = curUser.potions.length - 1; i >= 0; i--) {
+        const potion = curUser.potions[i];
+        if (potion.quantity === 0) {
+          curUser.potions.splice(i, 1);
+        }
+      }
+
+      // user 세션의 mountingItems중 quantity 0인 item 삭제
+      for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
+        const item = curUser.mountingItems[i];
+        if (item.quantity === 0) {
+          curUser.mountingItems.splice(i, 1);
+        }
+      }
 
       statInfo = {
         level: curUser.playerInfo.statInfo.level,

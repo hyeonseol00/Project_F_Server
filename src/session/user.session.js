@@ -18,6 +18,11 @@ export const addUser = (
   avoidAbility,
   gold,
   worldLevel,
+  weapon,
+  armor,
+  gloves,
+  shoes,
+  accessory,
 ) => {
   const user = new User(
     getRegistCount(),
@@ -36,6 +41,11 @@ export const addUser = (
     avoidAbility,
     gold,
     worldLevel,
+    weapon,
+    armor,
+    gloves,
+    shoes,
+    accessory,
   );
   userSessions.push(user);
   return user;

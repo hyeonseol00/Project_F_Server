@@ -5,4 +5,5 @@ export const SQL_QUERIES = {
     'UPDATE Character_Items SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE character_id = ? AND item_id = ?',
   INSERT_CHARACTER_ITEM:
     'INSERT INTO Character_Items (character_id, item_id, quantity) VALUES (?, ?, ?)',
+  DELETE_CHARACTER_ITEM: 'DELETE FROM Character_Items WHERE character_id = ? AND item_id = ?',
 };

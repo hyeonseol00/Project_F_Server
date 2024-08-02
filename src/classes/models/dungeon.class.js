@@ -85,7 +85,10 @@ class InstanceDungeon {
           dungeonCode, // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
           itemInfo,
         );
-        this.potions.push(this.items.length); // items에 저장될 idx
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.potions.push(this.items.length); // items에 저장될 idx
+        }
         this.items.push(potion);
       } else {
         const mountingItem = new Item(
