@@ -127,6 +127,22 @@ const enterTownHandler = async ({ socket, payload }) => {
       await updateCharacterItems(curUser.characterId, curUser.potions);
       await updateCharacterItems(curUser.characterId, curUser.mountingItems);
 
+      // user 세션의 potions중 quantity 0인 potion 삭제
+      for (let i = curUser.potions.length - 1; i >= 0; i--) {
+        const potion = curUser.potions[i];
+        if (potion.quantity === 0) {
+          curUser.potions.splice(i, 1);
+        }
+      }
+
+      // user 세션의 mountingItems중 quantity 0인 item 삭제
+      for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
+        const item = curUser.mountingItems[i];
+        if (item.quantity === 0) {
+          curUser.mountingItems.splice(i, 1);
+        }
+      }
+
       statInfo = {
         level: curUser.playerInfo.statInfo.level,
         hp: curUser.playerInfo.statInfo.hp,
