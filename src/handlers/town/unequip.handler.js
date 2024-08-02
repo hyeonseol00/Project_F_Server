@@ -46,7 +46,7 @@ export const unquipHandler = (user, message) => {
           );
           user.pushMountingItem(item);
         } else {
-          user.addMountingItem(weaponInfo.itemId);
+          user.addMountingItem(weaponInfo.itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -98,7 +98,7 @@ export const unquipHandler = (user, message) => {
           );
           user.pushMountingItem(item);
         } else {
-          user.addMountingItem(armorInfo.itemId);
+          user.addMountingItem(armorInfo.itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -152,7 +152,7 @@ export const unquipHandler = (user, message) => {
           );
           user.pushMountingItem(item);
         } else {
-          user.addMountingItem(glovesInfo.itemId);
+          user.addMountingItem(glovesInfo.itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -206,7 +206,7 @@ export const unquipHandler = (user, message) => {
           );
           user.pushMountingItem(item);
         } else {
-          user.addMountingItem(shoesInfo.itemId);
+          user.addMountingItem(shoesInfo.itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -260,7 +260,7 @@ export const unquipHandler = (user, message) => {
           );
           user.pushMountingItem(item);
         } else {
-          user.addMountingItem(accessoryInfo.itemId);
+          user.addMountingItem(accessoryInfo.itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
