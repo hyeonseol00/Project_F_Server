@@ -186,10 +186,11 @@ const enterTownHandler = async ({ socket, payload }) => {
       };
     }
 
-    const items = curUser.mountingItems.map(item => ({ id: item.itemId, quantity: item.quantity }));
+    const items = curUser.mountingItems.map((item) => ({
+      id: item.itemId,
+      quantity: item.quantity,
+    }));
 
-    console.log(items);
-    console.log(curUser.mountingItems);
     const inven = {
       items,
     };
@@ -211,7 +212,6 @@ const enterTownHandler = async ({ socket, payload }) => {
       inven,
     };
 
-    console.log("statInfo", statInfo);
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
