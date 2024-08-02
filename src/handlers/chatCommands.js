@@ -9,6 +9,7 @@ import {
   kickMemberHandler,
 } from './town/chatCommand.handler.js';
 import { equipHandler } from './town/equip.handler.js';
+import { unquipHandler } from './town/unequip.handler.js';
 
 const chatCommands = new Map([
   ['w', sendDirectMessage],
@@ -22,6 +23,9 @@ const chatCommands = new Map([
   ['kickMember', kickMemberHandler],
   // ---------team end------------
   ['equip', equipHandler],
+  ['eq', equipHandler],
+  ['unequip', unquipHandler],
+  ['ueq', unquipHandler],
 ]);
 
 export default chatCommands;

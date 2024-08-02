@@ -30,6 +30,7 @@ export const equipHandler = (user, message) => {
     itemType,
     name,
     quantity,
+    requireLevel,
     addHp,
     addMp,
     addAttack,
@@ -39,6 +40,16 @@ export const equipHandler = (user, message) => {
     addAvoidance,
     addCritical,
   } = findItem;
+
+  if (level < requireLevel) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] ${name} 장비는 레벨 ${requireLevel} 이상만 착용할 수 있습니다.`,
+    });
+    user.socket.write(response);
+
+    return;
+  }
 
   let statInfo;
   if (itemType === 'weapon') {
