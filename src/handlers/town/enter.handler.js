@@ -148,7 +148,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       };
     }
 
-    const items = curUser.mountingItems.map(item => ({ id: item.id, quantity: item.quantity }));
+    const items = curUser.mountingItems.map(item => ({ id: item.itemId, quantity: item.quantity }));
 
     console.log(items);
     console.log(curUser.mountingItems);
