@@ -109,6 +109,7 @@ message S_EnterHatchery{
 }
 
 message S_SpawnPlayerHatchery{
+  repeated PlayerInfo players = 1;
 }
 
 message S_MoveAtHatchery{
