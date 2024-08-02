@@ -94,14 +94,14 @@ export const equipHandler = (user, message) => {
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         } else {
-          user.addMountingItem(isInven.itemId);
+          user.addMountingItem(isInven.itemId, 1);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         }
 
@@ -134,7 +134,7 @@ export const equipHandler = (user, message) => {
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
-          user.decMountingItem(itemId);
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -185,14 +185,14 @@ export const equipHandler = (user, message) => {
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         } else {
-          user.addMountingItem(isInven.itemId);
+          user.addMountingItem(isInven.itemIdm, 1);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         }
 
@@ -225,7 +225,7 @@ export const equipHandler = (user, message) => {
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
-          user.decMountingItem(itemId);
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -277,14 +277,14 @@ export const equipHandler = (user, message) => {
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         } else {
-          user.addMountingItem(isInven.itemId);
+          user.addMountingItem(isInven.itemId, 1);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         }
 
@@ -319,7 +319,7 @@ export const equipHandler = (user, message) => {
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
-          user.decMountingItem(itemId);
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -372,14 +372,14 @@ export const equipHandler = (user, message) => {
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         } else {
-          user.addMountingItem(isInven.itemId);
+          user.addMountingItem(isInven.itemId, 1);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         }
 
@@ -414,7 +414,7 @@ export const equipHandler = (user, message) => {
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
-          user.decMountingItem(itemId);
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -473,14 +473,14 @@ export const equipHandler = (user, message) => {
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         } else {
-          user.addMountingItem(isInven.itemId);
+          user.addMountingItem(isInven.itemId, 1);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
-            user.decMountingItem(itemId);
+            user.decMountingItem(itemId, 1);
           }
         }
 
@@ -515,7 +515,7 @@ export const equipHandler = (user, message) => {
         if (user.getItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
-          user.decMountingItem(itemId);
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {

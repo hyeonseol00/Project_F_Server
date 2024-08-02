@@ -121,14 +121,14 @@ class User {
     }
   }
 
-  decMountingItem(itemId) {
+  decMountingItem(itemId, quantity) {
     const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity--;
+    this.mountingItems[findIdx].quantity -= quantity;
   }
 
-  addMountingItem(itemId) {
+  addMountingItem(itemId, quantity) {
     const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity++;
+    this.mountingItems[findIdx].quantity += quantity;
   }
 
   updateItemId(itemType, itemId) {
