@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { getDungeonItems, getMountingItem, getPotionItem } from '../../db/game/game.db.js';
+import { getDungeonItems, getItem } from '../../db/game/game.db.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
@@ -73,25 +73,24 @@ class InstanceDungeon {
 
     const dungeonItems = await getDungeonItems(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      item.isPotion = item.isPotion && item.isPotion[0] === 1;
-      if (item.isPotion) {
-        const potionInfo = await getPotionItem(item.itemId);
+      const itemInfo = await getItem(item.itemId);
+      if (itemInfo.itemType === 'potion') {
         const potion = new Item(
-          item.itemId,
-          true,
-          potionInfo.name,
-          potionInfo.hpHealingAmount,
-          potionInfo.mpHealingAmount,
-          potionInfo.expHealingAmount,
+          itemInfo.itemId,
+          itemInfo.itemType,
+          itemInfo.itemName,
+          itemInfo.itemHp,
+          itemInfo.itemMp,
+          itemInfo.requireLevel,
           dungeonCode, // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
+          itemInfo,
         );
         this.potions.push(this.items.length); // items에 저장될 idx
         this.items.push(potion);
       } else {
-        const itemInfo = await getMountingItem(item.itemId);
         const mountingItem = new Item(
-          item.itemId,
-          false,
+          itemInfo.itemId,
+          itemInfo.itemType,
           itemInfo.itemName,
           itemInfo.itemHp,
           itemInfo.itemMp,

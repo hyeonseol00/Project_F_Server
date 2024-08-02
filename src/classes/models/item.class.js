@@ -1,19 +1,18 @@
 class Item {
-  constructor(itemId, isPotion, name, hp, mp, exp, quantity, itemInfo = null) {
+  constructor(itemId, itemType, name, hp, mp, requireLevel, quantity, itemInfo = null) {
     this.itemId = itemId;
-    this.isPotion = isPotion;
+    this.itemType = itemType;
     this.name = name;
     this.quantity = quantity;
-    if (isPotion) {
+    this.requireLevel = requireLevel;
+    if (itemType === 'potion') {
       // potions
       this.hp = hp;
       this.mp = mp;
-      this.exp = exp;
     } else {
       // mounting items
       this.addHp = hp;
       this.addMp = mp;
-      this.requireLevel = exp;
       this.addAttack = itemInfo.itemAttack;
       this.addDefense = itemInfo.itemDefense;
       this.addMagic = itemInfo.itemMagic;
