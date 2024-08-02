@@ -15,3 +15,12 @@ export const loadItemTable = async () => {
     itemTable.push(item);
   });
 };
+
+export const getItemCostbyId = (itemId) => {
+  const item = getItemById(itemId);
+  if (item) {
+    return item.itemCost;
+  } else {
+    return 0;
+  }
+};

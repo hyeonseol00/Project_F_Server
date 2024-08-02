@@ -10,6 +10,8 @@ import chatHandler from './town/chat.handler.js';
 import registerHandler from './town/register.handler.js';
 import loginHandler from './town/login.handler.js';
 import enterHatcheryHandler from './town/enterHatchery.handler.js';
+import buyItemHandler from './town/user.buyItem.js';
+import sellItemHandler from './town/user.sellItem.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -47,6 +49,14 @@ const handlers = {
   [PACKET_TYPE.C_EnterHatchery]: {
     handler: enterHatcheryHandler,
     protoType: 'town.C_EnterHatchery',
+  },
+  [PACKET_TYPE.C_SellItem]: {
+    handler: sellItemHandler,
+    protoType: 'town.C_SellItem',
+  },
+  [PACKET_TYPE.C_BuyItem]: {
+    handler: buyItemHandler,
+    protoType: 'town.C_BuyItem',
   },
 };
 
