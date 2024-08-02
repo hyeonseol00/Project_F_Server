@@ -45,7 +45,19 @@ const enterTownHandler = async ({ socket, payload }) => {
         character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
       }
 
-      const { experience, critical, criticalAttack, avoidAbility, gold, worldLevel } = character;
+      const {
+        experience,
+        critical,
+        criticalAttack,
+        avoidAbility,
+        gold,
+        worldLevel,
+        weapon,
+        armor,
+        gloves,
+        shoes,
+        accessory,
+      } = character;
       const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
 
       // 소비 아이템 가져오기
@@ -72,6 +84,7 @@ const enterTownHandler = async ({ socket, payload }) => {
         const itemInfo = await getMountingItem(mountingItem.itemId);
         const item = new Item(
           mountingItem.itemId,
+          itemInfo.itemType,
           false,
           itemInfo.itemName,
           itemInfo.itemHp,
@@ -101,6 +114,11 @@ const enterTownHandler = async ({ socket, payload }) => {
         avoidAbility,
         gold,
         worldLevel,
+        weapon,
+        armor,
+        gloves,
+        shoes,
+        accessory,
       );
       if (!userExist) gameSession.addUser(curUser);
 
@@ -135,6 +153,11 @@ const enterTownHandler = async ({ socket, payload }) => {
         curUser.criticalAttack,
         curUser.avoidAbility,
         curUser.gold,
+        curUser.weapon,
+        curUser.armor,
+        curUser.gloves,
+        curUser.shoes,
+        curUser.accessory,
         curUser.nickname,
         curUser.characterClass,
       );

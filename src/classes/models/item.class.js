@@ -1,6 +1,7 @@
 class Item {
-  constructor(itemId, isPotion, name, hp, mp, exp, quantity, itemInfo = null) {
+  constructor(itemId, itemType, isPotion, name, hp, mp, exp, quantity, itemInfo = null) {
     this.itemId = itemId;
+    this.itemType = itemType;
     this.isPotion = isPotion;
     this.name = name;
     this.quantity = quantity;

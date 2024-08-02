@@ -123,6 +123,11 @@ export const updateCharacterStatus = async (
   criticalAttack,
   avoidAbility,
   gold,
+  weapon,
+  armor,
+  gloves,
+  shoes,
+  accessory,
   characterName,
   jobId,
 ) => {
@@ -141,6 +146,11 @@ export const updateCharacterStatus = async (
     criticalAttack,
     avoidAbility,
     gold,
+    weapon,
+    armor,
+    gloves,
+    shoes,
+    accessory,
     characterName,
     jobId,
   ]);
