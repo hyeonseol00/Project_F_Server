@@ -36,7 +36,6 @@ export const unquipHandler = (user, message) => {
           const item = new Item(
             weaponInfo.itemId,
             weaponInfo.itemType,
-            false,
             weaponInfo.itemName,
             weaponInfo.itemHp,
             weaponInfo.itemMp,
@@ -88,7 +87,6 @@ export const unquipHandler = (user, message) => {
           const item = new Item(
             armorInfo.itemId,
             armorInfo.itemType,
-            false,
             armorInfo.itemName,
             armorInfo.itemHp,
             armorInfo.itemMp,
@@ -142,7 +140,6 @@ export const unquipHandler = (user, message) => {
           const item = new Item(
             glovesInfo.itemId,
             glovesInfo.itemType,
-            false,
             glovesInfo.itemName,
             glovesInfo.itemHp,
             glovesInfo.itemMp,
@@ -196,7 +193,6 @@ export const unquipHandler = (user, message) => {
           const item = new Item(
             shoesInfo.itemId,
             shoesInfo.itemType,
-            false,
             shoesInfo.itemName,
             shoesInfo.itemHp,
             shoesInfo.itemMp,
@@ -250,7 +246,6 @@ export const unquipHandler = (user, message) => {
           const item = new Item(
             accessoryInfo.itemId,
             accessoryInfo.itemType,
-            false,
             accessoryInfo.itemName,
             accessoryInfo.itemHp,
             accessoryInfo.itemMp,

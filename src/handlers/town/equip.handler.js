@@ -82,7 +82,6 @@ export const equipHandler = (user, message) => {
           const item = new Item(
             itemInfo.itemId,
             itemInfo.itemType,
-            false,
             itemInfo.itemName,
             itemInfo.itemHp,
             itemInfo.itemMp,
@@ -173,7 +172,6 @@ export const equipHandler = (user, message) => {
           const item = new Item(
             itemInfo.itemId,
             itemInfo.itemType,
-            false,
             itemInfo.itemName,
             itemInfo.itemHp,
             itemInfo.itemMp,
@@ -265,7 +263,6 @@ export const equipHandler = (user, message) => {
           const item = new Item(
             itemInfo.itemId,
             itemInfo.itemType,
-            false,
             itemInfo.itemName,
             itemInfo.itemHp,
             itemInfo.itemMp,
@@ -360,7 +357,6 @@ export const equipHandler = (user, message) => {
           const item = new Item(
             itemInfo.itemId,
             itemInfo.itemType,
-            false,
             itemInfo.itemName,
             itemInfo.itemHp,
             itemInfo.itemMp,
@@ -461,7 +457,6 @@ export const equipHandler = (user, message) => {
           const item = new Item(
             itemInfo.itemId,
             itemInfo.itemType,
-            false,
             itemInfo.itemName,
             itemInfo.itemHp,
             itemInfo.itemMp,
