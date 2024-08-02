@@ -8,4 +8,5 @@ export const SQL_GAME_QUERIES = {
   GET_DUNGEON_ITEMS: 'SELECT * FROM Dungeon_Items WHERE dungeon_id = ?',
   GET_MOUNTING_ITEMS: 'SELECT * FROM Items',
   GET_MOUNTING_ITEM: 'SELECT * FROM Items WHERE item_id = ?',
+  GET_ITEM_TABLE: 'SELECT * FROM Items',
 };

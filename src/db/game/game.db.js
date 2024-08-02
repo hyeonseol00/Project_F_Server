@@ -59,3 +59,9 @@ export const getMountingItem = async (itemId) => {
 
   return toCamelCase(rows[0]);
 };
+
+export const getItemTable = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_ITEM_TABLE, []);
+
+  return toCamelCase(rows);
+};
