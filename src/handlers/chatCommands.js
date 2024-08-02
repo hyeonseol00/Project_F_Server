@@ -9,6 +9,8 @@ import {
   kickMemberHandler,
 } from './town/chatCommand.handler.js';
 import { equipHandler } from './town/equip.handler.js';
+import buyItemHandler from './town/user.buyItem.js';
+import sellItemHandler from './town/user.sellItem.js';
 
 const chatCommands = new Map([
   ['w', sendDirectMessage],
@@ -22,6 +24,8 @@ const chatCommands = new Map([
   ['kickMember', kickMemberHandler],
   // ---------team end------------
   ['equip', equipHandler],
+  ['buyItem', buyItemHandler],
+  ['sellItem', sellItemHandler],
 ]);
 
 export default chatCommands;

@@ -1,48 +1,90 @@
-import { handleError } from "../../utils/error/errorHandler.js";
-import { getUserBySocket } from "../../session/user.session.js";
-import { itemTable } from "../../session/sessions.js";
-import { getItemById } from "../../session/item.session.js";
-import User from "../../classes/models/user.class.js";
-import { getItemCostbyId } from "../../session/item.session.js";
+import { handleError } from '../../utils/error/errorHandler.js';
+import { getUserBySocket } from '../../session/user.session.js';
+import { itemTable } from '../../session/sessions.js';
+import { getItemById } from '../../session/item.session.js';
+import User from '../../classes/models/user.class.js';
+import { getItemCostbyId } from '../../session/item.session.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
-const sellItemHandler = async ({ socket, payload }) => {
-    try{
-        const user = getUserBySocket(socket);
-        const { characterId } = user;
-        const {itemId , itemName ,itemType, itemCost } = itemTable;
+const sellItemHandler = async (user, message) => {
+  const [id, quantity] = message.split(' ');
+  const sellItem = getItemById(Number(id));
+  const itemCost = sellItem.itemCost;
+  if (!sellItem) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: ` 존재하는 아이템이 아닙니다. `,
+    });
+    user.socket.write(response);
+    return;
+  }
+  // console.log(Number(user.gold));
+  //아이템 테이블과 팔고싶은 아이템 ID가 같을 경우
+  if (Number(id) === sellItem.itemId) {
+    const itemCost = sellItem.itemCost; //아이템 아이디를 통해 판매 가격 확인
+    const findItem = user.findItemByInven(Number(id));
+    // 아이템이 인벤토리 없을 때, 인벤토리보다 더 많이 파려고 할 때, 정상적일 떄
+    if (!findItem) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: ` 인벤토리에 아이템이 존재하지 않습니다. `,
+      });
+      user.socket.write(response);
+      return;
+    } else {
+      if (findItem.itemType === 'potion') {
+        if (findItem.quantity < Number(quantity)) {
+          const response = createResponse('response', 'S_Chat', {
+            playerId: user.playerId,
+            chatMsg: ` 포션을 ${findItem.quantity}개 이상 판매할 수 없습니다. `,
+          });
+          user.socket.write(response);
+          return;
+        } else {
+          const addGold = findItem.itemCost * Number(quantity) * 0.7;
+          user.plusGold(addGold);
 
-        //유저가 판매하고 싶은 아이템 ID 가져오기
-        const { itemId : getItemId } = payload;
-        const sellItem = getItemById(getItemId);
+          user.decPotion(sellItem.itemId, Number(quantity));
 
-        //아이템 테이블과 팔고싶은 아이템 ID가 같을 경우
-        if(itemId === sellItem.itemId){
-            const itemCost = getItemCostbyId(itemId); //아이템 아이디를 통해 판매 가격 확인
-            
-            //유저 아이템 DB에서 인벤토리 수정
-            user.mountingItems = user.mountingItems.filter((item) => item.itemId !== sellItem.itemId);
-            
-            user.gold += itemCost;   //유저 DB에서 골드 수정
+          if (getPotionQuantity(findItem.itemId) === 0) {
+            user.deletePotion(findItem.itemId);
+          }
 
-
-            const sellItemResponse = createResponse('response', 'S_SellItem', {
-                playerId: user.playerId,
-                itemId: user.itemId,
-                msg : `판매 성공! ${itemName}을(를) ${gold}G로 판매하였습니다. 남은 골드: ${user.gold}`,
-              });
-              socket.write(sellItemResponse);
-              return;
-        }else{
-            console.error("판매할 아이템이 존재하지 않습니다.");
-            return; 
+          const response = createResponse('response', 'S_Chat', {
+            playerId: user.playerId,
+            chatMsg: ` ${sellItem.itemName} 아이템 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
+          });
+          user.socket.write(response);
+          return;
         }
+      } else {
+        if (findItem.quantity < Number(quantity)) {
+          const response = createResponse('response', 'S_Chat', {
+            playerId: user.playerId,
+            chatMsg: ` ${findItem.quantity}개 이상 판매할 수 없습니다. `,
+          });
+          user.socket.write(response);
+          return;
+        } else {
+          const addGold = findItem.itemCost * Number(quantity) * 0.7;
+          user.plusGold(addGold);
 
+          if (user.getItemQuantity(findItem.itemId) === 0) {
+            user.deleteMountingItem(findItem.itemId);
+          }
 
+          user.decMountingItem(sellItem.itemId, Number(quantity));
 
-    }catch (err){
-        handleError(socket, err);
+          const response = createResponse('response', 'S_Chat', {
+            playerId: user.playerId,
+            chatMsg: ` ${sellItem.itemName} 아이템 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
+          });
+          user.socket.write(response);
+          return;
+        }
+      }
     }
-
+  }
 };
 
 export default sellItemHandler;

@@ -45,15 +45,3 @@ message C_LogIn{
 // 둥지 입장
 message C_EnterHatchery{
 }
-
-//아이템 판매
-message C_SellItem {
-    string socketId = 1; // 유저 소켓 ID
-    int32 itemId = 2;    // 판매하려는 아이템 ID
-}
-
-//아이템 구매
-message C_BuyItem {
-    string socketId = 1; // 유저 소켓 ID
-    int32 itemId = 2;    // 구매하려는 아이템 ID
-}

@@ -98,6 +98,14 @@ class User {
     }
     return -1;
   }
+  getItemIdx2(itemId) {
+    for (const itemIdx in this.mountingItems) {
+      if (this.mountingItems[itemIdx].itemId === itemId) {
+        return itemIdx;
+      }
+    }
+    return -1;
+  }
 
   findItemByInven(itemId) {
     const findItem = this.mountingItems.find((item) => item.itemId === itemId);
@@ -119,16 +127,6 @@ class User {
     if (findIdx !== -1) {
       this.mountingItems.splice(findIdx, 1);
     }
-  }
-
-  decMountingItem(itemId) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity--;
-  }
-
-  addMountingItem(itemId) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity++;
   }
 
   updateItemId(itemType, itemId) {
@@ -163,6 +161,46 @@ class User {
       return findItem.quantity;
     }
     return 0;
+  }
+  plusGold(itemCost) {
+    this.gold += itemCost;
+  }
+
+  minusGold(itemCost) {
+    this.gold -= itemCost;
+  }
+  decMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity -= quantity;
+  }
+
+  addMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity += quantity;
+  }
+
+  addPotion(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.potions[findIdx].quantity += quantity;
+  }
+  decPotion(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.potions[findIdx].quantity -= quantity;
+  }
+
+  getPotionQuantity(itemId) {
+    const findItem = this.potions.find((item) => item.itemId === itemId);
+    if (findItem) {
+      return findItem.quantity;
+    }
+    return 0;
+  }
+
+  deletePotion(itemId) {
+    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
+    if (findIdx !== -1) {
+      this.potions.splice(findIdx, 1);
+    }
   }
 }
 

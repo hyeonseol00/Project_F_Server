@@ -118,19 +118,3 @@ message S_MoveAtHatchery{
 message S_SetHatcheryBossHp{
   int32 bossCurHp = 1;
 }
-
-//아이템 판매 
-message S_SellItem {
-    string playerId = 1; // 유저 플레이어 ID
-    int32 itemId = 2;    // 판매된 아이템 ID
-    string message = 3;  // 응답 메시지 (판매 결과)
-    int32 gold = 4;      // 업데이트된 유저 골드
-}
-
-//아이템 구매
-message S_BuyItem {
-    string playerId = 1; // 유저 플레이어 ID
-    int32 itemId = 2;    // 구매된 아이템 ID
-    string message = 3;  // 응답 메시지 (구매 결과)
-    int32 gold = 4;      // 업데이트된 유저 골드
-}
