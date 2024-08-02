@@ -28,4 +28,9 @@ export const PACKET_TYPE = {
   S_Register: 27,
   C_LogIn: 28,
   S_LogIn: 29,
+  C_EnterHatchery: 30,
+  S_EnterHatchery: 31,
+  S_SpawnPlayerHatchery: 32,
+  C_MoveAtHatchery: 33,
+  S_MoveAtHatchery: 34,
 };

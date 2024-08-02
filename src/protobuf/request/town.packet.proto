@@ -41,3 +41,7 @@ message C_LogIn{
   string nickname = 1;
   string password = 2;
 }
+
+// 둥지 입장
+message C_EnterHatchery{
+}

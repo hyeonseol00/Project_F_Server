@@ -101,3 +101,19 @@ message S_MonsterAction {
   int32 actionMonsterIdx = 1;
   ActionSet actionSet = 2;
 }
+
+message S_EnterHatchery{
+  PlayerInfo player = 1;
+  int32 bossMaxHp = 2;
+  string bossName = 3;
+}
+
+message S_SpawnPlayerHatchery{
+}
+
+message S_MoveAtHatchery{
+}
+
+message S_SetHatcheryBossHp{
+  int32 bossCurHp = 1;
+}
