@@ -115,6 +115,10 @@ const enterTownHandler = async ({ socket, payload }) => {
         def: character.defense,
         magic: character.magic,
         speed: character.speed,
+        critRate: character.critical,
+        critDmg: character.criticalAttack,
+        avoidRate: character.avoidAbility,
+        exp: character.experience,
       };
     } else {
       // 첫 접속이 아닌 town으로 다시 돌아온 경우 (session이 있음) DB에 저장
@@ -175,8 +179,20 @@ const enterTownHandler = async ({ socket, payload }) => {
         def: curUser.playerInfo.statInfo.def,
         magic: curUser.playerInfo.statInfo.magic,
         speed: curUser.playerInfo.statInfo.speed,
+        critRate: curUser.critical,
+        critDmg: curUser.criticalAttack,
+        avoidRate: curUser.avoidAbility,
+        exp: curUser.experience,
       };
     }
+
+    const items = curUser.mountingItems.map(item => ({ id: item.itemId, quantity: item.quantity }));
+
+    console.log(items);
+    console.log(curUser.mountingItems);
+    const inven = {
+      items,
+    };
 
     const transformInfo = {
       posX: Math.random() * 18 - 9, // -9 ~ 9
@@ -189,10 +205,13 @@ const enterTownHandler = async ({ socket, payload }) => {
       playerId: curUser.playerId,
       nickname,
       class: characterClass,
+      gold: curUser.gold,
       transform: transformInfo,
       statInfo,
+      inven,
     };
 
+    console.log("statInfo", statInfo);
     const enterTownResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
