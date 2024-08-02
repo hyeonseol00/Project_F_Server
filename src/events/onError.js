@@ -10,9 +10,11 @@ export const onError = (socket) => (err) => {
 
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
+  const hatcherySession = getHatcherySession();
 
   if (user) {
     gameSession.removeUser(user.playerId);
+    hatcherySession.removePlayer(user.nickname);
   }
   removeDungeon(user.nickname);
 
