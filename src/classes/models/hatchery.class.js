@@ -37,6 +37,17 @@ class Hatchery {
       monsterHp,
     );
   }
+
+  addPlayer(player) {
+    if (this.players.length >= config.hatchery.maxPlayers) {
+      throw new Error('게임 세션에 자리가 없습니다!');
+    }
+    this.players.push(player);
+  }
+
+  removePlayer(nickname) {
+    this.players = this.players.filter((player) => player.nickname !== nickname);
+  }
 }
 
 export default Hatchery;

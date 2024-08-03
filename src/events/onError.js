@@ -1,6 +1,7 @@
 import { config } from '../config/config.js';
 import { removeDungeon } from '../session/dungeon.session.js';
 import { getGameSession } from '../session/game.session.js';
+import { getHatcherySession } from '../session/hatchery.session.js';
 import { getUserBySocket, removeUser } from '../session/user.session.js';
 import CustomError from '../utils/error/customError.js';
 import { handleError } from '../utils/error/errorHandler.js';
@@ -10,9 +11,11 @@ export const onError = (socket) => (err) => {
 
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
+  const hatcherySession = getHatcherySession();
 
   if (user) {
     gameSession.removeUser(user.playerId);
+    hatcherySession.removePlayer(user.nickname);
   }
   removeDungeon(user.nickname);
 

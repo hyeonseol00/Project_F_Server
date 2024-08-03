@@ -20,7 +20,14 @@ export const existItem = async (characterId, itemId) => {
 export const updateCharacterItems = async (characterId, items) => {
   for (const item of items) {
     if (await existItem(characterId, item.itemId)) {
-      // item 목록이 있다면 update
+      // item 목록이 있다면
+      if (item.quantity === 0) {
+        await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
+          characterId,
+          item.itemId,
+        ]);
+        continue;
+      }
       await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_ITEM, [
         item.quantity,
         characterId,

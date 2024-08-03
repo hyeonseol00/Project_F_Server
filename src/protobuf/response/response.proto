@@ -109,9 +109,12 @@ message S_EnterHatchery{
 }
 
 message S_SpawnPlayerHatchery{
+  repeated PlayerInfo players = 1;
 }
 
 message S_MoveAtHatchery{
+  int32 playerId = 1;
+  TransformInfo transform = 2;
 }
 
 message S_SetHatcheryBossHp{

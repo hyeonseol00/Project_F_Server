@@ -24,18 +24,26 @@ export const PACKET_TYPE = {
   S_SetMonsterHp: 23,
   S_PlayerAction: 24,
   S_MonsterAction: 25,
-  C_Register: 26,
-  S_Register: 27,
-  C_LogIn: 28,
-  S_LogIn: 29,
-  C_EnterHatchery: 30,
-  S_EnterHatchery: 31,
-  S_SpawnPlayerHatchery: 32,
-  C_MoveAtHatchery: 33,
-  S_MoveAtHatchery: 34,
 
+
+  // ********** 100번대 패킷 ********** //
   C_BuyItem: 100,
   S_BuyItem: 101,
   C_SellItem: 102,
-  S_SellItem: 103
+  S_SellItem: 103,
+  // ********** 100번대 패킷 끝 ********** //
+
+  // ********** 200번대 패킷 ********** //
+  C_Register: 201,
+  S_Register: 202,
+  C_LogIn: 203,
+  S_LogIn: 204,
+  C_EnterHatchery: 205,
+  S_EnterHatchery: 206,
+  S_SpawnPlayerHatchery: 207,
+  C_MoveAtHatchery: 208,
+  S_MoveAtHatchery: 209,
+  C_AttackBoss: 210,
+  S_SetHatcheryBossHp: 211,
+  // ********** 200번대 패킷 끝 ********** //
 };
