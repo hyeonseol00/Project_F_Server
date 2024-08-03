@@ -17,7 +17,6 @@ import { unquipHandler } from './town/unequip.handler.js';
 const chatCommands = new Map([
   // ---------common cmd begin------------
   ['w', sendDirectMessage],
-  ['myStat', sendMyStat],
   // ---------team begin------------
   ['t', sendMessageToTeam],
   ['createTeam', createTeamHandler],
