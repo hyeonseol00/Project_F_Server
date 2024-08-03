@@ -117,3 +117,13 @@ message S_MoveAtHatchery{
 message S_SetHatcheryBossHp{
   int32 bossCurHp = 1;
 }
+
+message S_BuyItem{
+  ItemInfo item = 1;
+  int32 gold = 2;	// 서버가 갱신한 유저 골드
+}
+
+message S_SellItem{
+  ItemInfo item = 1;
+  int32 gold = 2;	// 서버가 갱신한 유저 골드
+}

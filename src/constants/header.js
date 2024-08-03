@@ -33,4 +33,9 @@ export const PACKET_TYPE = {
   S_SpawnPlayerHatchery: 32,
   C_MoveAtHatchery: 33,
   S_MoveAtHatchery: 34,
+
+  C_BuyItem: 100,
+  S_BuyItem: 101,
+  C_SellItem: 102,
+  S_SellItem: 103
 };

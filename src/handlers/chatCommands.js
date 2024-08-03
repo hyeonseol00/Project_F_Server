@@ -9,6 +9,8 @@ import {
   acceptTeamHandler,
   kickMemberHandler,
   sendTeamList,
+  buyItemHandler,
+  sellItemHandler
 } from './town/chatCommand.handler.js';
 
 
@@ -27,7 +29,11 @@ const chatCommands = new Map([
   ['memlist', sendTeamList],
   // ---------team end------------
 
+  // ---------shop begin------------
+  ['buyItem', buyItemHandler],
+  ['sellItem', sellItemHandler],
 
+  // ---------shop end------------
 ]);
 
 export default chatCommands;
