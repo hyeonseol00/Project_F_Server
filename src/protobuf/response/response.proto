@@ -113,8 +113,14 @@ message S_SpawnPlayerHatchery{
 }
 
 message S_MoveAtHatchery{
+  int32 playerId = 1;
+  TransformInfo transform = 2;
 }
 
 message S_SetHatcheryBossHp{
   int32 bossCurHp = 1;
+}
+
+message S_TryAttack{
+  int32 playerId = 1;
 }

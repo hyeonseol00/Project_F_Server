@@ -3,7 +3,11 @@ syntax = "proto3";
 package hatchery;
 
 message C_MoveAtHatchery{
+  TransformInfo transform = 1;
 }
 
 message C_AttackBoss{
+}
+
+message C_TryAttack{
 }

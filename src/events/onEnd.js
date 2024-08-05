@@ -38,6 +38,7 @@ export const onEnd = (socket) => async () => {
       user.characterClass,
     );
 
+    await updateCharacterItems(user.characterId, user.potions);
     await updateCharacterItems(user.characterId, user.mountingItems);
     await updateCharacterItems(user.characterId, user.potions);
 

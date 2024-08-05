@@ -135,6 +135,17 @@ class User {
     }
   }
 
+
+  decMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity -= quantity;
+  }
+
+  addMountingItem(itemId, quantity) {
+    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    this.mountingItems[findIdx].quantity += quantity;
+  }
+
   updateItemId(itemType, itemId) {
     switch (itemType) {
       case 'weapon':

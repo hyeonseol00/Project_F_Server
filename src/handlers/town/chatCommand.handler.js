@@ -1,7 +1,7 @@
 
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getAllUsersInTeam, getUserByNickname } from '../../session/user.session.js';
-
+import { findUserByUsername, findCharacterByUserIdAndClass } from '../../db/user/user.db.js';
 
 const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
@@ -133,6 +133,31 @@ export const sendDirectMessage = (sender, message) => {
   } catch (error) {
     console.error(`Failed to send message to recipient: ${error.msg}`);
   }
+};
+
+export const sendMyStat = async (sender, message) => {
+  const userInDB = await findUserByUsername(sender.nickname);
+  const character = await findCharacterByUserIdAndClass(userInDB.userId, sender.characterClass);
+ 
+  const msg = `이름: ${character.characterName}
+  레벨: ${character.characterLevel}
+  경험치: ${character.characterLevel}
+  직업: ${character.jobName}
+  체력: ${character.curHp}/${character.maxHp}
+  마나: ${character.curMp}/${character.maxMp}
+  공격력: ${character.attack}
+  주문력: ${character.magic}
+  치명타 확률: ${character.critical}%
+  치명타 피해: +${character.criticalAttack}%
+  소지금: ${character.gold}`;
+
+  const response = createResponse('response', 'S_Chat', {
+    playerId: sender.playerId,
+    chatMsg: `[System]: ${msg}`,
+  });
+  sender.socket.write(response);
+
+  console.log(character);
 };
 
 export const sendMessageToTeam = (sender, message) => {
@@ -329,4 +354,24 @@ export const kickMemberHandler = (sender, message) => {
     member.socket.write(response);
   }
 };
+// 팀원 리스트 불러오기
+export const sendTeamList = (sender) => {
+  if (!sender.teamId) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: `[System] You don't have a team...`,
+    });
+    sender.socket.write(response);
+    return;
+  }
+
+  const teamMembers = getAllUsersInTeam(sender.teamId);
+  const memberList = teamMembers.map(member => member.nickname).join(', ');
+  const response = createResponse('response', 'S_Chat', {
+    playerId: sender.playerId,
+    chatMsg: `[System] Team members: ${memberList}`,
+  });
+  sender.socket.write(response);
+};
+
 

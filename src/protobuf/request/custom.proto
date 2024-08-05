@@ -7,9 +7,11 @@ message PlayerInfo {
   int32 playerId = 1; // 서버 내부관리코드   
   string nickname = 2;
   int32 class = 3;
+  int32 gold = 4;
 
-  TransformInfo transform = 4;
-  StatInfo statInfo = 5;
+  TransformInfo transform = 5; 
+  StatInfo statInfo = 6;
+  optional Inventory inven = 7;
 }
 
 // C_Enter 를 통해 입장했을때는 서버에서 랜덤 생성 
@@ -33,6 +35,21 @@ message StatInfo {
   float def = 7;
   float magic = 8;
   float speed = 9; 
+  float critRate = 10;
+  float critDmg = 11;
+  float avoidRate = 12; 
+  int32 exp = 13;
+}
+
+// 인벤토리 정보
+message Inventory{
+  repeated ItemInfo items = 1; 
+}
+
+// 아이템 정보
+message ItemInfo{
+  int32 id = 1;
+  int32 quantity = 2;    
 }
 
 // 스크린 텍스트
