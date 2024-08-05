@@ -1,15 +1,15 @@
 import { config } from '../../config/config.js';
 import { findMonsterByMonsters } from '../../db/game/game.db.js';
-import Monster from './monster.class.js';
+import BossMonster from './bossMonster.class.js';
 
 class Hatchery {
-  constructor() {
+  constructor(location) {
     this.players = [];
 
-    this.initMonster();
+    this.initMonster(location);
   }
 
-  async initMonster() {
+  async initMonster(location) {
     const monster = await findMonsterByMonsters(config.hatchery.bossId);
     const {
       monsterId,
@@ -23,7 +23,7 @@ class Hatchery {
       monsterCriticalAttack,
     } = monster;
 
-    this.monster = new Monster(
+    this.boss = new BossMonster(
       0,
       monsterId,
       monsterHp,
@@ -35,6 +35,7 @@ class Hatchery {
       monsterCritical,
       monsterCriticalAttack,
       monsterHp,
+      location,
     );
   }
 
