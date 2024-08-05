@@ -17,29 +17,48 @@ export const existItem = async (characterId, itemId) => {
   return false;
 };
 
-export const updateCharacterItems = async (characterId, items) => {
-  for (const item of items) {
-    if (await existItem(characterId, item.itemId)) {
-      // item 목록이 있다면
-      if (item.quantity === 0) {
+export const updateCharacterItems = async (characterId, sessionItems) => {
+  // 1. 데이터베이스에서 캐릭터의 모든 아이템을 가져옵니다.
+  const dbItems = getUserItemsByCharacterId(characterId);
+
+  // 2. 데이터베이스에 있지만 세션에 없는 아이템을 찾아 삭제합니다.
+  for (const dbItem of dbItems) {
+    const sessionItem = sessionItems.find((item) => item.itemId === dbItem.itemId);
+    if (!sessionItem) {
+      await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
+        characterId,
+        dbItem.itemId,
+      ]);
+    }
+  }
+
+  // 3. 세션 인벤토리를 데이터베이스에 업데이트합니다.
+  for (const sessionItem of sessionItems) {
+    const dbItem = dbItems.find((item) => item.itemId === sessionItem.itemId);
+    if (dbItem) {
+      // 데이터베이스에 이미 있는 경우 업데이트
+      if (sessionItem.quantity > 0) {
+        await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_ITEM, [
+          sessionItem.quantity,
+          characterId,
+          sessionItem.itemId,
+        ]);
+      } else {
+        // 수량이 0인 경우 삭제
         await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
           characterId,
-          item.itemId,
+          sessionItem.itemId,
         ]);
-        continue;
       }
-      await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_ITEM, [
-        item.quantity,
-        characterId,
-        item.itemId,
-      ]);
     } else {
-      // 없다면 목록 생성
-      await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_CHARACTER_ITEM, [
-        characterId,
-        item.itemId,
-        item.quantity,
-      ]);
+      // 데이터베이스에 없는 경우 새로 추가
+      if (sessionItem.quantity > 0) {
+        await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_CHARACTER_ITEM, [
+          characterId,
+          sessionItem.itemId,
+          sessionItem.quantity,
+        ]);
+      }
     }
   }
 };
