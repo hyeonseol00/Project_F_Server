@@ -10,7 +10,10 @@ import {
   sendTeamList,
 } from './town/chatCommand.handler.js';
 import { equipHandler } from './town/equip.handler.js';
+import buyItemHandler from './town/user.buyItem.js';
+import sellItemHandler from './town/user.sellItem.js';
 import { unquipHandler } from './town/unequip.handler.js';
+
 
 const chatCommands = new Map([
   // ---------common cmd begin------------
@@ -26,6 +29,8 @@ const chatCommands = new Map([
   ['memlist', sendTeamList],
   // ---------team end------------
   ['equip', equipHandler],
+  ['buyItem', buyItemHandler],
+  ['sellItem', sellItemHandler],
   ['eq', equipHandler],
   ['unequip', unquipHandler],
   ['ueq', unquipHandler],
