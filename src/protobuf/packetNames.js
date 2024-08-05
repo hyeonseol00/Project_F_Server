@@ -23,6 +23,7 @@ export const packetNames = {
     S_MoveAtHatchery: 'response.S_MoveAtHatchery',
     S_SetHatcheryBossHp: 'response.S_SetHatcheryBossHp',
     S_TryAttack: 'response.S_TryAttack',
+    S_BossMove: 'response.S_BossMove',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -55,5 +56,6 @@ export const packetNames = {
     PlayerStatus: 'custom.PlayerStatus',
     BattleLog: 'custom.BattleLog',
     BtnInfo: 'custom.BtnInfo',
+    UnitVector: 'custom.UnitVector',
   },
 };
