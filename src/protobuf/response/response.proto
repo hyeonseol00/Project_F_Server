@@ -120,3 +120,7 @@ message S_MoveAtHatchery{
 message S_SetHatcheryBossHp{
   int32 bossCurHp = 1;
 }
+
+message S_TryAttack{
+  int32 playerId = 1;
+}
