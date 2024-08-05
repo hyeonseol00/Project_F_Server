@@ -192,7 +192,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     }));
 
     const inven = {
-      items,
+      items
     };
 
     const transformInfo = {
@@ -202,6 +202,14 @@ const enterTownHandler = async ({ socket, payload }) => {
       rot: Math.random() * 360, // 0 ~ 360
     };
 
+    const equipment = {
+      weapon: curUser.weapon,
+      armor: curUser.armor,
+      gloves: curUser.gloves,
+      shoes: curUser.shoes,
+      accessory: curUser.accessory
+    };
+    
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
@@ -210,6 +218,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       transform: transformInfo,
       statInfo,
       inven,
+      equipment
     };
 
     const enterTownResponse = createResponse('response', 'S_Enter', {
