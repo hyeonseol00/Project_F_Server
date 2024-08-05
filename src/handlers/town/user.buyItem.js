@@ -91,6 +91,15 @@ const buyItemHandler = async (user, message) => {
         chatMsg: `[System] ${buyItem.itemName} 포션이 ${Number(quantity)}개 구매가 완료되었습니다. 골드가 ${user.gold} 남았습니다.`,
       });
       user.socket.write(response);
+      // S_BuyItem 패킷 전송
+      const buyItemResponse = createResponse('response', 'S_BuyItem', {
+        item: {
+          itemId: buyItem.itemId,
+          quantity: buyItem.quantity,
+        },
+        gold: user.gold,
+      });
+      user.socket.write(buyItemResponse);
       return;
     } else {
       //장비 아이템
@@ -117,6 +126,15 @@ const buyItemHandler = async (user, message) => {
         chatMsg: `[System] ${buyItem.itemName} 아이템을 ${Number(quantity)}개 구매하였습니다. 남은 돈은 ${user.gold} 입니다. `,
       });
       user.socket.write(response);
+      // S_BuyItem 패킷 전송
+      const buyItemResponse = createResponse('response', 'S_BuyItem', {
+        item: {
+          itemId: buyItem.itemId,
+          quantity: buyItem.quantity,
+        },
+        gold: user.gold,
+      });
+      user.socket.write(buyItemResponse);
       return;
     }
   } else {
