@@ -19,7 +19,7 @@ export const existItem = async (characterId, itemId) => {
 
 export const updateCharacterItems = async (characterId, sessionItems) => {
   // 1. 데이터베이스에서 캐릭터의 모든 아이템을 가져옵니다.
-  const dbItems = getUserItemsByCharacterId(characterId);
+  const dbItems = await getUserItemsByCharacterId(characterId);
 
   // 2. 데이터베이스에 있지만 세션에 없는 아이템을 찾아 삭제합니다.
   for (const dbItem of dbItems) {

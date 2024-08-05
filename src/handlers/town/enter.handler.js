@@ -150,8 +150,8 @@ const enterTownHandler = async ({ socket, payload }) => {
       );
 
       // user items 저장
-      await updateCharacterItems(curUser.characterId, curUser.potions);
-      await updateCharacterItems(curUser.characterId, curUser.mountingItems);
+      const sessionItems = [...curUser.potions, ...curUser.mountingItems];
+      await updateCharacterItems(curUser.characterId, sessionItems);
 
       // user 세션의 potions중 quantity 0인 potion 삭제
       for (let i = curUser.potions.length - 1; i >= 0; i--) {
