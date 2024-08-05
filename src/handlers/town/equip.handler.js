@@ -2,9 +2,37 @@ import { getItemById } from '../../session/item.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import Item from '../../classes/models/item.class.js';
 
+function isInteger(s) {
+  s += ''; // 문자열로 변환
+  s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
+  if (s === '' || isNaN(s)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
+
+  const num = Number(s);
+  return Number.isInteger(num); // 정수인지 확인
+}
+
 export const equipHandler = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory, critical, avoidAbility } = user;
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+
+  if (!isInteger(message)) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] 아이템 ID(숫자)를(를) 입력하세요.`,
+    });
+    user.socket.write(response);
+    return;
+  }
+
+  if (Number(message) <= 0) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] 정확한 아이템ID를 입력하세요. `,
+    });
+    user.socket.write(response);
+    return;
+  }
+
   const isItemByTable = getItemById(Number(message));
   const findItem = user.findItemByInven(Number(message));
   if (!isItemByTable) {

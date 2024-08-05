@@ -24,6 +24,7 @@ export const packetNames = {
     S_SetHatcheryBossHp: 'response.S_SetHatcheryBossHp',
     S_BuyItem: 'response.S_BuyItem',
     S_SellItem: 'response.S_SellItem',
+    S_TryAttack: 'response.S_TryAttack',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -43,6 +44,7 @@ export const packetNames = {
   hatchery: {
     C_MoveAtHatchery: 'hatchery.C_MoveAtHatchery',
     C_AttackBoss: 'hatchery.C_AttackBoss',
+    C_TryAttack: 'hatchery.C_TryAttack',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',

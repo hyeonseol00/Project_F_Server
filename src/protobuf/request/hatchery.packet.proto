@@ -8,3 +8,6 @@ message C_MoveAtHatchery{
 
 message C_AttackBoss{
 }
+
+message C_TryAttack{
+}

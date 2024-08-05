@@ -38,7 +38,8 @@ export const onEnd = (socket) => async () => {
       user.characterClass,
     );
 
-    await updateCharacterItems(user.characterId, user.mountingItems);
+    const sessionItems = [...user.potions, ...user.mountingItems];
+    await updateCharacterItems(user.characterId, sessionItems);
 
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
