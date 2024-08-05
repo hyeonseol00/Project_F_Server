@@ -185,9 +185,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -276,9 +276,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -367,9 +367,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -461,9 +461,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -561,9 +561,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
