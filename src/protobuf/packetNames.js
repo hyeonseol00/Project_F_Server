@@ -22,6 +22,11 @@ export const packetNames = {
     S_SpawnPlayerHatchery: 'response.S_SpawnPlayerHatchery',
     S_MoveAtHatchery: 'response.S_MoveAtHatchery',
     S_SetHatcheryBossHp: 'response.S_SetHatcheryBossHp',
+    S_BuyItem: 'response.S_BuyItem',
+    S_SellItem: 'response.S_SellItem',
+    S_UseItem: 'response.S_UseItem',
+    S_EquipWeapon: 'response.S_EquipWeapon',
+    S_UnequipWeapon: 'response.S_UnequipWeapon',
     S_TryAttack: 'response.S_TryAttack',
   },
   town: {
@@ -33,6 +38,11 @@ export const packetNames = {
     C_Register: 'town.C_Register',
     C_LogIn: 'town.C_LogIn',
     C_EnterHatchery: 'town.C_EnterHatchery',
+    C_BuyItem: 'town.C_BuyItem',
+    C_SellItem: 'town.C_SellItem',
+    C_UseItem: 'town.C_UseItem',
+    C_EquipWeapon: 'town.C_EquipWeapon',
+    C_UnequipWeapon: 'town.C_UnequipWeapon',
   },
   battle: {
     C_PlayerResponse: 'battle.C_PlayerResponse',
@@ -55,5 +65,6 @@ export const packetNames = {
     PlayerStatus: 'custom.PlayerStatus',
     BattleLog: 'custom.BattleLog',
     BtnInfo: 'custom.BtnInfo',
+    ItemInfo: 'custom.ItemInfo'
   },
 };

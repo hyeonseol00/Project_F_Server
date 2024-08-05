@@ -15,6 +15,49 @@ export const equipHandler = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory, critical, avoidAbility } = user;
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
 
+  // TEST--------------------------------------------------------
+  // const item = {
+  //   id: 1,
+  //   quantity: 123
+  // };
+
+  // const test1Response = createResponse('response', 'S_BuyItem', {
+  //   item,
+  //   success: true
+  // });
+  // user.socket.write(test1Response);
+
+  // const test2Response = createResponse('response', 'S_SellItem', {
+  //   item,
+  //   success: true
+  // });
+  // user.socket.write(test2Response);
+
+  // const test3Response = createResponse('response', 'S_UseItem', {
+  //   itemId : 1,
+  //   success: true
+  // });
+  // user.socket.write(test3Response);
+
+  // const test4Response = createResponse('response', 'S_EquipWeapon', {
+  //   itemId: 1,
+  //   success: true
+  // });
+  // user.socket.write(test4Response);
+
+  // console.log(test4Response);
+
+  // const type = "weapon";
+
+  // const test5Response = createResponse('response', 'S_UnequipWeapon', {
+  //   itemType: type,
+  //   success: true
+  // });
+  // user.socket.write(test5Response);
+
+  // console.log(test5Response);
+
+  // TEST--------------------------------------------------------
   if (!isInteger(message)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -169,6 +212,7 @@ export const equipHandler = (user, message) => {
           chatMsg: `[System] ${name}을(를) 장착했습니다.`,
         });
         user.socket.write(response);
+
       }
       break;
     case 'armor':

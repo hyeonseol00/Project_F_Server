@@ -28,9 +28,9 @@ const chatCommands = new Map([
   ['kickMember', kickMemberHandler],
   ['memlist', sendTeamList],
   // ---------team end------------
-  ['equip', equipHandler],
   ['buyItem', buyItemHandler],
   ['sellItem', sellItemHandler],
+  ['equip', equipHandler],
   ['eq', equipHandler],
   ['unequip', unquipHandler],
   ['ueq', unquipHandler],
