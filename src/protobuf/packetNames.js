@@ -22,6 +22,7 @@ export const packetNames = {
     S_SpawnPlayerHatchery: 'response.S_SpawnPlayerHatchery',
     S_MoveAtHatchery: 'response.S_MoveAtHatchery',
     S_SetHatcheryBossHp: 'response.S_SetHatcheryBossHp',
+    S_TryAttack: 'response.S_TryAttack',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -39,6 +40,7 @@ export const packetNames = {
   hatchery: {
     C_MoveAtHatchery: 'hatchery.C_MoveAtHatchery',
     C_AttackBoss: 'hatchery.C_AttackBoss',
+    C_TryAttack: 'hatchery.C_TryAttack',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',
