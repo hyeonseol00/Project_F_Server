@@ -13,10 +13,10 @@ class BossMonster extends Monster {
     critical,
     criticalAttack,
     maxHp,
-    location,
+    transform,
   ) {
     super(idx, id, hp, power, name, effectCode, exp, gold, critical, criticalAttack, maxHp);
-    this.location = location;
+    this.transform = transform;
   }
 }
 

@@ -104,8 +104,9 @@ message S_MonsterAction {
 
 message S_EnterHatchery{
   PlayerInfo player = 1;
-  int32 bossMaxHp = 2;
-  string bossName = 3;
+  TransformInfo bossTransformInfo = 2;
+  int32 bossMaxHp = 3;
+  string bossName = 4;
 }
 
 message S_SpawnPlayerHatchery{

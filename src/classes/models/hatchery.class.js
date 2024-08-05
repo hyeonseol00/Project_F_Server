@@ -3,13 +3,13 @@ import { findMonsterByMonsters } from '../../db/game/game.db.js';
 import BossMonster from './bossMonster.class.js';
 
 class Hatchery {
-  constructor(location) {
+  constructor(transform) {
     this.players = [];
 
-    this.initMonster(location);
+    this.initMonster(transform);
   }
 
-  async initMonster(location) {
+  async initMonster(transform) {
     const monster = await findMonsterByMonsters(config.hatchery.bossId);
     const {
       monsterId,
@@ -35,7 +35,7 @@ class Hatchery {
       monsterCritical,
       monsterCriticalAttack,
       monsterHp,
-      location,
+      transform,
     );
   }
 

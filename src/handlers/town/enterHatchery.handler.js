@@ -11,14 +11,21 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
     const hatcherySession = getHatcherySession();
     const user = getUserBySocket(socket);
 
-    const { hp, maxHp, name } = hatcherySession.monster;
+    const { hp, maxHp, name, transform } = hatcherySession.boss;
 
     gameSession.removeUser(user.playerId);
     hatcherySession.addPlayer(user);
 
     /***** S_EnterHatchery *****/
+    const bossTransformInfo = {
+      posX: transform.x,
+      poxY: transform.y,
+      posZ: transform.z,
+      rot: transform.rot,
+    };
     const enterHatcheryResponse = createResponse('response', 'S_EnterHatchery', {
       player: user.getPlayerInfo(),
+      bossTransformInfo,
       bossMaxHp: maxHp,
       bossName: name,
     });
