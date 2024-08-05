@@ -40,6 +40,7 @@ export const onEnd = (socket) => async () => {
 
     await updateCharacterItems(user.characterId, user.potions);
     await updateCharacterItems(user.characterId, user.mountingItems);
+    await updateCharacterItems(user.characterId, user.potions);
 
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
