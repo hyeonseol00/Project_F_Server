@@ -108,8 +108,10 @@ class User {
   }
 
   findItemByInven(itemId) {
-    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
-
+    let findItem = this.mountingItems.find((item) => item.itemId === itemId);
+    if (!findItem) {
+      findItem = this.potions.find((item) => item.itemId === itemId);
+    }
     return findItem;
   }
 
@@ -120,6 +122,10 @@ class User {
 
   pushMountingItem(item) {
     this.mountingItems.push(item);
+  }
+
+  pushPotionItem(item) {
+    this.potions.push(item);
   }
 
   deleteMountingItem(itemId) {
@@ -180,11 +186,11 @@ class User {
   }
 
   addPotion(itemId, quantity) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
     this.potions[findIdx].quantity += quantity;
   }
   decPotion(itemId, quantity) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
     this.potions[findIdx].quantity -= quantity;
   }
 
