@@ -97,8 +97,8 @@ const sellItemHandler = async (user, message) => {
           // S_SellItem 패킷 전송
           const sellItemResponse = createResponse('response', 'S_SellItem', {
             item: {
-              itemId: sellItem.itemId,
-              quantity: Number(quantity),
+              id: sellItem.itemId,
+              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
             },
             gold: user.gold,
           });
@@ -130,8 +130,8 @@ const sellItemHandler = async (user, message) => {
           // S_SellItem 패킷 전송
           const sellItemResponse = createResponse('response', 'S_SellItem', {
             item: {
-              itemId: sellItem.itemId,
-              quantity: Number(quantity),
+              id: sellItem.itemId,
+              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
             },
             gold: user.gold,
           });

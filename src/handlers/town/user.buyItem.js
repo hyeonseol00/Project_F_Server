@@ -94,8 +94,8 @@ const buyItemHandler = async (user, message) => {
       // S_BuyItem 패킷 전송
       const buyItemResponse = createResponse('response', 'S_BuyItem', {
         item: {
-          itemId: buyItem.itemId,
-          quantity: buyItem.quantity,
+          id,
+          quantity: user.findItemByInven(buyItem.itemId).quantity
         },
         gold: user.gold,
       });
@@ -129,8 +129,8 @@ const buyItemHandler = async (user, message) => {
       // S_BuyItem 패킷 전송
       const buyItemResponse = createResponse('response', 'S_BuyItem', {
         item: {
-          itemId: buyItem.itemId,
-          quantity: buyItem.quantity,
+          id,
+          quantity: user.findItemByInven(buyItem.itemId).quantity
         },
         gold: user.gold,
       });
