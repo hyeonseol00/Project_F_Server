@@ -114,13 +114,6 @@ class User {
     this.mountingItems.push(item);
   }
 
-  deleteMountingItem(itemId) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    if (findIdx !== -1) {
-      this.mountingItems.splice(findIdx, 1);
-    }
-  }
-
   decMountingItem(itemId, quantity) {
     const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
     this.mountingItems[findIdx].quantity -= quantity;
@@ -155,14 +148,6 @@ class User {
 
   updateStatInfo(statInfo) {
     this.playerInfo.statInfo = statInfo;
-  }
-
-  getItemQuantity(itemId) {
-    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
-    if (findItem) {
-      return findItem.quantity;
-    }
-    return 0;
   }
 }
 
