@@ -135,7 +135,6 @@ class User {
     }
   }
 
-
   decMountingItem(itemId, quantity) {
     const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
     this.mountingItems[findIdx].quantity -= quantity;
@@ -179,6 +178,7 @@ class User {
     }
     return 0;
   }
+  
   plusGold(itemCost) {
     this.gold += itemCost;
   }
@@ -186,6 +186,7 @@ class User {
   minusGold(itemCost) {
     this.gold -= itemCost;
   }
+  
   decMountingItem(itemId, quantity) {
     const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
     this.mountingItems[findIdx].quantity -= quantity;
@@ -200,24 +201,10 @@ class User {
     const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
     this.potions[findIdx].quantity += quantity;
   }
+  
   decPotion(itemId, quantity) {
     const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
     this.potions[findIdx].quantity -= quantity;
-  }
-
-  getPotionQuantity(itemId) {
-    const findItem = this.potions.find((item) => item.itemId === itemId);
-    if (findItem) {
-      return findItem.quantity;
-    }
-    return 0;
-  }
-
-  deletePotion(itemId) {
-    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
-    if (findIdx !== -1) {
-      this.potions.splice(findIdx, 1);
-    }
   }
 }
 

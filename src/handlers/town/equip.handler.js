@@ -114,9 +114,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -204,9 +204,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -271,18 +271,10 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -295,9 +287,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -312,12 +304,7 @@ export const equipHandler = (user, message) => {
 
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId, 1);
-        }
+        user.decMountingItem(itemId, 1);
 
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -365,18 +352,10 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -389,9 +368,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -406,12 +385,7 @@ export const equipHandler = (user, message) => {
 
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId, 1);
-        }
+        user.decMountingItem(itemId, 1);
 
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -465,18 +439,10 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
-            user.deleteMountingItem(itemId);
-          } else {
-            user.decMountingItem(itemId, 1);
-          }
+          user.decMountingItem(itemId, 1);
         }
 
         const response = createResponse('response', 'S_Chat', {
@@ -489,9 +455,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -506,12 +472,7 @@ export const equipHandler = (user, message) => {
 
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
-
-        if (user.getItemQuantity(itemId) === 1) {
-          user.deleteMountingItem(itemId);
-        } else {
-          user.decMountingItem(itemId, 1);
-        }
+        user.decMountingItem(itemId, 1);
 
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
