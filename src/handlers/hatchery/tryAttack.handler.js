@@ -8,7 +8,7 @@ const tryAttackHatchery = async ({ socket, payload }) => {
     const hatcherySession = getHatcherySession();
     const players = hatcherySession.players;
 
-    const tryAttackResponse = createResponse('response', 'S_MoveAtHatchery', {
+    const tryAttackResponse = createResponse('response', 'S_TryAttack', {
       playerId: user.playerId,
     });
 
