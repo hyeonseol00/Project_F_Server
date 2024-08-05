@@ -39,10 +39,6 @@ const sellItemHandler = async (user, message) => {
           user.plusGold(addGold);
           user.decPotion(sellItem.itemId, Number(quantity));
 
-          if (user.getPotionQuantity(findItem.itemId) === 0) {
-            user.deletePotion(findItem.itemId);
-          }
-          console.log(user.potions);
           const response = createResponse('response', 'S_Chat', {
             playerId: user.playerId,
             chatMsg: ` ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
@@ -61,9 +57,6 @@ const sellItemHandler = async (user, message) => {
         } else {
           const addGold = itemCost * Number(quantity) * 0.7;
           user.plusGold(Math.floor(addGold));
-          if (user.getItemQuantity(findItem.itemId) === 0) {
-            user.deleteMountingItem(findItem.itemId);
-          }
 
           user.decMountingItem(sellItem.itemId, Number(quantity));
 
