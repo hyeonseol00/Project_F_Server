@@ -13,6 +13,7 @@ import enterHatcheryHandler from './town/enterHatchery.handler.js';
 import moveHatcheryHandler from './hatchery/move.handler.js';
 import tryAttackHatchery from './hatchery/tryAttack.handler.js';
 import attackBossHatchery from './hatchery/attackBoss.handler.js';
+import leaveHatchery from './hatchery/leaveHatchery.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -62,6 +63,10 @@ const handlers = {
   [PACKET_TYPE.C_AttackBoss]: {
     handler: attackBossHatchery,
     protoType: 'hatchery.C_AttackBoss',
+  },
+  [PACKET_TYPE.C_LeaveHatchery]: {
+    handler: leaveHatchery,
+    protoType: 'hatchery.C_LeaveHatchery',
   },
 };
 
