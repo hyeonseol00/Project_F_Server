@@ -94,6 +94,15 @@ const sellItemHandler = async (user, message) => {
             chatMsg: `[System] ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
           });
           user.socket.write(response);
+          // S_SellItem 패킷 전송
+          const sellItemResponse = createResponse('response', 'S_SellItem', {
+            item: {
+              id: sellItem.itemId,
+              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
+            },
+            gold: user.gold,
+          });
+          user.socket.write(sellItemResponse);
           return;
         }
       } else {
@@ -118,6 +127,15 @@ const sellItemHandler = async (user, message) => {
             chatMsg: `[System] ${sellItem.itemName} 아이템이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
           });
           user.socket.write(response);
+          // S_SellItem 패킷 전송
+          const sellItemResponse = createResponse('response', 'S_SellItem', {
+            item: {
+              id: sellItem.itemId,
+              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
+            },
+            gold: user.gold,
+          });
+          user.socket.write(sellItemResponse);
           return;
         }
       }

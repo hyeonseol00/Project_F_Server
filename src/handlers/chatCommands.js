@@ -13,7 +13,7 @@ import { equipHandler } from './town/equip.handler.js';
 import buyItemHandler from './town/user.buyItem.js';
 import sellItemHandler from './town/user.sellItem.js';
 import { unquipHandler } from './town/unequip.handler.js';
-
+import useHandler from './town/use.handler.js';
 
 const chatCommands = new Map([
   // ---------common cmd begin------------
@@ -34,6 +34,7 @@ const chatCommands = new Map([
   ['eq', equipHandler],
   ['unequip', unquipHandler],
   ['ueq', unquipHandler],
+  ['use', useHandler],
 ]);
 
 export default chatCommands;

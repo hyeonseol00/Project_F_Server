@@ -186,10 +186,18 @@ const enterTownHandler = async ({ socket, payload }) => {
       };
     }
 
-    const items = curUser.mountingItems.map((item) => ({
-      id: item.itemId,
-      quantity: item.quantity,
-    }));
+    const items = [
+      ...curUser.mountingItems.map((item) => ({
+        id: item.itemId,
+        quantity: item.quantity,
+      })),
+      ...curUser.potions.map((potion) => ({
+        id: potion.itemId,
+        quantity: potion.quantity,
+      })),
+    ];
+
+    // console.log('현재 items:', items);
 
     const inven = {
       items,
@@ -202,6 +210,14 @@ const enterTownHandler = async ({ socket, payload }) => {
       rot: Math.random() * 360, // 0 ~ 360
     };
 
+    const equipment = {
+      weapon: curUser.weapon,
+      armor: curUser.armor,
+      gloves: curUser.gloves,
+      shoes: curUser.shoes,
+      accessory: curUser.accessory,
+    };
+
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
@@ -210,6 +226,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       transform: transformInfo,
       statInfo,
       inven,
+      equipment,
     };
 
     const enterTownResponse = createResponse('response', 'S_Enter', {

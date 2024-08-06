@@ -134,28 +134,24 @@ message S_BossMove{
 
 // ==============타운 패킷===================
 message S_BuyItem{
-  ItemInfo item = 1;
-  bool success = 2; // 서버가 갱신한 유저 골드
+  ItemInfo item = 1;  // 구매한 후 구매한 아이템 id, quantity
+  int32 gold = 2;      // 남은 금액
 }
 
 message S_SellItem{
-  ItemInfo item = 1;
-  bool success = 2; // 서버가 갱신한 유저 골드
+  ItemInfo item = 1;  // 구매한 후 구매한 아이템 id, quantity
+  int32 gold = 2;      // 남은 금액
 }
 
 message S_EquipWeapon{
- int32 itemId = 1;
- bool success = 2;
+ int32 itemId = 1;   // 장착한 아이템 id
 }
 
 message S_UnequipWeapon{
- string itemType = 1;
- bool success = 2;
+ string itemType = 1;  // 탈착한 아이템 id
 }
 
 message S_UseItem{
- int32 itemId = 1;
- bool success = 2;
+  ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
-
 
