@@ -22,11 +22,10 @@ class BossMonster extends Monster {
   }
 
   getDistanceFromPlayer(userTransform) {
-    const { posX, posY, posZ } = this.transform;
+    const { posX, posZ } = this.transform;
     const deltaX = userTransform.posX - posX;
-    const deltaY = userTransform.posY - posY;
     const deltaZ = userTransform.posZ - posZ;
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+    return Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
   }
 
   getUnitVectorFromPlayer(userTransform) {
