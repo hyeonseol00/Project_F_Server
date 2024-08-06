@@ -127,3 +127,8 @@ message BtnInfo {
   string msg = 1;
   bool enable = 2;
 }
+
+message UnitVector {
+  float unitX = 1;
+  float unitZ = 2;
+}

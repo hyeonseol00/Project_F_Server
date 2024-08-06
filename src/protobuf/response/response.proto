@@ -104,8 +104,10 @@ message S_MonsterAction {
 
 message S_EnterHatchery{
   PlayerInfo player = 1;
-  int32 bossMaxHp = 2;
-  string bossName = 3;
+  TransformInfo bossTransformInfo = 2;
+  float bossMaxHp = 3;
+  float bossSpeed = 4;
+  string bossName = 5;
 }
 
 message S_SpawnPlayerHatchery{
@@ -123,6 +125,11 @@ message S_SetHatcheryBossHp{
 
 message S_TryAttack{
   int32 playerId = 1;
+}
+
+message S_BossMove{
+  TransformInfo bossTransform = 1;
+  UnitVector bossUnitVector = 2;
 }
 
 // ==============타운 패킷===================

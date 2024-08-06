@@ -28,6 +28,7 @@ export const packetNames = {
     S_EquipWeapon: 'response.S_EquipWeapon',
     S_UnequipWeapon: 'response.S_UnequipWeapon',
     S_TryAttack: 'response.S_TryAttack',
+    S_BossMove: 'response.S_BossMove',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -65,6 +66,7 @@ export const packetNames = {
     PlayerStatus: 'custom.PlayerStatus',
     BattleLog: 'custom.BattleLog',
     BtnInfo: 'custom.BtnInfo',
-    ItemInfo: 'custom.ItemInfo'
+    UnitVector: 'custom.UnitVector',
+    ItemInfo: 'custom.ItemInfo',
   },
 };

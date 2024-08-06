@@ -51,15 +51,16 @@ class User {
     this.playerInfo = playerInfo;
   }
 
+  setTransformInfo(transform) {
+    this.playerInfo.transform = transform;
+  }
+
   getPlayerInfo() {
     return { ...this.playerInfo };
   }
 
-  updatePosition(x, y, z, rot) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.rot = rot;
+  updatePosition(transform) {
+    this.playerInfo.transform = transform;
     this.lastUpdateTime = Date.now();
   }
 
