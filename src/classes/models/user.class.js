@@ -16,6 +16,7 @@ class User {
     avoidAbility,
     gold,
     worldLevel,
+    skillPoint,
     weapon,
     armor,
     gloves,
@@ -38,6 +39,7 @@ class User {
     this.avoidAbility = avoidAbility;
     this.gold = gold;
     this.worldLevel = worldLevel;
+    this.skillPoint = skillPoint;
     this.weapon = weapon;
     this.armor = armor;
     this.gloves = gloves;
@@ -210,6 +212,10 @@ class User {
     if (findIdx !== -1) {
       this.potions.splice(findIdx, 1);
     }
+  }
+  skillPointUpdate(statInfo) {
+    this.playerInfo.statInfo = statInfo;
+    this.skillPoint = statInfo.skillPoint;
   }
 }
 
