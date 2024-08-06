@@ -11,7 +11,9 @@ function isInteger(s) {
 }
 
 export const skillPointHandler = async (user, message) => {
-  let { hp, maxHp, mp, maxMp, atk, def, magic, speed, skillPoint } = user.playerInfo.statInfo;
+  const { skillPoint } = user;
+  let { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  console.log(skillPoint);
   const [upAbility, quantity] = message.split(' ');
   const validAbilities = ['hp', 'mp', 'atk', 'def', 'magic', 'speed'];
   if (!validAbilities.includes(upAbility)) {
@@ -57,6 +59,7 @@ export const skillPointHandler = async (user, message) => {
   switch (upAbility) {
     case 'hp':
       statInfo = {
+        level,
         hp: hp + upAbilityValue * Number(quantity),
         maxHp: maxHp + upAbilityValue * Number(quantity),
         mp: mp,
@@ -65,11 +68,13 @@ export const skillPointHandler = async (user, message) => {
         def: def,
         magic: magic,
         speed: speed,
-        skillPoint: Number(skillPoint) - Number(quantity),
+        skillPoint: skillPoint - Number(quantity),
       };
+      await user.skillPointUpdate(statInfo);
       break;
     case 'mp':
       statInfo = {
+        level,
         hp: hp,
         maxHp: maxHp,
         mp: mp + upAbilityValue * Number(quantity),
@@ -83,6 +88,7 @@ export const skillPointHandler = async (user, message) => {
       break;
     case 'atk':
       statInfo = {
+        level,
         hp: hp,
         maxHp: maxHp,
         mp: mp,
@@ -96,6 +102,7 @@ export const skillPointHandler = async (user, message) => {
       break;
     case 'def':
       statInfo = {
+        level,
         hp: hp,
         maxHp: maxHp,
         mp: mp,
@@ -109,6 +116,7 @@ export const skillPointHandler = async (user, message) => {
       break;
     case 'magic':
       statInfo = {
+        level,
         hp: hp,
         maxHp: maxHp,
         mp: mp,
@@ -122,6 +130,7 @@ export const skillPointHandler = async (user, message) => {
       break;
     case 'speed':
       statInfo = {
+        level,
         hp: hp,
         maxHp: maxHp,
         mp: mp,
@@ -134,7 +143,7 @@ export const skillPointHandler = async (user, message) => {
       };
       break;
   }
-  await user.updateStatInfo(statInfo);
+
   const response = createResponse('response', 'S_Chat', {
     playerId: user.playerId,
     chatMsg: `[System] 스킬포인트 ${quantity}를 소모하여 ${quantity * upAbilityValue} 능력치를 올렸습니다.`,

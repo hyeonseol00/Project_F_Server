@@ -142,6 +142,7 @@ const enterTownHandler = async ({ socket, payload }) => {
         curUser.criticalAttack,
         curUser.avoidAbility,
         curUser.gold,
+        curUser.skillPoint,
         curUser.weapon,
         curUser.armor,
         curUser.gloves,

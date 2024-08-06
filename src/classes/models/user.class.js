@@ -212,6 +212,18 @@ class User {
       this.potions.splice(findIdx, 1);
     }
   }
+  skillPointUpdate(statInfo) {
+    this.level = statInfo.level;
+    this.hp = statInfo.hp;
+    this.maxHp = statInfo.maxHp;
+    this.mp = statInfo.mp;
+    this.maxMp = statInfo.maxMp;
+    this.atk = statInfo.atk;
+    this.def = statInfo.def;
+    this.magic = statInfo.magic;
+    this.speed = statInfo.speed;
+    this.skillPoint = statInfo.skillPoint;
+  }
 }
 
 export default User;
