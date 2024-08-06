@@ -16,7 +16,7 @@ function findPotionById(user, itemId) {
 }
 
 export const useHandler = (user, message) => {
-  const { hp, maxHp, mp, maxMp } = user.playerInfo.statInfo;
+  const { hp, maxHp, mp, maxMp, level } = user.playerInfo.statInfo;
 
   if (!isInteger(message)) {
     const response = createResponse('response', 'S_Chat', {
@@ -52,7 +52,7 @@ export const useHandler = (user, message) => {
 
   // `getItemById` 함수로 포션의 상세 정보를 가져옴
   const itemInfo = getItemById(itemId);
-  const { itemHp, itemMp } = itemInfo;
+  const { itemHp, itemMp, requireLevel } = itemInfo;
   const { quantity, name: itemName } = findItem;
 
   console.log(
@@ -63,6 +63,16 @@ export const useHandler = (user, message) => {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 아이템의 수량이 부족합니다.`,
+    });
+    user.socket.write(response);
+    return;
+  }
+
+  // 필요한 레벨을 확인
+  if (level < requireLevel) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] 이 아이템은 레벨 ${requireLevel} 이상만 사용할 수 있습니다.`,
     });
     user.socket.write(response);
     return;
@@ -95,7 +105,7 @@ export const useHandler = (user, message) => {
   // S_UseItem 패킷 전송
   const useItemResponse = createResponse('response', 'S_UseItem', {
     item: {
-      id: itemId,
+      id,
       quantity: updatedQuantity,
     },
   });

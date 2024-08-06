@@ -10,6 +10,11 @@ function isInteger(s) {
   return Number.isInteger(num); // 정수인지 확인
 }
 
+// user 객체 내에 포션 아이템을 찾는 함수 추가
+function findPotionById(user, itemId) {
+  return user.potions.find((potion) => potion.itemId === itemId);
+}
+
 const sellItemHandler = async (user, message) => {
   const [id, quantity] = message.split(' ');
   const sellItem = getItemById(Number(id));
@@ -26,7 +31,7 @@ const sellItemHandler = async (user, message) => {
   if (!isInteger(quantity)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] 구매할 수량(숫자)을(를) 입력하세요.`,
+      chatMsg: `[System] 수량(숫자)을(를) 입력하세요.`,
     });
     user.socket.write(response);
     return;
@@ -60,85 +65,90 @@ const sellItemHandler = async (user, message) => {
   }
 
   const itemCost = sellItem.itemCost;
-  //아이템 테이블과 팔고싶은 아이템 ID가 같을 경우
+  // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
   if (Number(id) === sellItem.itemId) {
+    const findPotion = findPotionById(user, Number(id));
     const findItem = user.findItemByInven(Number(id));
-    // 아이템이 인벤토리 없을 때, 인벤토리보다 더 많이 파려고 할 때, 정상적일 떄
-    if (!findItem) {
+
+    if (!findPotion && !findItem) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
         chatMsg: `[System] 인벤토리에 아이템이 존재하지 않습니다. `,
       });
       user.socket.write(response);
       return;
-    } else {
-      if (findItem.itemType === 'potion') {
-        if (findItem.quantity < Number(quantity)) {
-          const response = createResponse('response', 'S_Chat', {
-            playerId: user.playerId,
-            chatMsg: `[System] 포션을 ${findItem.quantity}개 이상 판매할 수 없습니다. `,
-          });
-          user.socket.write(response);
-          return;
-        } else {
-          const addGold = itemCost * Number(quantity) * 0.7;
-          user.plusGold(addGold);
-          user.decPotion(sellItem.itemId, Number(quantity));
+    }
 
-          if (user.getPotionItemQuantity(findItem.itemId) === 0) {
-            user.deletePotionItem(findItem.itemId);
-          }
-
-          const response = createResponse('response', 'S_Chat', {
-            playerId: user.playerId,
-            chatMsg: `[System] ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
-          });
-          user.socket.write(response);
-          // S_SellItem 패킷 전송
-          const sellItemResponse = createResponse('response', 'S_SellItem', {
-            item: {
-              id: sellItem.itemId,
-              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
-            },
-            gold: user.gold,
-          });
-          user.socket.write(sellItemResponse);
-          return;
-        }
-      } else {
-        if (findItem.quantity < Number(quantity)) {
-          const response = createResponse('response', 'S_Chat', {
-            playerId: user.playerId,
-            chatMsg: `[System] ${findItem.quantity}개 이상 판매할 수 없습니다. `,
-          });
-          user.socket.write(response);
-          return;
-        } else {
-          const addGold = itemCost * Number(quantity) * 0.7;
-          user.plusGold(Math.floor(addGold));
-          user.decMountingItem(sellItem.itemId, Number(quantity));
-
-          if (user.getItemQuantity(findItem.itemId) === 0) {
-            user.deleteMountingItem(findItem.itemId);
-          }
-
-          const response = createResponse('response', 'S_Chat', {
-            playerId: user.playerId,
-            chatMsg: `[System] ${sellItem.itemName} 아이템이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
-          });
-          user.socket.write(response);
-          // S_SellItem 패킷 전송
-          const sellItemResponse = createResponse('response', 'S_SellItem', {
-            item: {
-              id: sellItem.itemId,
-              quantity: user.findItemByInven(sellItem.itemId) ? user.findItemByInven(sellItem.itemId).quantity : 0
-            },
-            gold: user.gold,
-          });
-          user.socket.write(sellItemResponse);
-          return;
-        }
+    if (findPotion && findPotion.itemType === 'potion') {
+      if (findPotion.quantity < Number(quantity)) {
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] 포션을 ${findPotion.quantity}개 이상 판매할 수 없습니다. `,
+        });
+        user.socket.write(response);
+        return;
       }
+
+      const addGold = itemCost * Number(quantity) * 0.7;
+      user.plusGold(Math.floor(addGold));
+      user.decPotion(sellItem.itemId, Number(quantity));
+
+      if (user.getPotionItemQuantity(sellItem.itemId) === 0) {
+        user.deletePotionItem(sellItem.itemId);
+      }
+
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
+      });
+      user.socket.write(response);
+
+      // S_SellItem 패킷 전송
+      const sellItemResponse = createResponse('response', 'S_SellItem', {
+        item: {
+          id,
+          quantity: user.getPotionItemQuantity(id),
+        },
+        gold: user.gold,
+      });
+      user.socket.write(sellItemResponse);
+      return;
+    }
+
+    if (findItem && findItem.itemType !== 'potion') {
+      if (findItem.quantity < Number(quantity)) {
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${findItem.quantity}개 이상 판매할 수 없습니다. `,
+        });
+        user.socket.write(response);
+        return;
+      }
+
+      const addGold = itemCost * Number(quantity) * 0.7;
+      user.plusGold(Math.floor(addGold));
+      user.decMountingItem(sellItem.itemId, Number(quantity));
+
+      if (user.getItemQuantity(sellItem.itemId) === 0) {
+        user.deleteMountingItem(sellItem.itemId);
+      }
+
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] ${sellItem.itemName} 아이템이 ${quantity}개 판매가 완료되었습니다. 골드가 ${user.gold} 있습니다.`,
+      });
+      user.socket.write(response);
+
+      // S_SellItem 패킷 전송
+      const sellItemResponse = createResponse('response', 'S_SellItem', {
+        item: {
+          id,
+          quantity: user.findItemByInven(id) ? user.findItemByInven(id).quantity : 0,
+        },
+        gold: user.gold,
+      });
+      user.socket.write(sellItemResponse);
+      return;
     }
   }
 };
