@@ -65,7 +65,7 @@ export const skillPointHandler = async (user, message) => {
         def: def,
         magic: magic,
         speed: speed,
-        skillPoint: skillPoint - Number(quantity),
+        skillPoint: Number(skillPoint) - Number(quantity),
       };
       break;
     case 'mp':

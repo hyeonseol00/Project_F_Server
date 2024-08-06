@@ -55,8 +55,9 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       player.criticalAttack += criticalAttack;
       player.avoidAbility += avoidAbility;
       player.gold += gold;
+      player.skillPoint += skillPoint;
 
-      const message = `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!\n
+      const message = `경험치 ${monsterExp}, 골드 ${gold}, 스킬포인트 ${skillPoint}를 획득했습니다!\n
 레벨 ${playerLevel + 1}이 되었습니다!\n
 최대체력 +${hp} , 최대마나 +${mp}가 증가되었습니다!\n
 공격력 +${attack} , 방어력 +${defense} , 마력 +${magic} , 스피드 +${speed}이 증가되었습니다!`;
