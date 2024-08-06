@@ -47,6 +47,7 @@ const enterTownHandler = async ({ socket, payload }) => {
         avoidAbility,
         gold,
         worldLevel,
+        skillPoint,
         weapon,
         armor,
         gloves,
@@ -97,13 +98,13 @@ const enterTownHandler = async ({ socket, payload }) => {
         avoidAbility,
         gold,
         worldLevel,
+        skillPoint,
         weapon,
         armor,
         gloves,
         shoes,
         accessory,
       );
-      if (!userExist) gameSession.addUser(curUser);
 
       statInfo = {
         level: character.characterLevel,
@@ -140,6 +141,7 @@ const enterTownHandler = async ({ socket, payload }) => {
         curUser.criticalAttack,
         curUser.avoidAbility,
         curUser.gold,
+        curUser.skillPoint,
         curUser.weapon,
         curUser.armor,
         curUser.gloves,
@@ -235,6 +237,7 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 플레이어 정보를 user에 추가한다.
     curUser.setPlayerInfo(playerInfo);
+    gameSession.addUser(curUser);
 
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
 
