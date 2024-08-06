@@ -9,6 +9,7 @@ class Hatchery {
   constructor(transform) {
     this.players = [];
     this.intervalManager = new IntervalManager();
+    this.lastUnitVector = { x: 0, z: 0 };
 
     this.initMonster(transform);
   }
@@ -87,22 +88,20 @@ class Hatchery {
       }
     }
 
-    // 타겟 플레이어에 대한 몬스터의 방향 벡터 계산
-    const unitVec = this.boss.getUnitVectorFromPlayer(targetPlayerTr);
-    const rot = toEulerAngles(unitVec);
-    bossTr.rot = rot + 90;
-
     // 여기 부분에 현재 위치 계산
+    const lastUnitVec = this.lastUnitVector;
     const elapsedTime = Date.now() - this.lastUpdateTime;
     const timeDiff = elapsedTime / 1000;
     const speed = this.boss.speed;
-    bossTr.posX += unitVec.x * timeDiff * speed;
-    bossTr.posZ += unitVec.z * timeDiff * speed;
+    bossTr.posX += lastUnitVec.x * timeDiff * speed;
+    bossTr.posZ += lastUnitVec.z * timeDiff * speed;
 
-    console.log(timeDiff);
+    // 타겟 플레이어에 대한 몬스터의 방향 벡터 계산
+    const unitVec = this.boss.getUnitVectorFromPlayer(targetPlayerTr);
+    const rot = toEulerAngles(unitVec);
+    bossTr.rot = rot - 90;
 
     const bossUnitVector = { unitX: unitVec.x, unitZ: unitVec.z };
-
     const bossMoveResponse = createResponse('response', 'S_BossMove', {
       bossTransform: bossTr,
       bossUnitVector,
@@ -113,6 +112,7 @@ class Hatchery {
     }
 
     this.lastUpdateTime = Date.now();
+    this.lastUnitVector = unitVec;
   }
 }
 
