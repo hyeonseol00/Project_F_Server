@@ -103,7 +103,6 @@ const enterTownHandler = async ({ socket, payload }) => {
         shoes,
         accessory,
       );
-      if (!userExist) gameSession.addUser(curUser);
 
       statInfo = {
         level: character.characterLevel,
@@ -218,6 +217,7 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 플레이어 정보를 user에 추가한다.
     curUser.setPlayerInfo(playerInfo);
+    gameSession.addUser(curUser);
 
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
 
