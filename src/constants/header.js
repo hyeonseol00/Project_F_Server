@@ -53,5 +53,6 @@ export const PACKET_TYPE = {
   S_SetHatcheryBossHp: 211,
   C_TryAttack: 212,
   S_TryAttack: 213,
+  S_BossMove: 214,
   // ********** 200번대 패킷 끝 ********** //
 };

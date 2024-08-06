@@ -45,7 +45,14 @@ import {
   DB2_HOST,
   DB2_PORT,
 } from '../constants/env.js';
-import { BOSS_ID, MAX_PLAYERS } from '../constants/hatchery/sceneConfig.js';
+import {
+  BOSS_ATTACK_RANGE,
+  BOSS_ID,
+  BOSS_INIT_TRANSFORM,
+  BOSS_TARGET_INTERVAL,
+  BOSS_TARGET_INTERVAL_ID,
+  MAX_PLAYERS,
+} from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 import {
   SCREENCOLOR_B,
@@ -149,6 +156,10 @@ export const config = {
   hatchery: {
     maxPlayers: MAX_PLAYERS,
     bossId: BOSS_ID,
+    bossInitTransform: BOSS_INIT_TRANSFORM,
+    bossTargetIntervalId: BOSS_TARGET_INTERVAL_ID,
+    bossTargetInterval: BOSS_TARGET_INTERVAL,
+    bossAttackRange: BOSS_ATTACK_RANGE,
   },
   maxLevel: 20,
 };
