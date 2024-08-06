@@ -2,9 +2,80 @@ import { getItemById } from '../../session/item.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import Item from '../../classes/models/item.class.js';
 
+function isInteger(s) {
+  s += ''; // 문자열로 변환
+  s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
+  if (s === '' || isNaN(s)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
+
+  const num = Number(s);
+  return Number.isInteger(num); // 정수인지 확인
+}
+
 export const equipHandler = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory, critical, avoidAbility } = user;
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+
+  // TEST--------------------------------------------------------
+  // const item = {
+  //   id: 1,
+  //   quantity: 123
+  // };
+
+  // const test1Response = createResponse('response', 'S_BuyItem', {
+  //   item,
+  //   success: true
+  // });
+  // user.socket.write(test1Response);
+
+  // const test2Response = createResponse('response', 'S_SellItem', {
+  //   item,
+  //   success: true
+  // });
+  // user.socket.write(test2Response);
+
+  // const test3Response = createResponse('response', 'S_UseItem', {
+  //   itemId : 1,
+  //   success: true
+  // });
+  // user.socket.write(test3Response);
+
+  // const test4Response = createResponse('response', 'S_EquipWeapon', {
+  //   itemId: 1,
+  //   success: true
+  // });
+  // user.socket.write(test4Response);
+
+  // console.log(test4Response);
+
+  // const type = "weapon";
+
+  // const test5Response = createResponse('response', 'S_UnequipWeapon', {
+  //   itemType: type,
+  //   success: true
+  // });
+  // user.socket.write(test5Response);
+
+  // console.log(test5Response);
+
+  // TEST--------------------------------------------------------
+  if (!isInteger(message)) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] 아이템 ID(숫자)를(를) 입력하세요.`,
+    });
+    user.socket.write(response);
+    return;
+  }
+
+  if (Number(message) <= 0) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] 정확한 아이템ID를 입력하세요. `,
+    });
+    user.socket.write(response);
+    return;
+  }
+
   const isItemByTable = getItemById(Number(message));
   const findItem = user.findItemByInven(Number(message));
   if (!isItemByTable) {
@@ -114,9 +185,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -141,6 +212,7 @@ export const equipHandler = (user, message) => {
           chatMsg: `[System] ${name}을(를) 장착했습니다.`,
         });
         user.socket.write(response);
+
       }
       break;
     case 'armor':
@@ -204,9 +276,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -295,9 +367,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -389,9 +461,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,
@@ -489,9 +561,9 @@ export const equipHandler = (user, message) => {
 
         statInfo = {
           level,
-          hp: hp + addHp,
+          hp: hp,
           maxHp: maxHp + addHp,
-          mp: mp + addMp,
+          mp: mp,
           maxMp: maxMp + addMp,
           atk: atk + addAttack,
           def: def + addDefense,

@@ -131,3 +131,31 @@ message S_BossMove{
   TransformInfo bossTransform = 1;
   UnitVector bossUnitVector = 2;
 }
+
+// ==============타운 패킷===================
+message S_BuyItem{
+  ItemInfo item = 1;
+  bool success = 2; // 서버가 갱신한 유저 골드
+}
+
+message S_SellItem{
+  ItemInfo item = 1;
+  bool success = 2; // 서버가 갱신한 유저 골드
+}
+
+message S_EquipWeapon{
+ int32 itemId = 1;
+ bool success = 2;
+}
+
+message S_UnequipWeapon{
+ string itemType = 1;
+ bool success = 2;
+}
+
+message S_UseItem{
+ int32 itemId = 1;
+ bool success = 2;
+}
+
+
