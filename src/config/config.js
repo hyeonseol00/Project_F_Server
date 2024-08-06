@@ -46,6 +46,7 @@ import {
   DB2_PORT,
 } from '../constants/env.js';
 import {
+  BOSS_ATTACK_RANGE,
   BOSS_ID,
   BOSS_INIT_TRANSFORM,
   BOSS_TARGET_INTERVAL,
@@ -158,6 +159,7 @@ export const config = {
     bossInitTransform: BOSS_INIT_TRANSFORM,
     bossTargetIntervalId: BOSS_TARGET_INTERVAL_ID,
     bossTargetInterval: BOSS_TARGET_INTERVAL,
+    bossAttackRange: BOSS_ATTACK_RANGE,
   },
   maxLevel: 20,
 };

@@ -93,15 +93,47 @@ class Hatchery {
     const elapsedTime = Date.now() - this.lastUpdateTime;
     const timeDiff = elapsedTime / 1000;
     const speed = this.boss.speed;
-    bossTr.posX += lastUnitVec.x * timeDiff * speed;
-    bossTr.posZ += lastUnitVec.z * timeDiff * speed;
+
+    const moveDistance = timeDiff * speed;
+    let distanceX = lastUnitVec.x * moveDistance;
+    let distanceZ = lastUnitVec.z * moveDistance;
+    bossTr.posX += distanceX;
+    bossTr.posZ += distanceZ;
+    // Math.sqrt(distanceX * distanceX + distanceZ * distanceZ) 클라에서 이동한 거리
+    const bossDistanceToPlayer = this.boss.getDistanceFromPlayer(targetPlayerTr);
+    const bossAttackRange = config.hatchery.bossAttackRange;
+    let inRange = false;
+    if (bossDistanceToPlayer < bossAttackRange) {
+      // bossAttackRange에 들어오면 플레이어 공격
+      // 현재는 위치만 그대로 보내주기
+      bossTr.posX -= distanceX;
+      bossTr.posZ -= distanceZ;
+      // 이동했던 위치 원상복구
+
+      // 이동 전 거리가 10 이상일 때만 10까지는 이동시켜주는거
+      if (minDistance > bossAttackRange) {
+        const remainingDistance = minDistance - bossAttackRange;
+        const scalingFactor = remainingDistance / moveDistance;
+        distanceX *= scalingFactor;
+        distanceZ *= scalingFactor;
+        // 거리 10 이상이게 비율 조정해서 이동거리 보내주기
+        bossTr.posX += distanceX;
+        bossTr.posZ += distanceZ;
+
+        // 이러면 거리 10!
+      }
+      inRange = true;
+    }
 
     // 타겟 플레이어에 대한 몬스터의 방향 벡터 계산
     const unitVec = this.boss.getUnitVectorFromPlayer(targetPlayerTr);
     const rot = toEulerAngles(unitVec);
     bossTr.rot = rot - 90;
 
-    const bossUnitVector = { unitX: unitVec.x, unitZ: unitVec.z };
+    const bossUnitVector = inRange
+      ? { unitX: 0, unitZ: 0 }
+      : { unitX: unitVec.x, unitZ: unitVec.z };
+
     const bossMoveResponse = createResponse('response', 'S_BossMove', {
       bossTransform: bossTr,
       bossUnitVector,
