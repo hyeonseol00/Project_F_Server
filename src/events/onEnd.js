@@ -24,6 +24,7 @@ export const onEnd = (socket) => async () => {
       playerStatus.atk,
       playerStatus.def,
       playerStatus.magic,
+      // user.speed,
       playerStatus.speed,
       user.critical,
       user.criticalAttack,

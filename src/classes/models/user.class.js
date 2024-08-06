@@ -213,15 +213,7 @@ class User {
     }
   }
   skillPointUpdate(statInfo) {
-    this.level = statInfo.level;
-    this.hp = statInfo.hp;
-    this.maxHp = statInfo.maxHp;
-    this.mp = statInfo.mp;
-    this.maxMp = statInfo.maxMp;
-    this.atk = statInfo.atk;
-    this.def = statInfo.def;
-    this.magic = statInfo.magic;
-    this.speed = statInfo.speed;
+    this.playerInfo.statInfo = statInfo;
     this.skillPoint = statInfo.skillPoint;
   }
 }
