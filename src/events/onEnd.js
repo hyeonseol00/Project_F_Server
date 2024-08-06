@@ -29,6 +29,7 @@ export const onEnd = (socket) => async () => {
       user.criticalAttack,
       user.avoidAbility,
       user.gold,
+      user.skillPoint,
       user.weapon,
       user.armor,
       user.gloves,
