@@ -70,11 +70,12 @@ class Hatchery {
 
     if (this.players.length <= 0) {
       this.intervalManager.removePlayer(config.hatchery.bossTargetIntervalId);
+      this.initialize();
     }
   }
 
   bossMove() {
-    if (this.players.length <= 0) {
+    if (this.players.length <= 0 || this.boss.hp <= 0) {
       return;
     }
 
