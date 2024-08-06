@@ -11,3 +11,6 @@ message C_AttackBoss{
 
 message C_TryAttack{
 }
+
+message C_LeaveHatchery{
+}

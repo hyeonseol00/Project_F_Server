@@ -6,12 +6,16 @@ import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 
 class Hatchery {
-  constructor(transform) {
+  constructor() {
+    this.initialize();
+  }
+
+  initialize() {
     this.players = [];
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
 
-    this.initMonster(transform);
+    this.initMonster({ ...config.hatchery.bossInitTransform });
   }
 
   async initMonster(transform) {
@@ -66,11 +70,12 @@ class Hatchery {
 
     if (this.players.length <= 0) {
       this.intervalManager.removePlayer(config.hatchery.bossTargetIntervalId);
+      this.initialize();
     }
   }
 
   bossMove() {
-    if (this.players.length <= 0) {
+    if (this.players.length <= 0 || this.boss.hp <= 0) {
       return;
     }
 

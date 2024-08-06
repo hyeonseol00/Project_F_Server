@@ -52,6 +52,7 @@ export const packetNames = {
     C_MoveAtHatchery: 'hatchery.C_MoveAtHatchery',
     C_AttackBoss: 'hatchery.C_AttackBoss',
     C_TryAttack: 'hatchery.C_TryAttack',
+    C_LeaveHatchery: 'hatchery.C_LeaveHatchery',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',

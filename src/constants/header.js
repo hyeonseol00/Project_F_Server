@@ -25,18 +25,17 @@ export const PACKET_TYPE = {
   S_PlayerAction: 24,
   S_MonsterAction: 25,
 
-
   // ********** 100번대 패킷 ********** //
-  C_BuyItem : 100,
-  S_BuyItem : 101,
-  C_SellItem : 102,
-  S_SellItem : 103,
-  C_UseItem : 104,
-  S_UseItem : 105,
-  C_EquipWeapon : 106,
-  S_EquipWeapon : 107,
-  C_UnequipWeapon : 108,
-  S_UnequipWeapon : 109,
+  C_BuyItem: 100,
+  S_BuyItem: 101,
+  C_SellItem: 102,
+  S_SellItem: 103,
+  C_UseItem: 104,
+  S_UseItem: 105,
+  C_EquipWeapon: 106,
+  S_EquipWeapon: 107,
+  C_UnequipWeapon: 108,
+  S_UnequipWeapon: 109,
   // ********** 100번대 패킷 끝 ********** //
 
   // ********** 200번대 패킷 ********** //
@@ -54,5 +53,6 @@ export const PACKET_TYPE = {
   C_TryAttack: 212,
   S_TryAttack: 213,
   S_BossMove: 214,
+  C_LeaveHatchery: 215,
   // ********** 200번대 패킷 끝 ********** //
 };
