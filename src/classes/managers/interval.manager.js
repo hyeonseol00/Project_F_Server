@@ -12,22 +12,7 @@ class IntervalManager extends BaseManager {
     this.intervals.get(playerId).set(type, setInterval(callback, interval));
   }
 
-  addGame(gameId, callback, interval) {
-    this.addPlayer(gameId, callback, interval, 'game');
-  }
-
-  addUpdatePosition(playerId, callback, interval) {
-    this.addPlayer(playerId, callback, interval, 'updatePosition');
-  }
-
-  removePlayer(playerId) {
-    if (this.intervals.has(playerId)) {
-      const userIntervals = this.intervals.get(playerId);
-      userIntervals.forEach((intervalId) => clearInterval(intervalId));
-      this.intervals.delete(playerId);
-    }
-  }
-
+  // 특정 인터벌만 삭제
   removeInterval(playerId, type) {
     if (this.intervals.has(playerId)) {
       const userIntervals = this.intervals.get(playerId);
@@ -39,6 +24,16 @@ class IntervalManager extends BaseManager {
     }
   }
 
+  // 특정 플레이어가 가진 인터벌 전체 삭제
+  removePlayer(playerId) {
+    if (this.intervals.has(playerId)) {
+      const userIntervals = this.intervals.get(playerId);
+      userIntervals.forEach((intervalId) => clearInterval(intervalId));
+      this.intervals.delete(playerId);
+    }
+  }
+
+  // 인스턴스에 등록된 인터벌 전체 삭제
   clearAll() {
     this.intervals.forEach((userIntervals) => {
       userIntervals.forEach((intervalId) => clearInterval(intervalId));

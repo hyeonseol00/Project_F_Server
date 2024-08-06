@@ -212,7 +212,6 @@ export const equipHandler = (user, message) => {
           chatMsg: `[System] ${name}을(를) 장착했습니다.`,
         });
         user.socket.write(response);
-
       }
       break;
     case 'armor':
@@ -595,4 +594,10 @@ export const equipHandler = (user, message) => {
     default:
       break;
   }
+  // S_EquipWeapon 패킷 전송
+  const equipResponse = createResponse('response', 'S_EquipWeapon', {
+    itemId: itemId,
+    itemType: itemType,
+  });
+  user.socket.write(equipResponse);
 };

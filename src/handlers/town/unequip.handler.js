@@ -53,6 +53,11 @@ export const unquipHandler = (user, message) => {
           chatMsg: `[System] ${weaponInfo.itemName} 장비를 해제했습니다.`,
         });
         user.socket.write(response);
+        // S_UnequipWeapon 패킷 전송
+        const unequipResponse = createResponse('response', 'S_UnequipWeapon', {
+          itemType: 'weapon',
+        });
+        user.socket.write(unequipResponse);
       } else {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -104,6 +109,11 @@ export const unquipHandler = (user, message) => {
           chatMsg: `[System] ${armorInfo.itemName} 장비를 해제했습니다.`,
         });
         user.socket.write(response);
+        // S_UnequipWeapon 패킷 전송
+        const unequipResponse = createResponse('response', 'S_UnequipWeapon', {
+          itemType: 'armor',
+        });
+        user.socket.write(unequipResponse);
       } else {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -157,6 +167,11 @@ export const unquipHandler = (user, message) => {
           chatMsg: `[System] ${glovesInfo.itemName} 장비를 해제했습니다.`,
         });
         user.socket.write(response);
+        // S_UnequipWeapon 패킷 전송
+        const unequipResponse = createResponse('response', 'S_UnequipWeapon', {
+          itemType: 'gloves',
+        });
+        user.socket.write(unequipResponse);
       } else {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -210,6 +225,11 @@ export const unquipHandler = (user, message) => {
           chatMsg: `[System] ${shoesInfo.itemName} 장비를 해제했습니다.`,
         });
         user.socket.write(response);
+        // S_UnequipWeapon 패킷 전송
+        const unequipResponse = createResponse('response', 'S_UnequipWeapon', {
+          itemType: 'shoes',
+        });
+        user.socket.write(unequipResponse);
       } else {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -263,6 +283,11 @@ export const unquipHandler = (user, message) => {
           chatMsg: `[System] ${accessoryInfo.itemName} 장비를 해제했습니다.`,
         });
         user.socket.write(response);
+        // S_UnequipWeapon 패킷 전송
+        const unequipResponse = createResponse('response', 'S_UnequipWeapon', {
+          itemType: 'accessory',
+        });
+        user.socket.write(unequipResponse);
       } else {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,

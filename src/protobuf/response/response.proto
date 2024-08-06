@@ -104,8 +104,10 @@ message S_MonsterAction {
 
 message S_EnterHatchery{
   PlayerInfo player = 1;
-  int32 bossMaxHp = 2;
-  string bossName = 3;
+  TransformInfo bossTransformInfo = 2;
+  float bossMaxHp = 3;
+  float bossSpeed = 4;
+  string bossName = 5;
 }
 
 message S_SpawnPlayerHatchery{
@@ -125,30 +127,31 @@ message S_TryAttack{
   int32 playerId = 1;
 }
 
+message S_BossMove{
+  TransformInfo bossTransform = 1;
+  UnitVector bossUnitVector = 2;
+}
+
 // ==============타운 패킷===================
 message S_BuyItem{
-  ItemInfo item = 1;
-  bool success = 2; // 서버가 갱신한 유저 골드
+  ItemInfo item = 1;  // 구매한 후 구매한 아이템 id, quantity
+  int32 gold = 2;      // 남은 금액
 }
 
 message S_SellItem{
-  ItemInfo item = 1;
-  bool success = 2; // 서버가 갱신한 유저 골드
+  ItemInfo item = 1;  // 구매한 후 구매한 아이템 id, quantity
+  int32 gold = 2;      // 남은 금액
 }
 
 message S_EquipWeapon{
- int32 itemId = 1;
- bool success = 2;
+ int32 itemId = 1;   // 장착한 아이템 id
 }
 
 message S_UnequipWeapon{
- string itemType = 1;
- bool success = 2;
+ string itemType = 1;  // 탈착한 아이템 id
 }
 
 message S_UseItem{
- int32 itemId = 1;
- bool success = 2;
+  ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
-
 
