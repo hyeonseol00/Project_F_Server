@@ -97,7 +97,7 @@ const buyItemHandler = async (user, message) => {
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] ${buyItem.itemName} 을 ${Number(quantity)}개 구매가 완료되었습니다. 골드가 ${user.gold} 남았습니다.`,
+        chatMsg: `[System] ${buyItem.itemName} 을(를) ${Number(quantity)}개 구매가 완료되었습니다. 골드가 ${user.gold} 남았습니다.`,
       });
       user.socket.write(response);
 
@@ -105,15 +105,15 @@ const buyItemHandler = async (user, message) => {
       if (potion) {
         const buyItemResponse = createResponse('response', 'S_BuyItem', {
           item: {
-            id: potion.itemId,
+            id,
             quantity: potion.quantity,
           },
           gold: user.gold,
         });
         user.socket.write(buyItemResponse);
-        console.log(`포션 구매 완료: ${potion.id}, 수량: ${potion.quantity}`);
+        console.log(`포션 구매 완료: ${id}, 수량: ${potion.quantity}`);
       } else {
-        console.log(`포션 객체를 찾을 수 없습니다. itemId: ${buyItem.itemId}`);
+        console.log(`포션 객체를 찾을 수 없습니다. itemId: ${id}`);
       }
       return;
     } else {
@@ -148,7 +148,7 @@ const buyItemHandler = async (user, message) => {
       if (item) {
         const buyItemResponse = createResponse('response', 'S_BuyItem', {
           item: {
-            id: item.itemId,
+            id,
             quantity: item.quantity,
           },
           gold: user.gold,
@@ -156,7 +156,7 @@ const buyItemHandler = async (user, message) => {
         user.socket.write(buyItemResponse);
         console.log(`장비 아이템 구매 완료: ${id}, 수량: ${item.quantity}`);
       } else {
-        console.log(`장비 아이템 객체를 찾을 수 없습니다. itemId: ${buyItem.itemId}`);
+        console.log(`장비 아이템 객체를 찾을 수 없습니다. itemId: ${id}`);
       }
       return;
     }
