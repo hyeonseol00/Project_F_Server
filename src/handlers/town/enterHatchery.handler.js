@@ -22,7 +22,7 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
       posX: Math.random() * 18 - 9, // -9 ~ 9
       posY: 1.0,
       posZ: Math.random() * 16 - 8, // -8 ~ 8
-      rot: Math.random() * 360, // 0 ~ 360
+      rot: 180,
     };
     user.setTransformInfo(transformInfo);
     const bossTransformInfo = { posX, posY, posZ, rot };
