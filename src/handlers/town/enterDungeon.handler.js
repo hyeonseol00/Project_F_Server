@@ -21,17 +21,18 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const monsters = getMonsterByDungeonId(dungeonCode + 5000);
 
-    const { worldLevels } = config;
+    const worldLevels = config.worldLevels;
+
     const {
       hpRating = 1,
       attackRating = 1,
       expRating = 1,
       goldRating = 1,
-    } = worldLevels[player.worldLevel] || {};
+    } = worldLevels[user.worldLevel] || {};
 
     const monsterStatus = [];
 
-    for (let i = 0; i < monsterAssets.length; i++) {
+    for (let i = 0; i < 3; i++) {
       const monsterDB = monsters[Math.floor(Math.random() * monsters.length)].monsterId;
       const {
         monsterId,
