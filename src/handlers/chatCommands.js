@@ -14,7 +14,7 @@ import buyItemHandler from './town/chatCommands/user.buyItem.js';
 import sellItemHandler from './town/chatCommands/user.sellItem.js';
 import { unequipHandler } from './town/unequip.handler.js';
 import { skillPointHandler } from './town/skillPoint.handler.js';
-import useHandler from './town/use.handler.js';
+import useHandler from './town/chatCommands/use.handler.js';
 
 const chatCommands = new Map([
   // ---------common cmd begin------------

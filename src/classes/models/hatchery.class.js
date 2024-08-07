@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { findMonsterByMonsters } from '../../db/game/game.db.js';
+import { findMonsterById } from '../../db/game/game.db.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import toEulerAngles from '../../utils/toEulerAngle.js';
 import IntervalManager from '../managers/interval.manager.js';
@@ -19,7 +19,7 @@ class Hatchery {
   }
 
   async initMonster(transform) {
-    const monster = await findMonsterByMonsters(config.hatchery.bossId);
+    const monster = await findMonsterById(config.hatchery.bossId);
     const {
       monsterId,
       monsterName,

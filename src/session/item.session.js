@@ -1,4 +1,4 @@
-import { getItemTable } from '../db/game/game.db.js';
+import { getAllItemData } from '../db/game/game.db.js';
 import { itemTable } from './sessions.js';
 
 export const getItemById = (itemId) => {
@@ -10,7 +10,7 @@ export const getItemById = (itemId) => {
 };
 
 export const loadItemTable = async () => {
-  const itemComponent = await getItemTable();
+  const itemComponent = await getAllItemData();
   itemComponent.forEach((item) => {
     itemTable.push(item);
   });
