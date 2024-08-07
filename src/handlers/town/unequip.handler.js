@@ -31,7 +31,7 @@ export const unquipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(weaponInfo.itemId);
+        const isInven = user.findMountingItemByInven(weaponInfo.itemId);
         if (!isInven) {
           const item = new Item(
             weaponInfo.itemId,
@@ -87,7 +87,7 @@ export const unquipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(armorInfo.itemId);
+        const isInven = user.findMountingItemByInven(armorInfo.itemId);
         if (!isInven) {
           const item = new Item(
             armorInfo.itemId,
@@ -145,7 +145,7 @@ export const unquipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(glovesInfo.itemId);
+        const isInven = user.findMountingItemByInven(glovesInfo.itemId);
         if (!isInven) {
           const item = new Item(
             glovesInfo.itemId,
@@ -203,7 +203,7 @@ export const unquipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(shoesInfo.itemId);
+        const isInven = user.findMountingItemByInven(shoesInfo.itemId);
         if (!isInven) {
           const item = new Item(
             shoesInfo.itemId,
@@ -261,7 +261,7 @@ export const unquipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(accessoryInfo.itemId);
+        const isInven = user.findMountingItemByInven(accessoryInfo.itemId);
         if (!isInven) {
           const item = new Item(
             accessoryInfo.itemId,

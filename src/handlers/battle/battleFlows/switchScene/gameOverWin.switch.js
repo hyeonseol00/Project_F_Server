@@ -16,7 +16,7 @@ export default function switchToGameOverWin(dungeon, socket) {
     }
   } else {
     // 보상이 장착 아이템일 경우
-    const itemIdx = player.getItemIdx(item.name);
+    const itemIdx = player.getMountingItemIdx(item.name);
     if (itemIdx === -1) {
       // 아이템이 없으면 추가
       player.mountingItems.push(item);

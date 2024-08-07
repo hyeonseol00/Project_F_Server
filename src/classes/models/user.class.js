@@ -93,7 +93,7 @@ class User {
     return count;
   }
 
-  getItemIdx(name) {
+  getMountingItemIdx(name) {
     for (const itemIdx in this.mountingItems) {
       if (this.mountingItems[itemIdx].name === name) {
         return itemIdx;
@@ -102,16 +102,7 @@ class User {
     return -1;
   }
 
-  getItemIdx2(itemId) {
-    for (const itemIdx in this.mountingItems) {
-      if (this.mountingItems[itemIdx].itemId === itemId) {
-        return itemIdx;
-      }
-    }
-    return -1;
-  }
-
-  findItemByInven(itemId) {
+  findMountingItemByInven(itemId) {
     const findItem = this.mountingItems.find((item) => item.itemId === itemId);
 
     return findItem;
@@ -173,7 +164,7 @@ class User {
     this.playerInfo.statInfo = statInfo;
   }
 
-  getItemQuantity(itemId) {
+  getMountingItemQuantity(itemId) {
     const findItem = this.mountingItems.find((item) => item.itemId === itemId);
     if (findItem) {
       return findItem.quantity;
@@ -213,6 +204,7 @@ class User {
       this.potions.splice(findIdx, 1);
     }
   }
+
   skillPointUpdate(statInfo) {
     this.playerInfo.statInfo = statInfo;
     this.skillPoint = statInfo.skillPoint;

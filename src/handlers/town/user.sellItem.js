@@ -60,7 +60,7 @@ const sellItemHandler = async (user, message) => {
   // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
   if (Number(id) === sellItem.itemId) {
     const findPotion = findPotionById(user, Number(id));
-    const findItem = user.findItemByInven(Number(id));
+    const findItem = user.findMountingItemByInven(Number(id));
 
     if (!findPotion && !findItem) {
       const response = createResponse('response', 'S_Chat', {
@@ -121,7 +121,7 @@ const sellItemHandler = async (user, message) => {
       user.plusGold(Math.floor(addGold));
       user.decMountingItem(sellItem.itemId, Number(quantity));
 
-      if (user.getItemQuantity(sellItem.itemId) === 0) {
+      if (user.getMountingItemQuantity(sellItem.itemId) === 0) {
         user.deleteMountingItem(sellItem.itemId);
       }
 
@@ -135,7 +135,9 @@ const sellItemHandler = async (user, message) => {
       const sellItemResponse = createResponse('response', 'S_SellItem', {
         item: {
           id,
-          quantity: user.findItemByInven(id) ? user.findItemByInven(id).quantity : 0,
+          quantity: user.findMountingItemByInven(id)
+            ? user.findMountingItemByInven(id).quantity
+            : 0,
         },
         gold: user.gold,
       });

@@ -85,7 +85,7 @@ export const useHandler = (user, message) => {
   }
 
   // 인벤토리 업데이트
-  const invenItem = user.findItemByInven(itemId);
+  const invenItem = user.findMountingItemByInven(itemId);
   if (invenItem) {
     if (invenItem.quantity <= 1) {
       user.removeItemFromInven(itemId);
