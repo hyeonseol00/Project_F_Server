@@ -38,7 +38,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       monsterExp += monster.exp;
       gold += monster.gold;
     }
-    const playerExp = monsterExp + player.experience;
+    const playerExp = monsterExp + playerStatus.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
       player.updateLevel(playerLevel + 1, playerExp - requiredExp);
