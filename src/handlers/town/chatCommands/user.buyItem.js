@@ -1,15 +1,7 @@
 import { getItemById } from '../../session/item.session.js';
 import Item from '../../classes/models/item.class.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-
-function isInteger(s) {
-  s += ''; // 문자열로 변환
-  s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
-  if (s === '' || isNaN(s)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
-
-  const num = Number(s);
-  return Number.isInteger(num); // 정수인지 확인
-}
+import isInteger from '../../utils/isInteger.js';
 
 // user 객체 내에 포션 아이템을 찾는 함수 추가
 function findPotionById(user, itemId) {
@@ -110,13 +102,13 @@ const buyItemHandler = async (user, message) => {
     } else {
       // 장비 아이템
       let item = null;
-      const itemInx = user.getItemIdx2(buyItem.itemId);
+      const itemInx = user.getMountingItemIdx(buyItem.itemName);
       if (itemInx === -1) {
         item = new Item(Number(quantity), buyItem);
         user.pushMountingItem(item);
       } else {
         user.addMountingItem(buyItem.itemId, Number(quantity));
-        item = user.findItemByInven(buyItem.itemId);
+        item = user.findMountingItemByInven(buyItem.itemId);
       }
       user.minusGold(itemCost);
 
