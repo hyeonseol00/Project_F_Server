@@ -6,6 +6,13 @@ import {
 } from '../constants/battle/actionSceneButton.js';
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
+  WORLD_LEVEL_1_CONFIG,
+  WORLD_LEVEL_2_CONFIG,
+  WORLD_LEVEL_3_CONFIG,
+  WORLD_LEVEL_4_CONFIG,
+  WORLD_LEVEL_5_CONFIG,
+} from '../constants/battle/battleSceneConfig.js';
+import {
   SCENE_CHOOSE_TARGET,
   SCENE_MESSAGE_WINDOW,
   SCENE_CHOOSE_ACTION,
@@ -165,10 +172,10 @@ export const config = {
     maxLevel: PLAYER_MAX_LEVEL,
   },
   worldLevels: {
-    1: { hpRating: 1, attackRating: 1, expRating: 1, goldRating: 1 },
-    2: { hpRating: 1.2, attackRating: 1.2, expRating: 1.2, goldRating: 1.2 },
-    3: { hpRating: 1.5, attackRating: 1.5, expRating: 1.5, goldRating: 1.5 },
-    4: { hpRating: 2, attackRating: 2, expRating: 2, goldRating: 2 },
-    5: { hpRating: 3, attackRating: 3, expRating: 3, goldRating: 3 },
+    1: WORLD_LEVEL_1_CONFIG,
+    2: WORLD_LEVEL_2_CONFIG,
+    3: WORLD_LEVEL_3_CONFIG,
+    4: WORLD_LEVEL_4_CONFIG,
+    5: WORLD_LEVEL_5_CONFIG,
   },
 };
