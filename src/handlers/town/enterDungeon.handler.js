@@ -9,6 +9,7 @@ import {
 } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
+import { monsterTable } from '../../session/sessions.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -22,7 +23,6 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     gameSession.removeUser(user.playerId);
 
     const monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
-
     let hpRating = 0;
     let attackRating = 0;
     let expRating = 0;
@@ -62,9 +62,10 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const monsterStatus = [];
     for (let i = 0; i < 3; i++) {
-      const monsterDB = await findMonsterByMonsters(
-        monsters[Math.floor(Math.random() * monsters.length)].monsterId,
-      );
+      // const monsterDB = await findMonsterByMonsters(
+      //   monsters[Math.floor(Math.random() * monsters.length)].monsterId,
+      const monsterAsset = monsterTable[Math.floor(Math.random() * monsterTable.length)];
+
       const {
         monsterId,
         monsterHp,
@@ -74,7 +75,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterGold,
         monsterCritical,
         monsterCriticalAttack,
-      } = monsterDB;
+      } = monsterAsset;
       const effectCode = await getMonsterEffect(monsterId);
 
       const monster = {
