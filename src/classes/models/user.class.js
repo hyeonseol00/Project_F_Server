@@ -126,25 +126,7 @@ class User {
   }
 
   setItemId(itemType, itemId) {
-    switch (itemType) {
-      case 'weapon':
-        this.equipment.weapon = itemId;
-        break;
-      case 'armor':
-        this.equipment.armor = itemId;
-        break;
-      case 'gloves':
-        this.equipment.gloves = itemId;
-        break;
-      case 'shoes':
-        this.equipment.shoes = itemId;
-        break;
-      case 'accessory':
-        this.equipment.accessory = itemId;
-        break;
-      default:
-        break;
-    }
+    this.equipment[itemType] = itemId;
   }
 
   setStatInfo(statInfo) {
