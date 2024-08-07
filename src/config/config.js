@@ -178,4 +178,9 @@ export const config = {
     4: WORLD_LEVEL_4_CONFIG,
     5: WORLD_LEVEL_5_CONFIG,
   },
+  levelThresholds: {
+    level1: 5,
+    level2: 10,
+    level3: 15,
+  },
 };

@@ -36,6 +36,7 @@ const chatCommands = new Map([
   ['unequip', unquipHandler],
   ['ueq', unquipHandler],
   ['upAbility', skillPointHandler],
+  ['use', useHandler],
 ]);
 
 export default chatCommands;

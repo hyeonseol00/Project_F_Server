@@ -49,20 +49,24 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
   });
   socket.write(responseSetPlayerMp);
 
-  let changeEffect;
+  let changeEffect = 0;
   if (attackType === 2) {
-    changeEffect =
-      playerStatInfo.level > 5
-        ? playerStatInfo.level > 10
-          ? playerStatInfo.level > 15
-            ? 3
-            : 2
-          : 1
-        : 0;
+    if (playerStatInfo.level > config.levelThresholds.high) {
+      changeEffect = 3;
+    } else if (playerStatInfo.level > config.levelThresholds.medium) {
+      changeEffect = 2;
+    } else if (playerStatInfo.level > config.levelThresholds.low) {
+      changeEffect = 1;
+    } else {
+      changeEffect = 0;
+    }
   } else {
-    changeEffect = playerStatInfo.level > 10 ? 1 : 0;
+    if (playerStatInfo.level > config.levelThresholds.medium) {
+      changeEffect = 1;
+    } else {
+      changeEffect = 0;
+    }
   }
-
   // S_PlayerAction 패킷
   const actionSet = {
     animCode: 0,
