@@ -46,8 +46,6 @@ const enterTownHandler = async ({ socket, payload }) => {
       })),
     ];
 
-    // console.log('현재 items:', items);
-
     const inven = {
       items,
     };

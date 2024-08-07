@@ -47,3 +47,9 @@ export const getItemTable = async () => {
 
   return toCamelCase(rows);
 };
+
+export const getMonster = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MONSTER, []);
+
+  return toCamelCase(rows);
+};

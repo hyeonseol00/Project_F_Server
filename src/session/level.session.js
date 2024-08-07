@@ -1,5 +1,5 @@
-import { getLevelTable } from "../db/game/game.db.js";
-import { levelTable } from "./sessions.js";
+import { getLevelTable } from '../db/game/game.db.js';
+import { levelTable } from './sessions.js';
 
 export const getLevelById = (levelId) => {
   return levelTable.find((level) => level.levelId === levelId);

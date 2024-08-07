@@ -161,5 +161,19 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
   },
-  maxLevel: 20,
+  battleScene: {
+    maxLevel: PLAYER_MAX_LEVEL,
+  },
+  worldLevels: {
+    1: { hpRating: 1, attackRating: 1, expRating: 1, goldRating: 1 },
+    2: { hpRating: 1.2, attackRating: 1.2, expRating: 1.2, goldRating: 1.2 },
+    3: { hpRating: 1.5, attackRating: 1.5, expRating: 1.5, goldRating: 1.5 },
+    4: { hpRating: 2, attackRating: 2, expRating: 2, goldRating: 2 },
+    5: { hpRating: 3, attackRating: 3, expRating: 3, goldRating: 3 },
+  },
+  levelThresholds: {
+    level1: 5,
+    level2: 10,
+    level3: 15,
+  },
 };

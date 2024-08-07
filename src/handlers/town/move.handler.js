@@ -9,11 +9,6 @@ const moveTownHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(config.session.townId);
     const users = gameSession.users;
     const { transform } = payload;
-
-    // console.log(
-    //   `transform: x: ${transform.posX}, y: ${transform.posY}, z: ${transform.posZ}, angle: ${transform.rot}`,
-    // );
-
     const curUser = getUserBySocket(socket);
 
     curUser.updatePosition(transform);
@@ -25,7 +20,6 @@ const moveTownHandler = async ({ socket, payload }) => {
 
     for (const user of users) {
       if (user.playerId === curUser.playerId) continue;
-      // console.log("이동 패킷을 받는 다른 유저: ", user.playerId);
       user.socket.write(moveTownResponse);
     }
   } catch (err) {

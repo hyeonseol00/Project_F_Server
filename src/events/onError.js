@@ -6,7 +6,7 @@ import { getUserBySocket, removeUser } from '../session/user.session.js';
 import CustomError from '../utils/error/customError.js';
 import { handleError } from '../utils/error/errorHandler.js';
 
-export const onError = (socket) => (err) => {
+export const onError = (socket) => async (err) => {
   handleError(socket, new CustomError(500, `소켓 오류: ${err.message}`));
 
   const user = getUserBySocket(socket);
@@ -14,6 +14,8 @@ export const onError = (socket) => (err) => {
   const hatcherySession = getHatcherySession();
 
   if (user) {
+    await updateCharacterStatus(user);
+
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
   }

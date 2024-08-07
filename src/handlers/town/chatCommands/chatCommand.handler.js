@@ -1,4 +1,3 @@
-
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getAllUsersInTeam, getUserByNickname } from '../../session/user.session.js';
 import { findUserByUsername, findCharacterByUserIdAndClass } from '../../db/user/user.db.js';
@@ -88,7 +87,7 @@ const alreadyInvited = (sender, targetUser = undefined) => {
     return true;
   }
   return false;
-}
+};
 
 const notFoundInvitation = (sender, targetUser = undefined) => {
   if (!targetUser || !sender.invitedTeams.includes(targetUser.teamId)) {
@@ -101,10 +100,9 @@ const notFoundInvitation = (sender, targetUser = undefined) => {
   }
 
   return false;
-}
+};
 
 export const sendDirectMessage = (sender, message) => {
-
   const firstSpaceIdx = message.indexOf(' ');
   const recipientNickname = message.substring(0, firstSpaceIdx); // /w, /team 같은 명령어 파싱
   const msg = message.substring(firstSpaceIdx + 1);
@@ -127,37 +125,11 @@ export const sendDirectMessage = (sender, message) => {
   });
 
   try {
-    sender.socket.write(senderChatResponse);       // 발신자에게 메시지 전송
+    sender.socket.write(senderChatResponse); // 발신자에게 메시지 전송
     recipient.socket.write(recipientChatResponse); // 수신자에게 메시지 전송
-
   } catch (error) {
     console.error(`Failed to send message to recipient: ${error.msg}`);
   }
-};
-
-export const sendMyStat = async (sender, message) => {
-  const userInDB = await findUserByUsername(sender.nickname);
-  const character = await findCharacterByUserIdAndClass(userInDB.userId, sender.characterClass);
- 
-  const msg = `이름: ${character.characterName}
-  레벨: ${character.characterLevel}
-  경험치: ${character.characterLevel}
-  직업: ${character.jobName}
-  체력: ${character.curHp}/${character.maxHp}
-  마나: ${character.curMp}/${character.maxMp}
-  공격력: ${character.attack}
-  주문력: ${character.magic}
-  치명타 확률: ${character.critical}%
-  치명타 피해: +${character.criticalAttack}%
-  소지금: ${character.gold}`;
-
-  const response = createResponse('response', 'S_Chat', {
-    playerId: sender.playerId,
-    chatMsg: `[System]: ${msg}`,
-  });
-  sender.socket.write(response);
-
-  console.log(character);
 };
 
 export const sendMessageToTeam = (sender, message) => {
@@ -307,18 +279,18 @@ export const acceptTeamHandler = (sender, message) => {
   sender.socket.write(response);
 
   // 초대 목록에서 팀 ID 제거
-  sender.invitedTeams = sender.invitedTeams.filter(id => id !== targetUser.teamId);
+  sender.invitedTeams = sender.invitedTeams.filter((id) => id !== targetUser.teamId);
 
   // 팀 멤버들에게 본인이 들어왔다는 메시지를 전송합니다.
   const teamMembers = getAllUsersInTeam(targetUser.teamId);
-  teamMembers.forEach(member => {
+  teamMembers.forEach((member) => {
     const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
       chatMsg: `[System] ${sender.nickname} joined your team!`,
     });
     member.socket.write(joinResponse);
   });
-}
+};
 
 export const kickMemberHandler = (sender, message) => {
   const nickname = message;
@@ -366,13 +338,10 @@ export const sendTeamList = (sender) => {
   }
 
   const teamMembers = getAllUsersInTeam(sender.teamId);
-  const memberList = teamMembers.map(member => member.nickname).join(', ');
+  const memberList = teamMembers.map((member) => member.nickname).join(', ');
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
     chatMsg: `[System] Team members: ${memberList}`,
   });
   sender.socket.write(response);
 };
-
-
-
