@@ -1,15 +1,7 @@
 import { getItemById } from '../../session/item.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import Item from '../../classes/models/item.class.js';
-
-function isInteger(s) {
-  s += ''; // 문자열로 변환
-  s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
-  if (s === '' || isNaN(s)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
-
-  const num = Number(s);
-  return Number.isInteger(num); // 정수인지 확인
-}
+import isInteger from '../../utils/isInteger.js';
 
 export const equipHandler = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory, critical, avoidAbility } = user;
