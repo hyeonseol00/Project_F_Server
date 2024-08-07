@@ -83,7 +83,8 @@ class InstanceDungeon {
         }
         this.items.push(potion);
       } else {
-        const mountingItem = new Item(1, itemInfo);
+        const quantity = 1;
+        const mountingItem = new Item(quantity, itemInfo);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.mountingItems.push(this.items.length); // items에 저장될 idx
