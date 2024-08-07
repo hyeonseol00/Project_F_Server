@@ -1,6 +1,6 @@
+import { createResponse } from '../../../utils/response/createResponse.js';
 import { getAllUsersInTeam, getUserByNickname } from '../../../session/user.session.js';
 import { findUserByUsername, findCharacterByUserIdAndClass } from '../../../db/user/user.db.js';
-import { createResponse } from '../../../utils/response/createResponse.js';
 
 const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
