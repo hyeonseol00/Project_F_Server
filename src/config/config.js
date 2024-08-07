@@ -5,6 +5,7 @@ import {
   BUTTON_ITEM,
 } from '../constants/battle/actionSceneButton.js';
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
+import { PLAYER_MAX_LEVEL } from '../constants/battle/battleSceneConfig.js';
 import {
   SCENE_CHOOSE_TARGET,
   SCENE_MESSAGE_WINDOW,
@@ -161,5 +162,7 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
   },
-  maxLevel: 20,
+  battleScene: {
+    maxLevel: PLAYER_MAX_LEVEL,
+  },
 };

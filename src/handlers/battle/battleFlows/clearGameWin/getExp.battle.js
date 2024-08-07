@@ -12,7 +12,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     const playerLevel = playerStatus.level; // 유저의 현재 레벨
 
     let levelTable;
-    if (playerLevel < config.maxLevel) {
+    if (playerLevel < config.battleScene.maxLevel) {
       levelTable = getLevelById(playerLevel + 1);
     } else {
       levelTable = getLevelById(1);
@@ -41,7 +41,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     }
     const playerExp = monsterExp + player.experience;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
-    if (requiredExp <= playerExp && playerLevel < config.maxLevel) {
+    if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
       player.updateLevel(playerLevel + 1, playerExp - requiredExp);
       playerStatus.maxHp += hp;
       playerStatus.maxMp += mp;
