@@ -1,6 +1,6 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
-import { getLevelById } from '../../../../session/level.session.js';
+import { getLevelById } from '../../../../assets/level.assets.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {

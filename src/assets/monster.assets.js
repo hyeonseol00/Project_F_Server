@@ -1,6 +1,6 @@
 import { getDungeonMonster, getMonster } from '../db/game/game.db.js';
-import { monsterTable } from './sessions.js';
-import { dungeonMonster } from './sessions.js';
+import { monsterTable } from './assets.js';
+import { dungeonMonster } from './assets.js';
 
 export const loadMonsterTable = async () => {
   const monsterComponet = await getMonster();

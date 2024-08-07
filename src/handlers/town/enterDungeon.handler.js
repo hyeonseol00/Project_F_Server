@@ -5,8 +5,8 @@ import { addDungeon } from '../../session/dungeon.session.js';
 import { getMonsterEffectById } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
-import { getMonsterByDungeonId } from '../../session/monster.session.js';
-import { getMonsterById } from '../../session/monster.session.js';
+import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
+import { getMonsterById } from '../../assets/monster.assets.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {

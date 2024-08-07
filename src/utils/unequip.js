@@ -1,4 +1,4 @@
-import { getItemById } from '../session/item.session.js';
+import { getItemById } from '../assets/item.assets.js';
 import { createResponse } from './response/createResponse.js';
 import Item from '../classes/models/item.class.js';
 

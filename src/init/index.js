@@ -2,10 +2,10 @@ import { config } from '../config/config.js';
 import { addGameSession } from '../session/game.session.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import { loadProtos } from './loadProtos.js';
-import { loadLevelTable } from '../session/level.session.js';
-import { loadItemTable } from '../session/item.session.js';
-import { loadMonsterTable } from '../session/monster.session.js';
-import { loadDungeonMonster } from '../session/monster.session.js';
+import { loadLevelTable } from '../assets/level.assets.js';
+import { loadItemTable } from '../assets/item.assets.js';
+import { loadMonsterTable } from '../assets/monster.assets.js';
+import { loadDungeonMonster } from '../assets/monster.assets.js';
 const initServer = async () => {
   try {
     await loadProtos();

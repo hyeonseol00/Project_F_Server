@@ -1,6 +1,6 @@
 import isInteger from '../../utils/isInteger.js';
 import updateEquip from '../../utils/equip.js';
-import { getItemById } from '../../session/item.session.js';
+import { getItemById } from '../../assets/item.assets.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 export const equipHandler = (user, message) => {
