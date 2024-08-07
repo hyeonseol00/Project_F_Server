@@ -96,13 +96,15 @@ export const getCharacterWideEffectCode = async (jobId) => {
 
 export const updateCharacterStatus = async (user) => {
   const statInfo = user.playerInfo.statInfo;
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = statInfo;
-  const { experience, critical, criticalAttack, avoidAbility, gold, skillPoint } = user;
-  const { weapon, armor, gloves, shoes, accessory, nickname, characterClass } = user;
+  const { level, hp, maxHp, mp, maxMp, atk, speed, critRate, critDmg, avoidRate, exp, def, magic } =
+    statInfo;
+
+  const { nickname, characterClass, gold, skillPoint } = user;
+  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
 
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
     level,
-    experience,
+    exp,
     hp,
     maxHp,
     mp,
@@ -111,9 +113,9 @@ export const updateCharacterStatus = async (user) => {
     def,
     magic,
     speed,
-    critical,
-    criticalAttack,
-    avoidAbility,
+    critRate,
+    critDmg,
+    avoidRate,
     gold,
     skillPoint,
     weapon,
