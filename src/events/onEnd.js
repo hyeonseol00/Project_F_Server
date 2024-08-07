@@ -14,31 +14,7 @@ export const onEnd = (socket) => async () => {
   const hatcherySession = getHatcherySession();
 
   if (user) {
-    await updateCharacterStatus(
-      playerStatus.level,
-      user.experience,
-      playerStatus.hp,
-      playerStatus.maxHp,
-      playerStatus.mp,
-      playerStatus.maxMp,
-      playerStatus.atk,
-      playerStatus.def,
-      playerStatus.magic,
-      // user.speed,
-      playerStatus.speed,
-      user.critical,
-      user.criticalAttack,
-      user.avoidAbility,
-      user.gold,
-      user.skillPoint,
-      user.weapon,
-      user.armor,
-      user.gloves,
-      user.shoes,
-      user.accessory,
-      user.nickname,
-      user.characterClass,
-    );
+    await updateCharacterStatus(user);
 
     const sessionItems = [...user.potions, ...user.mountingItems];
     await updateCharacterItems(user.characterId, sessionItems);

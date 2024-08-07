@@ -108,39 +108,21 @@ export const getCharacterWideEffectCode = async (jobId) => {
   return toCamelCase(rows[0]).wideEffect;
 };
 
-export const updateCharacterStatus = async (
-  characterLevel,
-  experience,
-  curHp,
-  maxHp,
-  curMp,
-  maxMp,
-  attack,
-  defense,
-  magic,
-  speed,
-  critical,
-  criticalAttack,
-  avoidAbility,
-  gold,
-  skillPoint,
-  weapon,
-  armor,
-  gloves,
-  shoes,
-  accessory,
-  characterName,
-  jobId,
-) => {
+export const updateCharacterStatus = async (user) => {
+  const statInfo = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = statInfo;
+  const { experience, critical, criticalAttack, avoidAbility, gold, skillPoint } = user;
+  const { weapon, armor, gloves, shoes, accessory, characterName, jobId } = user;
+
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
-    characterLevel,
+    level,
     experience,
-    curHp,
+    hp,
     maxHp,
-    curMp,
+    mp,
     maxMp,
-    attack,
-    defense,
+    atk,
+    def,
     magic,
     speed,
     critical,

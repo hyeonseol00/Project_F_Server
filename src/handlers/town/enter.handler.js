@@ -124,32 +124,8 @@ const enterTownHandler = async ({ socket, payload }) => {
     } else {
       // 첫 접속이 아닌 town으로 다시 돌아온 경우 (session이 있음) DB에 저장
       curUser = userExist;
-      const playerStatus = curUser.playerInfo.statInfo;
       // user 현재 상태 DB에 저장
-      await updateCharacterStatus(
-        playerStatus.level,
-        curUser.experience,
-        playerStatus.hp,
-        playerStatus.maxHp,
-        playerStatus.mp,
-        playerStatus.maxMp,
-        playerStatus.atk,
-        playerStatus.def,
-        playerStatus.magic,
-        playerStatus.speed,
-        curUser.critical,
-        curUser.criticalAttack,
-        curUser.avoidAbility,
-        curUser.gold,
-        curUser.skillPoint,
-        curUser.weapon,
-        curUser.armor,
-        curUser.gloves,
-        curUser.shoes,
-        curUser.accessory,
-        curUser.nickname,
-        curUser.characterClass,
-      );
+      await updateCharacterStatus(curUser);
 
       // user items 저장
       const sessionItems = [...curUser.potions, ...curUser.mountingItems];
@@ -198,8 +174,6 @@ const enterTownHandler = async ({ socket, payload }) => {
         quantity: potion.quantity,
       })),
     ];
-
-    // console.log('현재 items:', items);
 
     const inven = {
       items,
