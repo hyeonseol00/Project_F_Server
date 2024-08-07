@@ -111,7 +111,7 @@ const buyItemHandler = async (user, message) => {
     } else {
       // 장비 아이템
       let item = null;
-      const itemInx = user.getItemIdx2(buyItem.itemId);
+      const itemInx = user.getMountingItemIdx(buyItem.itemName);
       if (itemInx === -1) {
         item = new Item(
           buyItem.itemId,
@@ -126,7 +126,7 @@ const buyItemHandler = async (user, message) => {
         user.pushMountingItem(item);
       } else {
         user.addMountingItem(buyItem.itemId, Number(quantity));
-        item = user.findItemByInven(buyItem.itemId);
+        item = user.findMountingItemByInven(buyItem.itemId);
       }
       user.minusGold(itemCost);
 

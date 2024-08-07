@@ -69,7 +69,7 @@ export const equipHandler = (user, message) => {
   }
 
   const isItemByTable = getItemById(Number(message));
-  const findItem = user.findItemByInven(Number(message));
+  const findItem = user.findMountingItemByInven(Number(message));
   if (!isItemByTable) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -139,7 +139,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(weapon);
+        const isInven = user.findMountingItemByInven(weapon);
         const itemInfo = getItemById(weapon);
         if (!isInven) {
           const item = new Item(
@@ -153,14 +153,14 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
           }
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
@@ -193,7 +193,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        if (user.getItemQuantity(itemId) === 1) {
+        if (user.getMountingItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId, 1);
@@ -229,7 +229,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(armor);
+        const isInven = user.findMountingItemByInven(armor);
         const itemInfo = getItemById(armor);
         if (!isInven) {
           const item = new Item(
@@ -243,14 +243,14 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
           }
         } else {
           user.addMountingItem(isInven.itemIdm, 1);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
@@ -283,7 +283,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        if (user.getItemQuantity(itemId) === 1) {
+        if (user.getMountingItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId, 1);
@@ -320,7 +320,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(gloves);
+        const isInven = user.findMountingItemByInven(gloves);
         const itemInfo = getItemById(gloves);
         if (!isInven) {
           const item = new Item(
@@ -334,14 +334,14 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
           }
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
@@ -376,7 +376,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        if (user.getItemQuantity(itemId) === 1) {
+        if (user.getMountingItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId, 1);
@@ -414,7 +414,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(shoes);
+        const isInven = user.findMountingItemByInven(shoes);
         const itemInfo = getItemById(shoes);
         if (!isInven) {
           const item = new Item(
@@ -428,14 +428,14 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
           }
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
@@ -470,7 +470,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        if (user.getItemQuantity(itemId) === 1) {
+        if (user.getMountingItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId, 1);
@@ -514,7 +514,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        const isInven = user.findItemByInven(accessory);
+        const isInven = user.findMountingItemByInven(accessory);
         const itemInfo = getItemById(accessory);
         if (!isInven) {
           const item = new Item(
@@ -528,14 +528,14 @@ export const equipHandler = (user, message) => {
             itemInfo,
           );
           user.pushMountingItem(item);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
           }
         } else {
           user.addMountingItem(isInven.itemId, 1);
-          if (user.getItemQuantity(itemId) === 1) {
+          if (user.getMountingItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
           } else {
             user.decMountingItem(itemId, 1);
@@ -570,7 +570,7 @@ export const equipHandler = (user, message) => {
         user.updateStatInfo(statInfo);
         user.updateCriAvoid(updateCritical, updateAvoidAbility);
 
-        if (user.getItemQuantity(itemId) === 1) {
+        if (user.getMountingItemQuantity(itemId) === 1) {
           user.deleteMountingItem(itemId);
         } else {
           user.decMountingItem(itemId, 1);
