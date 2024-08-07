@@ -19,8 +19,8 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
   const decreaseMp = [0, 25, 50];
 
   const isCritical = Math.floor(Math.random() * 101);
-  if (isCritical <= playerStatus.critRate) {
-    const criticalRate = playerStatus.critDmg / 100;
+  if (isCritical <= playerStatInfo.critRate) {
+    const criticalRate = playerStatInfo.critDmg / 100;
     decreaseHp = [
       playerStatInfo.atk * criticalRate,
       playerStatInfo.magic * criticalRate,
