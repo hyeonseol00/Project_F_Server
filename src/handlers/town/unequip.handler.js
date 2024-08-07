@@ -33,16 +33,7 @@ export const unquipHandler = (user, message) => {
 
         const isInven = user.findItemByInven(weaponInfo.itemId);
         if (!isInven) {
-          const item = new Item(
-            weaponInfo.itemId,
-            weaponInfo.itemType,
-            weaponInfo.itemName,
-            weaponInfo.itemHp,
-            weaponInfo.itemMp,
-            weaponInfo.requireLevel,
-            1,
-            weaponInfo,
-          );
+          const item = new Item(1, weaponInfo);
           user.pushMountingItem(item);
         } else {
           user.addMountingItem(weaponInfo.itemId, 1);
@@ -89,16 +80,7 @@ export const unquipHandler = (user, message) => {
 
         const isInven = user.findItemByInven(armorInfo.itemId);
         if (!isInven) {
-          const item = new Item(
-            armorInfo.itemId,
-            armorInfo.itemType,
-            armorInfo.itemName,
-            armorInfo.itemHp,
-            armorInfo.itemMp,
-            armorInfo.requireLevel,
-            1,
-            armorInfo,
-          );
+          const item = new Item(1, armorInfo);
           user.pushMountingItem(item);
         } else {
           user.addMountingItem(armorInfo.itemId, 1);
@@ -147,16 +129,7 @@ export const unquipHandler = (user, message) => {
 
         const isInven = user.findItemByInven(glovesInfo.itemId);
         if (!isInven) {
-          const item = new Item(
-            glovesInfo.itemId,
-            glovesInfo.itemType,
-            glovesInfo.itemName,
-            glovesInfo.itemHp,
-            glovesInfo.itemMp,
-            glovesInfo.requireLevel,
-            1,
-            glovesInfo,
-          );
+          const item = new Item(1, glovesInfo);
           user.pushMountingItem(item);
         } else {
           user.addMountingItem(glovesInfo.itemId, 1);
@@ -205,16 +178,7 @@ export const unquipHandler = (user, message) => {
 
         const isInven = user.findItemByInven(shoesInfo.itemId);
         if (!isInven) {
-          const item = new Item(
-            shoesInfo.itemId,
-            shoesInfo.itemType,
-            shoesInfo.itemName,
-            shoesInfo.itemHp,
-            shoesInfo.itemMp,
-            shoesInfo.requireLevel,
-            1,
-            shoesInfo,
-          );
+          const item = new Item(1, shoesInfo);
           user.pushMountingItem(item);
         } else {
           user.addMountingItem(shoesInfo.itemId, 1);
@@ -263,16 +227,7 @@ export const unquipHandler = (user, message) => {
 
         const isInven = user.findItemByInven(accessoryInfo.itemId);
         if (!isInven) {
-          const item = new Item(
-            accessoryInfo.itemId,
-            accessoryInfo.itemType,
-            accessoryInfo.itemName,
-            accessoryInfo.itemHp,
-            accessoryInfo.itemMp,
-            accessoryInfo.requireLevel,
-            1,
-            accessoryInfo,
-          );
+          const item = new Item(1, accessoryInfo);
           user.pushMountingItem(item);
         } else {
           user.addMountingItem(accessoryInfo.itemId, 1);

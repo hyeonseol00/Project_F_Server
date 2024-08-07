@@ -75,32 +75,15 @@ class InstanceDungeon {
     for (const item of dungeonItems) {
       const itemInfo = await getItem(item.itemId);
       if (itemInfo.itemType === 'potion') {
-        const potion = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          dungeonCode, // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
-          itemInfo,
-        );
+        // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
+        const potion = new Item(dungeonCode, itemInfo);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.potions.push(this.items.length); // items에 저장될 idx
         }
         this.items.push(potion);
       } else {
-        const mountingItem = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          1,
-          itemInfo,
-        );
+        const mountingItem = new Item(1, itemInfo);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.mountingItems.push(this.items.length); // items에 저장될 idx

@@ -75,16 +75,7 @@ const buyItemHandler = async (user, message) => {
       // 소비 아이템
       const potionIdx = user.getPotionIdx(buyItem.itemName);
       if (potionIdx === -1) {
-        potion = new Item(
-          buyItem.itemId,
-          buyItem.itemType,
-          buyItem.itemName,
-          buyItem.itemHp,
-          buyItem.itemMp,
-          buyItem.requireLevel,
-          Number(quantity),
-          buyItem,
-        );
+        potion = new Item(Number(quantity), buyItem);
         user.pushPotionItem(potion);
       } else {
         user.addPotion(buyItem.itemId, Number(quantity));
@@ -121,16 +112,7 @@ const buyItemHandler = async (user, message) => {
       let item = null;
       const itemInx = user.getItemIdx2(buyItem.itemId);
       if (itemInx === -1) {
-        item = new Item(
-          buyItem.itemId,
-          buyItem.itemType,
-          buyItem.itemName,
-          buyItem.itemHp,
-          buyItem.itemMp,
-          buyItem.requireLevel,
-          Number(quantity),
-          buyItem,
-        );
+        item = new Item(Number(quantity), buyItem);
         user.pushMountingItem(item);
       } else {
         user.addMountingItem(buyItem.itemId, Number(quantity));
