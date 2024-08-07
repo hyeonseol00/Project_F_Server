@@ -159,12 +159,8 @@ class User {
     return 0;
   }
 
-  addGold(itemCost) {
-    this.gold += itemCost;
-  }
-
-  decGold(itemCost) {
-    this.gold -= itemCost;
+  setGold(itemCost) {
+    this.gold = itemCost;
   }
 
   addPotion(itemId, quantity) {
