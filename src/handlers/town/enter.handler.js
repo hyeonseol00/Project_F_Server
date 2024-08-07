@@ -183,33 +183,9 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
 const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
   const curUser = userExist;
-  const playerStatus = curUser.playerInfo.statInfo;
 
   // user 현재 상태 DB에 저장
-  await updateCharacterStatus(
-    playerStatus.level,
-    curUser.experience,
-    playerStatus.hp,
-    playerStatus.maxHp,
-    playerStatus.mp,
-    playerStatus.maxMp,
-    playerStatus.atk,
-    playerStatus.def,
-    playerStatus.magic,
-    playerStatus.speed,
-    curUser.critical,
-    curUser.criticalAttack,
-    curUser.avoidAbility,
-    curUser.gold,
-    curUser.skillPoint,
-    curUser.weapon,
-    curUser.armor,
-    curUser.gloves,
-    curUser.shoes,
-    curUser.accessory,
-    curUser.nickname,
-    curUser.characterClass,
-  );
+  await updateCharacterStatus(curUser);
 
   // user items 저장
   const sessionItems = [...curUser.potions, ...curUser.mountingItems];
