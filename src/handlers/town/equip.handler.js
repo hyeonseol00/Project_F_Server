@@ -45,7 +45,8 @@ export const equipHandler = (user, message) => {
     return;
   }
 
-  if (level < findItem.requireLevel) {
+  const { itemId, itemType, name, requireLevel } = findItem;
+  if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] ${name} 장비는 레벨 ${requireLevel} 이상만 착용할 수 있습니다.`,
@@ -55,7 +56,7 @@ export const equipHandler = (user, message) => {
     return;
   }
 
-  switch (findItem.itemType) {
+  switch (itemType) {
     case 'weapon':
       updateEquip(weapon, findItem, user);
       break;
