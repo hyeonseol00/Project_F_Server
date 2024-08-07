@@ -12,6 +12,7 @@ import {
   WORLD_LEVEL_3_CONFIG,
   WORLD_LEVEL_4_CONFIG,
   WORLD_LEVEL_5_CONFIG,
+  PLAYER_MAX_LEVEL,
 } from '../constants/battle/battleSceneConfig.js';
 import {
   SCENE_CHOOSE_TARGET,
