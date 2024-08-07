@@ -4,8 +4,8 @@ import Item from '../classes/models/item.class.js';
 
 let statInfo;
 function updateUnEquip(uneqipItem, user) {
-  const { critical, avoidAbility } = user;
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+    user.playerInfo.statInfo;
 
   const uneqipItemInfo = getItemById(uneqipItem);
   user.updateItemId(uneqipItemInfo.itemType, 0);
@@ -22,8 +22,8 @@ function updateUnEquip(uneqipItem, user) {
     speed: speed - uneqipItemInfo.itemSpeed,
   };
 
-  const updateCritical = critical - uneqipItemInfo.itemCritical;
-  const updateAvoidAbility = avoidAbility - uneqipItemInfo.itemAvoidance;
+  const updateCritical = critRate - uneqipItemInfo.itemCritical;
+  const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
 
   user.updateStatInfo(statInfo);
   user.updateCriAvoid(updateCritical, updateAvoidAbility);

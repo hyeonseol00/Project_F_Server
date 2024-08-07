@@ -4,8 +4,8 @@ import { getItemById } from '../session/item.session.js';
 
 let statInfo;
 function updateEquip(equippedItem, findItem, user) {
-  const { critical, avoidAbility } = user;
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+    user.playerInfo.statInfo;
 
   const {
     itemId,
@@ -39,8 +39,8 @@ function updateEquip(equippedItem, findItem, user) {
       speed: speed + addSpeed - equippedItemInfo.itemSpeed,
     };
 
-    const updateCritical = critical + addCritical - equippedItemInfo.itemCritical;
-    const updateAvoidAbility = avoidAbility + addAvoidance - equippedItemInfo.itemAvoidance;
+    const updateCritical = critRate + addCritical - equippedItemInfo.itemCritical;
+    const updateAvoidAbility = avoidRate + addAvoidance - equippedItemInfo.itemAvoidance;
 
     user.updateStatInfo(statInfo);
     user.updateCriAvoid(updateCritical, updateAvoidAbility);
@@ -84,8 +84,8 @@ function updateEquip(equippedItem, findItem, user) {
       speed: speed + addSpeed,
     };
 
-    const updateCritical = critical + addCritical;
-    const updateAvoidAbility = avoidAbility + addAvoidance;
+    const updateCritical = critRate + addCritical;
+    const updateAvoidAbility = avoidRate + addAvoidance;
 
     user.updateStatInfo(statInfo);
     user.updateCriAvoid(updateCritical, updateAvoidAbility);

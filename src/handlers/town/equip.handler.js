@@ -4,7 +4,7 @@ import { getItemById } from '../../session/item.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 export const equipHandler = (user, message) => {
-  const { weapon, armor, gloves, shoes, accessory } = user;
+  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
   const { level } = user.playerInfo.statInfo;
 
   if (!isInteger(message)) {

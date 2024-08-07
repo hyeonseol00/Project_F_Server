@@ -133,21 +133,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
   }
 
-  const {
-    experience,
-    critical,
-    criticalAttack,
-    avoidAbility,
-    gold,
-    worldLevel,
-    skillPoint,
-    weapon,
-    armor,
-    gloves,
-    shoes,
-    accessory,
-  } = character;
-  const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+  const effect = await getJobInfo(character.jobId);
 
   const userItems = await getUserItemsByCharacterId(character.characterId);
   const userPotions = [];
@@ -170,24 +156,10 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     socket,
     nickname,
     characterClass,
-    character.characterId,
-    experience,
-    baseEffect,
-    singleEffect,
-    wideEffect,
+    effect,
     userPotions,
     userMountingItems,
-    critical,
-    criticalAttack,
-    avoidAbility,
-    gold,
-    worldLevel,
-    skillPoint,
-    weapon,
-    armor,
-    gloves,
-    shoes,
-    accessory,
+    character,
   );
 
   const statInfo = {
