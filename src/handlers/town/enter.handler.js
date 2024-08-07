@@ -20,164 +20,20 @@ const enterTownHandler = async ({ socket, payload }) => {
     const { nickname } = payload;
     const characterClass = payload.class;
     const userExist = getUserBySocket(socket);
-    let curUser, statInfo;
 
     // 게임세션을 가져온다.
     const gameSession = getGameSession(config.session.townId);
 
-    // 첫 입장에서만 DB에서 정보 불러오기
+    let userInfo;
     if (!userExist) {
-      // DB에서 user, character 정보 가져오기
-      let userInDB = await findUserByUsername(nickname);
-      if (!userInDB) {
-        await insertUserByUsername(nickname);
-        userInDB = await findUserByUsername(nickname);
-      }
-
-      let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-      if (!character) {
-        await insertCharacter(userInDB, characterClass);
-        character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-      }
-
-      const {
-        experience,
-        critical,
-        criticalAttack,
-        avoidAbility,
-        gold,
-        worldLevel,
-        skillPoint,
-        weapon,
-        armor,
-        gloves,
-        shoes,
-        accessory,
-      } = character;
-      const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
-
-      const userItems = await getUserItemsByCharacterId(character.characterId);
-      const userPotions = [];
-      const userMountingItems = [];
-      for (const userItem of userItems) {
-        const itemInfo = await getItem(userItem.itemId);
-        const item = new Item(userItem.quantity, itemInfo);
-        if (itemInfo.itemType === 'potion') {
-          // 소비 아이템
-          userPotions.push(item);
-        } else {
-          // 장착 아이템
-          userMountingItems.push(item);
-        }
-      }
-
-      // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-      // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-      curUser = addUser(
-        socket,
-        nickname,
-        characterClass,
-        character.characterId,
-        experience,
-        baseEffect,
-        singleEffect,
-        wideEffect,
-        userPotions,
-        userMountingItems,
-        critical,
-        criticalAttack,
-        avoidAbility,
-        gold,
-        worldLevel,
-        skillPoint,
-        weapon,
-        armor,
-        gloves,
-        shoes,
-        accessory,
-      );
-
-      statInfo = {
-        level: character.characterLevel,
-        hp: character.curHp,
-        maxHp: character.maxHp,
-        mp: character.curMp,
-        maxMp: character.maxMp,
-        atk: character.attack,
-        def: character.defense,
-        magic: character.magic,
-        speed: character.speed,
-        critRate: character.critical,
-        critDmg: character.criticalAttack,
-        avoidRate: character.avoidAbility,
-        exp: character.experience,
-      };
+      // 첫 입장에서만 DB에서 정보 불러오기
+      userInfo = await getUserInfoFromDB(socket, nickname, characterClass);
     } else {
-      // 첫 접속이 아닌 town으로 다시 돌아온 경우 (session이 있음) DB에 저장
-      curUser = userExist;
-      const playerStatus = curUser.playerInfo.statInfo;
-      // user 현재 상태 DB에 저장
-      await updateCharacterStatus(
-        playerStatus.level,
-        curUser.experience,
-        playerStatus.hp,
-        playerStatus.maxHp,
-        playerStatus.mp,
-        playerStatus.maxMp,
-        playerStatus.atk,
-        playerStatus.def,
-        playerStatus.magic,
-        playerStatus.speed,
-        curUser.critical,
-        curUser.criticalAttack,
-        curUser.avoidAbility,
-        curUser.gold,
-        curUser.skillPoint,
-        curUser.weapon,
-        curUser.armor,
-        curUser.gloves,
-        curUser.shoes,
-        curUser.accessory,
-        curUser.nickname,
-        curUser.characterClass,
-      );
-
-      // user items 저장
-      const sessionItems = [...curUser.potions, ...curUser.mountingItems];
-      await updateCharacterItems(curUser.characterId, sessionItems);
-
-      // user 세션의 potions중 quantity 0인 potion 삭제
-      for (let i = curUser.potions.length - 1; i >= 0; i--) {
-        const potion = curUser.potions[i];
-        if (potion.quantity === 0) {
-          curUser.potions.splice(i, 1);
-        }
-      }
-
-      // user 세션의 mountingItems중 quantity 0인 item 삭제
-      for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
-        const item = curUser.mountingItems[i];
-        if (item.quantity === 0) {
-          curUser.mountingItems.splice(i, 1);
-        }
-      }
-
-      statInfo = {
-        level: curUser.playerInfo.statInfo.level,
-        hp: curUser.playerInfo.statInfo.hp,
-        maxHp: curUser.playerInfo.statInfo.maxHp,
-        mp: curUser.playerInfo.statInfo.mp,
-        maxMp: curUser.playerInfo.statInfo.maxMp,
-        atk: curUser.playerInfo.statInfo.atk,
-        def: curUser.playerInfo.statInfo.def,
-        magic: curUser.playerInfo.statInfo.magic,
-        speed: curUser.playerInfo.statInfo.speed,
-        critRate: curUser.critical,
-        critDmg: curUser.criticalAttack,
-        avoidRate: curUser.avoidAbility,
-        exp: curUser.experience,
-      };
+      // 첫 접속이 아닌 town으로 다시 돌아온 경우 세션 불러오고, DB에 저장
+      userInfo = await getUserInfoFromSessionAndUpdateDB(userExist);
     }
+    const curUser = userInfo.curUser;
+    const statInfo = userInfo.statInfo;
 
     const items = [
       ...curUser.mountingItems.map((item) => ({
@@ -262,6 +118,150 @@ const enterTownHandler = async ({ socket, payload }) => {
   } catch (err) {
     handleError(socket, err);
   }
+};
+
+const getUserInfoFromDB = async (socket, nickname, characterClass) => {
+  // DB에서 user, character 정보 가져오기
+  let userInDB = await findUserByUsername(nickname);
+  if (!userInDB) {
+    await insertUserByUsername(nickname);
+    userInDB = await findUserByUsername(nickname);
+  }
+
+  // character 처음 생성하는 거면 character DB에 추가
+  let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+  if (!character) {
+    await insertCharacter(userInDB, characterClass);
+    character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
+  }
+
+  const {
+    experience,
+    critical,
+    criticalAttack,
+    avoidAbility,
+    gold,
+    worldLevel,
+    skillPoint,
+    weapon,
+    armor,
+    gloves,
+    shoes,
+    accessory,
+  } = character;
+  const { baseEffect, singleEffect, wideEffect } = await getJobInfo(character.jobId);
+
+  const userItems = await getUserItemsByCharacterId(character.characterId);
+  const userPotions = [];
+  const userMountingItems = [];
+  for (const userItem of userItems) {
+    const itemInfo = await getItem(userItem.itemId);
+    const item = new Item(userItem.quantity, itemInfo);
+    if (itemInfo.itemType === 'potion') {
+      // 소비 아이템
+      userPotions.push(item);
+    } else {
+      // 장착 아이템
+      userMountingItems.push(item);
+    }
+  }
+
+  // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
+  // 그렇지 않으면 유저세션, 게임세션에 추가한다.
+  const curUser = addUser(
+    socket,
+    nickname,
+    characterClass,
+    character.characterId,
+    experience,
+    baseEffect,
+    singleEffect,
+    wideEffect,
+    userPotions,
+    userMountingItems,
+    critical,
+    criticalAttack,
+    avoidAbility,
+    gold,
+    worldLevel,
+    skillPoint,
+    weapon,
+    armor,
+    gloves,
+    shoes,
+    accessory,
+  );
+
+  const statInfo = {
+    level: character.characterLevel,
+    hp: character.curHp,
+    maxHp: character.maxHp,
+    mp: character.curMp,
+    maxMp: character.maxMp,
+    atk: character.attack,
+    def: character.defense,
+    magic: character.magic,
+    speed: character.speed,
+    critRate: character.critical,
+    critDmg: character.criticalAttack,
+    avoidRate: character.avoidAbility,
+    exp: character.experience,
+  };
+
+  return { curUser, statInfo };
+};
+
+const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
+  const curUser = userExist;
+  const playerStatus = curUser.playerInfo.statInfo;
+
+  // user 현재 상태 DB에 저장
+  await updateCharacterStatus(
+    playerStatus.level,
+    curUser.experience,
+    playerStatus.hp,
+    playerStatus.maxHp,
+    playerStatus.mp,
+    playerStatus.maxMp,
+    playerStatus.atk,
+    playerStatus.def,
+    playerStatus.magic,
+    playerStatus.speed,
+    curUser.critical,
+    curUser.criticalAttack,
+    curUser.avoidAbility,
+    curUser.gold,
+    curUser.skillPoint,
+    curUser.weapon,
+    curUser.armor,
+    curUser.gloves,
+    curUser.shoes,
+    curUser.accessory,
+    curUser.nickname,
+    curUser.characterClass,
+  );
+
+  // user items 저장
+  const sessionItems = [...curUser.potions, ...curUser.mountingItems];
+  await updateCharacterItems(curUser.characterId, sessionItems);
+
+  // user 세션의 potions중 quantity 0인 potion 삭제
+  for (let i = curUser.potions.length - 1; i >= 0; i--) {
+    const potion = curUser.potions[i];
+    if (potion.quantity === 0) {
+      curUser.potions.splice(i, 1);
+    }
+  }
+
+  // user 세션의 mountingItems중 quantity 0인 item 삭제
+  for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
+    const item = curUser.mountingItems[i];
+    if (item.quantity === 0) {
+      curUser.mountingItems.splice(i, 1);
+    }
+  }
+
+  return { curUser, statInfo: curUser.playerInfo.statInfo };
 };
 
 export default enterTownHandler;
