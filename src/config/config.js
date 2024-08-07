@@ -5,6 +5,7 @@ import {
   BUTTON_ITEM,
 } from '../constants/battle/actionSceneButton.js';
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
+
 import {
   SCENE_CHOOSE_TARGET,
   SCENE_MESSAGE_WINDOW,
@@ -161,5 +162,14 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
   },
+
+  worldLevels: {
+    1: { hpRating: 1, attackRating: 1, expRating: 1, goldRating: 1 },
+    2: { hpRating: 1.2, attackRating: 1.2, expRating: 1.2, goldRating: 1.2 },
+    3: { hpRating: 1.5, attackRating: 1.5, expRating: 1.5, goldRating: 1.5 },
+    4: { hpRating: 2, attackRating: 2, expRating: 2, goldRating: 2 },
+    5: { hpRating: 3, attackRating: 3, expRating: 3, goldRating: 3 },
+  },
+
   maxLevel: 20,
 };
