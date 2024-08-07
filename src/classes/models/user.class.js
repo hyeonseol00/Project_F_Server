@@ -3,50 +3,37 @@ class User {
     playerId,
     nickname,
     characterClass,
-    characterId,
     socket,
-    experience,
-    normalCode,
-    singleSkillCode,
-    wideSkillCode,
+    effect,
     potions,
     mountingItems,
-    critical,
-    criticalAttack,
-    avoidAbility,
-    gold,
-    worldLevel,
-    skillPoint,
-    weapon,
-    armor,
-    gloves,
-    shoes,
-    accessory,
+    character,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
-    this.characterId = characterId;
+    this.characterId = character.characterId;
     this.socket = socket;
-    this.experience = experience;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
     this.potions = potions;
     this.mountingItems = mountingItems;
-    this.experience = experience;
-    this.critical = critical;
-    this.criticalAttack = criticalAttack;
-    this.avoidAbility = avoidAbility;
-    this.gold = gold;
-    this.worldLevel = worldLevel;
-    this.skillPoint = skillPoint;
-    this.weapon = weapon;
-    this.armor = armor;
-    this.gloves = gloves;
-    this.shoes = shoes;
-    this.accessory = accessory;
+    this.gold = character.gold;
+    this.worldLevel = character.worldLevel;
+    this.skillPoint = character.skillPoint;
+    this.equipment = {
+      weapon: character.weapon,
+      armor: character.armor,
+      gloves: character.gloves,
+      shoes: character.shoes,
+      accessory: character.accessory,
+    };
 
-    this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
+    this.effectCode = {
+      normal: effect.baseEffect,
+      single: effect.singleEffect,
+      wide: effect.wideEffect,
+    };
   }
 
   setPlayerInfo(playerInfo) {
@@ -73,7 +60,7 @@ class User {
 
   updateLevel(level, experience) {
     this.playerInfo.statInfo.level = level;
-    this.experience = experience;
+    this.playerInfo.statInfo.exp = experience;
   }
 
   getPotionIdx(name) {
@@ -93,7 +80,7 @@ class User {
     return count;
   }
 
-  getItemIdx(name) {
+  getMountingItemIdx(name) {
     for (const itemIdx in this.mountingItems) {
       if (this.mountingItems[itemIdx].name === name) {
         return itemIdx;
@@ -102,24 +89,15 @@ class User {
     return -1;
   }
 
-  getItemIdx2(itemId) {
-    for (const itemIdx in this.mountingItems) {
-      if (this.mountingItems[itemIdx].itemId === itemId) {
-        return itemIdx;
-      }
-    }
-    return -1;
-  }
-
-  findItemByInven(itemId) {
+  findMountingItemByInven(itemId) {
     const findItem = this.mountingItems.find((item) => item.itemId === itemId);
 
     return findItem;
   }
 
   updateCriAvoid(critical, avoidAbility) {
-    this.critical = critical;
-    this.avoidAbility = avoidAbility;
+    this.playerInfo.statInfo.critRate = critical;
+    this.playerInfo.statInfo.avoidRate = avoidAbility;
   }
 
   pushMountingItem(item) {
@@ -150,19 +128,19 @@ class User {
   updateItemId(itemType, itemId) {
     switch (itemType) {
       case 'weapon':
-        this.weapon = itemId;
+        this.equipment.weapon = itemId;
         break;
       case 'armor':
-        this.armor = itemId;
+        this.equipment.armor = itemId;
         break;
       case 'gloves':
-        this.gloves = itemId;
+        this.equipment.gloves = itemId;
         break;
       case 'shoes':
-        this.shoes = itemId;
+        this.equipment.shoes = itemId;
         break;
       case 'accessory':
-        this.accessory = itemId;
+        this.equipment.accessory = itemId;
         break;
       default:
         break;
@@ -173,7 +151,7 @@ class User {
     this.playerInfo.statInfo = statInfo;
   }
 
-  getItemQuantity(itemId) {
+  getMountingItemQuantity(itemId) {
     const findItem = this.mountingItems.find((item) => item.itemId === itemId);
     if (findItem) {
       return findItem.quantity;
@@ -213,6 +191,7 @@ class User {
       this.potions.splice(findIdx, 1);
     }
   }
+
   skillPointUpdate(statInfo) {
     this.playerInfo.statInfo = statInfo;
     this.skillPoint = statInfo.skillPoint;

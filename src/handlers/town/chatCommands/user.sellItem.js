@@ -1,14 +1,6 @@
 import { getItemById } from '../../../session/item.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
-
-function isInteger(s) {
-  s += ''; // 문자열로 변환
-  s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
-  if (s === '' || isNaN(s)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
-
-  const num = Number(s);
-  return Number.isInteger(num); // 정수인지 확인
-}
+import isInteger from '../../../utils/isInteger.js';
 
 // user 객체 내에 포션 아이템을 찾는 함수 추가
 function findPotionById(user, itemId) {
@@ -68,7 +60,7 @@ const sellItemHandler = async (user, message) => {
   // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
   if (Number(id) === sellItem.itemId) {
     const findPotion = findPotionById(user, Number(id));
-    const findItem = user.findItemByInven(Number(id));
+    const findItem = user.findMountingItemByInven(Number(id));
 
     if (!findPotion && !findItem) {
       const response = createResponse('response', 'S_Chat', {
@@ -129,7 +121,7 @@ const sellItemHandler = async (user, message) => {
       user.plusGold(Math.floor(addGold));
       user.decMountingItem(sellItem.itemId, Number(quantity));
 
-      if (user.getItemQuantity(sellItem.itemId) === 0) {
+      if (user.getMountingItemQuantity(sellItem.itemId) === 0) {
         user.deleteMountingItem(sellItem.itemId);
       }
 
@@ -143,7 +135,9 @@ const sellItemHandler = async (user, message) => {
       const sellItemResponse = createResponse('response', 'S_SellItem', {
         item: {
           id,
-          quantity: user.findItemByInven(id) ? user.findItemByInven(id).quantity : 0,
+          quantity: user.findMountingItemByInven(id)
+            ? user.findMountingItemByInven(id).quantity
+            : 0,
         },
         gold: user.gold,
       });
