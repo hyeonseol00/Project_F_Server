@@ -61,16 +61,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       const userMountingItems = [];
       for (const userItem of userItems) {
         const itemInfo = await getItem(userItem.itemId);
-        const item = new Item(
-          itemInfo.itemId,
-          itemInfo.itemType,
-          itemInfo.itemName,
-          itemInfo.itemHp,
-          itemInfo.itemMp,
-          itemInfo.requireLevel,
-          userItem.quantity,
-          itemInfo,
-        );
+        const item = new Item(userItem.quantity, itemInfo);
         if (itemInfo.itemType === 'potion') {
           // 소비 아이템
           userPotions.push(item);

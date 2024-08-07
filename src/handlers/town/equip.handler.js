@@ -150,16 +150,7 @@ export const equipHandler = (user, message) => {
         const isInven = user.findItemByInven(weapon);
         const itemInfo = getItemById(weapon);
         if (!isInven) {
-          const item = new Item(
-            itemInfo.itemId,
-            itemInfo.itemType,
-            itemInfo.itemName,
-            itemInfo.itemHp,
-            itemInfo.itemMp,
-            itemInfo.requireLevel,
-            1,
-            itemInfo,
-          );
+          const item = new Item(1, itemInfo);
           user.pushMountingItem(item);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
@@ -240,16 +231,7 @@ export const equipHandler = (user, message) => {
         const isInven = user.findItemByInven(armor);
         const itemInfo = getItemById(armor);
         if (!isInven) {
-          const item = new Item(
-            itemInfo.itemId,
-            itemInfo.itemType,
-            itemInfo.itemName,
-            itemInfo.itemHp,
-            itemInfo.itemMp,
-            itemInfo.requireLevel,
-            1,
-            itemInfo,
-          );
+          const item = new Item(1, itemInfo);
           user.pushMountingItem(item);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
@@ -331,16 +313,7 @@ export const equipHandler = (user, message) => {
         const isInven = user.findItemByInven(gloves);
         const itemInfo = getItemById(gloves);
         if (!isInven) {
-          const item = new Item(
-            itemInfo.itemId,
-            itemInfo.itemType,
-            itemInfo.itemName,
-            itemInfo.itemHp,
-            itemInfo.itemMp,
-            itemInfo.requireLevel,
-            1,
-            itemInfo,
-          );
+          const item = new Item(1, itemInfo);
           user.pushMountingItem(item);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
@@ -425,16 +398,7 @@ export const equipHandler = (user, message) => {
         const isInven = user.findItemByInven(shoes);
         const itemInfo = getItemById(shoes);
         if (!isInven) {
-          const item = new Item(
-            itemInfo.itemId,
-            itemInfo.itemType,
-            itemInfo.itemName,
-            itemInfo.itemHp,
-            itemInfo.itemMp,
-            itemInfo.requireLevel,
-            1,
-            itemInfo,
-          );
+          const item = new Item(1, itemInfo);
           user.pushMountingItem(item);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
@@ -525,16 +489,7 @@ export const equipHandler = (user, message) => {
         const isInven = user.findItemByInven(accessory);
         const itemInfo = getItemById(accessory);
         if (!isInven) {
-          const item = new Item(
-            itemInfo.itemId,
-            itemInfo.itemType,
-            itemInfo.itemName,
-            itemInfo.itemHp,
-            itemInfo.itemMp,
-            itemInfo.requireLevel,
-            1,
-            itemInfo,
-          );
+          const item = new Item(1, itemInfo);
           user.pushMountingItem(item);
           if (user.getItemQuantity(itemId) === 1) {
             user.deleteMountingItem(itemId);
