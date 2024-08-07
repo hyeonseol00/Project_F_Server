@@ -171,4 +171,9 @@ export const config = {
     4: { hpRating: 2, attackRating: 2, expRating: 2, goldRating: 2 },
     5: { hpRating: 3, attackRating: 3, expRating: 3, goldRating: 3 },
   },
+  levelThresholds: {
+    level1: 5,
+    level2: 10,
+    level3: 15,
+  },
 };
