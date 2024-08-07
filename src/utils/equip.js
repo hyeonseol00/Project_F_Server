@@ -3,6 +3,7 @@ import { createResponse } from './response/createResponse.js';
 import { getItemById } from '../assets/item.assets.js';
 
 let statInfo;
+const quantity = 1;
 function updateEquip(equippedItem, findItem, user) {
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
     user.playerInfo.statInfo;
@@ -48,19 +49,19 @@ function updateEquip(equippedItem, findItem, user) {
     const isInven = user.findMountingItemByInven(equippedItem);
     const itemInfo = getItemById(equippedItem);
     if (!isInven) {
-      const item = new Item(1, itemInfo);
+      const item = new Item(quantity, itemInfo);
       user.pushMountingItem(item);
       if (user.getMountingItemQuantity(itemId) === 1) {
         user.deleteMountingItem(itemId);
       } else {
-        user.decMountingItem(itemId, 1);
+        user.decMountingItem(itemId, quantity);
       }
     } else {
-      user.addMountingItem(isInven.itemId, 1);
+      user.addMountingItem(isInven.itemId, quantity);
       if (user.getMountingItemQuantity(itemId) === 1) {
         user.deleteMountingItem(itemId);
       } else {
-        user.decMountingItem(itemId, 1);
+        user.decMountingItem(itemId, quantity);
       }
     }
 
@@ -93,7 +94,7 @@ function updateEquip(equippedItem, findItem, user) {
     if (user.getMountingItemQuantity(itemId) === 1) {
       user.deleteMountingItem(itemId);
     } else {
-      user.decMountingItem(itemId, 1);
+      user.decMountingItem(itemId, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {
