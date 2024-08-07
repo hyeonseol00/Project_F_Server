@@ -73,7 +73,7 @@ const buyItemHandler = async (user, message) => {
         user.addPotion(buyItem.itemId, Number(quantity));
       }
 
-      user.minusGold(itemCost);
+      user.decGold(itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
       potion = findPotionById(user, buyItem.itemId);
@@ -110,7 +110,7 @@ const buyItemHandler = async (user, message) => {
         user.addMountingItem(buyItem.itemId, Number(quantity));
         item = user.findMountingItemByInven(buyItem.itemId);
       }
-      user.minusGold(itemCost);
+      user.decGold(itemCost);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,

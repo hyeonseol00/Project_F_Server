@@ -48,7 +48,7 @@ class User {
     return { ...this.playerInfo };
   }
 
-  updatePosition(transform) {
+  setPosition(transform) {
     this.playerInfo.transform = transform;
     this.lastUpdateTime = Date.now();
   }
@@ -58,7 +58,7 @@ class User {
     this.teamId = teamId;
   }
 
-  updateLevel(level, experience) {
+  setLevel(level, experience) {
     this.playerInfo.statInfo.level = level;
     this.playerInfo.statInfo.exp = experience;
   }
@@ -95,7 +95,7 @@ class User {
     return findItem;
   }
 
-  updateCriAvoid(critical, avoidAbility) {
+  setCriAvoid(critical, avoidAbility) {
     this.playerInfo.statInfo.critRate = critical;
     this.playerInfo.statInfo.avoidRate = avoidAbility;
   }
@@ -125,7 +125,7 @@ class User {
     this.mountingItems[findIdx].quantity += quantity;
   }
 
-  updateItemId(itemType, itemId) {
+  setItemId(itemType, itemId) {
     switch (itemType) {
       case 'weapon':
         this.equipment.weapon = itemId;
@@ -147,7 +147,7 @@ class User {
     }
   }
 
-  updateStatInfo(statInfo) {
+  setStatInfo(statInfo) {
     this.playerInfo.statInfo = statInfo;
   }
 
@@ -159,11 +159,11 @@ class User {
     return 0;
   }
 
-  plusGold(itemCost) {
+  addGold(itemCost) {
     this.gold += itemCost;
   }
 
-  minusGold(itemCost) {
+  decGold(itemCost) {
     this.gold -= itemCost;
   }
 

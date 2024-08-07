@@ -10,7 +10,7 @@ const moveHatcheryHandler = async ({ socket, payload }) => {
     const players = hatcherySession.players;
     const { transform } = payload;
 
-    user.updatePosition(transform);
+    user.setPosition(transform);
 
     const moveHatcheryResponse = createResponse('response', 'S_MoveAtHatchery', {
       playerId: user.playerId,
