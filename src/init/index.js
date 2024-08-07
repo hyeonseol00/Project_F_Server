@@ -5,7 +5,7 @@ import { loadProtos } from './loadProtos.js';
 import { loadLevelTable } from '../session/level.session.js';
 import { loadItemTable } from '../session/item.session.js';
 import { loadMonsterTable } from '../session/monster.session.js';
-
+import { loadDungeonMonster } from '../session/monster.session.js';
 const initServer = async () => {
   try {
     await loadProtos();
@@ -14,6 +14,7 @@ const initServer = async () => {
     await loadLevelTable();
     await loadItemTable();
     await loadMonsterTable();
+    await loadDungeonMonster();
   } catch (err) {
     console.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료

@@ -2,14 +2,11 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
-import {
-  findMonsterById,
-  findMonstersByDungeonId,
-  getMonsterEffectById,
-} from '../../db/game/game.db.js';
+import { getMonsterEffectById } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
-import { monsterTable } from '../../session/sessions.js';
+import { getMonsterByDungeonId } from '../../session/monster.session.js';
+import { getMonsterById } from '../../session/monster.session.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -22,7 +19,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const dungeon = addDungeon(nickname, player, dungeonCode);
     gameSession.removeUser(user.playerId);
 
-    const monsters = await findMonstersByDungeonId(dungeonCode + 5000);
+    const monsters = getMonsterByDungeonId(dungeonCode + 5000);
 
     const { worldLevels } = config;
     const {
@@ -33,9 +30,9 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     } = worldLevels[player.worldLevel] || {};
 
     const monsterStatus = [];
-    for (let i = 0; i < 3; i++) {
-      const monsterAsset = monsterTable[Math.floor(Math.random() * monsterTable.length)];
 
+    for (let i = 0; i < monsterAssets.length; i++) {
+      const monsterDB = monsters[Math.floor(Math.random() * monsters.length)].monsterId;
       const {
         monsterId,
         monsterHp,
@@ -45,7 +42,8 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterGold,
         monsterCritical,
         monsterCriticalAttack,
-      } = monsterAsset;
+      } = getMonsterById(monsterDB);
+
       const effectCode = await getMonsterEffectById(monsterId);
 
       const monster = {

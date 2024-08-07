@@ -7,4 +7,5 @@ export const SQL_GAME_QUERIES = {
   GET_ITEM: 'SELECT * FROM Items WHERE item_id = ?',
   GET_ALL_ITEM_DATA: 'SELECT * FROM Items',
   GET_MONSTER: 'SELECT * FROM Monsters',
+  GET_DUNGEON_MONSTER: 'SELECT * FROM Dungeon_Monsters',
 };

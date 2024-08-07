@@ -8,3 +8,4 @@ export const levelTable = [];
 export const hatcherySession = new Hatchery();
 export const itemTable = [];
 export const monsterTable = [];
+export const dungeonMonster = [];
