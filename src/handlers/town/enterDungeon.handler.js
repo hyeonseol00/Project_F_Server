@@ -4,7 +4,7 @@ import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import {
   findMonsterById,
-  findMonstersByDungeonMonsters,
+  findMonstersByDungeonId,
   getMonsterEffectById,
 } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
@@ -22,7 +22,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const dungeon = addDungeon(nickname, player, dungeonCode);
     gameSession.removeUser(user.playerId);
 
-    const monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
+    const monsters = await findMonstersByDungeonId(dungeonCode + 5000);
 
     const { worldLevels } = config;
     const {

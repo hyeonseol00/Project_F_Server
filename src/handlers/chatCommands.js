@@ -8,7 +8,7 @@ import {
   acceptTeamHandler,
   kickMemberHandler,
   sendTeamList,
-} from './chatCommands/chatCommand.handler.js';
+} from './town/chatCommands/chatCommand.handler.js';
 import { equipHandler } from './town/equip.handler.js';
 import buyItemHandler from './town/chatCommands/user.buyItem.js';
 import sellItemHandler from './town/chatCommands/user.sellItem.js';
