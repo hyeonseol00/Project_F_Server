@@ -97,7 +97,7 @@ export const useHandler = (user, message) => {
   // S_UseItem 패킷 전송
   const useItemResponse = createResponse('response', 'S_UseItem', {
     item: {
-      id,
+      id : itemId,
       quantity: updatedQuantity,
     },
   });
