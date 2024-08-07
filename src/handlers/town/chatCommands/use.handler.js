@@ -1,4 +1,4 @@
-import { getItemById } from '../../../session/item.session.js';
+import { getItemById } from '../../../assets/item.assets.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
 
@@ -97,7 +97,7 @@ export const useHandler = (user, message) => {
   // S_UseItem 패킷 전송
   const useItemResponse = createResponse('response', 'S_UseItem', {
     item: {
-      id : itemId,
+      id: itemId,
       quantity: updatedQuantity,
     },
   });

@@ -1,4 +1,4 @@
-import { getItemById } from '../../../session/item.session.js';
+import { getItemById } from '../../../assets/item.assets.js';
 import Item from '../../../classes/models/item.class.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
