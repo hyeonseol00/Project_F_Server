@@ -1,5 +1,5 @@
+import { getDungeonItemsByDungeonCode, getItemById } from '../../assets/item.assets.js';
 import { config } from '../../config/config.js';
-import { findItemsByDungeonCode, getItem } from '../../db/game/game.db.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
@@ -71,9 +71,9 @@ class InstanceDungeon {
     this.mountingItems = []; // random mounting item list
     this.potions = []; // random potion list
 
-    const dungeonItems = await findItemsByDungeonCode(dungeonCode + 5000);
+    const dungeonItems = getDungeonItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      const itemInfo = await getItem(item.itemId);
+      const itemInfo = getItemById(item.itemId);
       if (itemInfo.itemType === 'potion') {
         // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
         const potion = new Item(dungeonCode, itemInfo);

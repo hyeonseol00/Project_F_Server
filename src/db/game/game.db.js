@@ -30,18 +30,10 @@ export const getAllLevelData = async () => {
   return toCamelCase(rows);
 };
 
-export const findItemsByDungeonCode = async (dungeonCode) => {
-  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.FIND_ITEMS_BY_DUNGEON_CODE, [
-    dungeonCode,
-  ]);
+export const getDungeonItems = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_DUNGEON_ITEMS, []);
 
   return toCamelCase(rows);
-};
-
-export const getItem = async (itemId) => {
-  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_ITEM, [itemId]);
-
-  return toCamelCase(rows[0]);
 };
 
 export const getAllItemData = async () => {

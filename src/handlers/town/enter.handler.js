@@ -1,6 +1,6 @@
+import { getItemById } from '../../assets/item.assets.js';
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
-import { getItem } from '../../db/game/game.db.js';
 import { getUserItemsByCharacterId, updateCharacterItems } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
@@ -139,7 +139,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   const userPotions = [];
   const userMountingItems = [];
   for (const userItem of userItems) {
-    const itemInfo = await getItem(userItem.itemId);
+    const itemInfo = getItemById(userItem.itemId);
     const item = new Item(userItem.quantity, itemInfo);
     if (itemInfo.itemType === 'potion') {
       // 소비 아이템
