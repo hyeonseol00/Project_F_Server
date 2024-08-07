@@ -57,7 +57,7 @@ export const getMonster = async () => {
 };
 
 export const getDungeonMonster = async () => {
-  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_DUNGEON_MONSTER, []);
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MONSTER, []);
 
   return toCamelCase(rows);
 };
