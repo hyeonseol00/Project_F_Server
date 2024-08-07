@@ -1,5 +1,5 @@
 import { getAllItemData } from '../db/game/game.db.js';
-import { itemTable } from './sessions.js';
+import { itemTable } from './assets.js';
 
 export const getItemById = (itemId) => {
   if (itemId !== 0) {

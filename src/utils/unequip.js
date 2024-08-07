@@ -1,4 +1,4 @@
-import { getItemById } from '../session/item.session.js';
+import { getItemById } from '../assets/item.assets.js';
 import { createResponse } from './response/createResponse.js';
 import Item from '../classes/models/item.class.js';
 
@@ -8,7 +8,7 @@ function updateUnEquip(uneqipItem, user) {
     user.playerInfo.statInfo;
 
   const uneqipItemInfo = getItemById(uneqipItem);
-  user.updateItemId(uneqipItemInfo.itemType, 0);
+  user.setItemId(uneqipItemInfo.itemType, 0);
 
   statInfo = {
     level,
@@ -25,8 +25,8 @@ function updateUnEquip(uneqipItem, user) {
   const updateCritical = critRate - uneqipItemInfo.itemCritical;
   const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
 
-  user.updateStatInfo(statInfo);
-  user.updateCriAvoid(updateCritical, updateAvoidAbility);
+  user.setStatInfo(statInfo);
+  user.setCriAvoid(updateCritical, updateAvoidAbility);
 
   const isInven = user.findMountingItemByInven(uneqipItemInfo.itemId);
   if (!isInven) {

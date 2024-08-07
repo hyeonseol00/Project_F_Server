@@ -11,5 +11,5 @@ export const SQL_QUERIES = {
   GET_CHARACTER_SINGLE_EFFECT_CODE: 'SELECT single_effect FROM jobs WHERE job_id = ?',
   GET_CHARACTER_WIDE_EFFECT_CODE: 'SELECT wide_effect FROM jobs WHERE job_id = ?',
   UPDATE_CHARACTER_STATUS:
-    'UPDATE characters SET character_level = ?, experience = ?, cur_hp = ?, max_hp = ?, cur_mp = ?, max_mp = ?, attack = ?, defense = ?, magic = ?, speed = ?, critical = ?, critical_attack = ?, avoid_ability = ?, gold = ?, skill_point=?, weapon = ?, armor = ?, gloves = ?, shoes = ?, accessory = ?, updated_at = CURRENT_TIMESTAMP WHERE character_name = ? AND job_id = ?',
+    'UPDATE characters SET character_level = ?, experience = ?, cur_hp = ?, max_hp = ?, cur_mp = ?, max_mp = ?, attack = ?, defense = ?, magic = ?, speed = ?, critical = ?, critical_attack = ?, avoid_ability = ?, gold = ?, world_level = ?, skill_point=?, weapon = ?, armor = ?, gloves = ?, shoes = ?, accessory = ?, updated_at = CURRENT_TIMESTAMP WHERE character_name = ? AND job_id = ?',
 };

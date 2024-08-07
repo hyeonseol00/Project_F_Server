@@ -1,4 +1,4 @@
-import { getItemById } from '../../../session/item.session.js';
+import { getItemById } from '../../../assets/item.assets.js';
 import Item from '../../../classes/models/item.class.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
@@ -73,7 +73,7 @@ const buyItemHandler = async (user, message) => {
         user.addPotion(buyItem.itemId, Number(quantity));
       }
 
-      user.minusGold(itemCost);
+      user.setGold(user.gold - itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
       potion = findPotionById(user, buyItem.itemId);
@@ -110,7 +110,7 @@ const buyItemHandler = async (user, message) => {
         user.addMountingItem(buyItem.itemId, Number(quantity));
         item = user.findMountingItemByInven(buyItem.itemId);
       }
-      user.minusGold(itemCost);
+      user.setGold(user.gold - itemCost);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,

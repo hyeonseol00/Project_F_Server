@@ -7,20 +7,20 @@ import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
 import { getHatcherySession } from '../session/hatchery.session.js';
 
-export const onEnd = (socket) => async () => {
+export const onEnd = (socket) => () => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
   const playerStatus = user.playerInfo.statInfo;
   const hatcherySession = getHatcherySession();
 
   if (user) {
-    await updateCharacterStatus(user);
-
     const sessionItems = [...user.potions, ...user.mountingItems];
-    await updateCharacterItems(user.characterId, sessionItems);
 
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
+
+    updateCharacterStatus(user);
+    updateCharacterItems(user.characterId, sessionItems);
   }
   removeDungeon(user.nickname);
 

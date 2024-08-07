@@ -1,6 +1,6 @@
 import Item from '../classes/models/item.class.js';
 import { createResponse } from './response/createResponse.js';
-import { getItemById } from '../session/item.session.js';
+import { getItemById } from '../assets/item.assets.js';
 
 let statInfo;
 function updateEquip(equippedItem, findItem, user) {
@@ -23,7 +23,7 @@ function updateEquip(equippedItem, findItem, user) {
 
   if (equippedItem !== 0) {
     const equippedItemInfo = getItemById(equippedItem);
-    user.updateItemId(itemType, itemId);
+    user.setItemId(itemType, itemId);
 
     statInfo = {
       level,
@@ -42,8 +42,8 @@ function updateEquip(equippedItem, findItem, user) {
     const updateCritical = critRate + addCritical - equippedItemInfo.itemCritical;
     const updateAvoidAbility = avoidRate + addAvoidance - equippedItemInfo.itemAvoidance;
 
-    user.updateStatInfo(statInfo);
-    user.updateCriAvoid(updateCritical, updateAvoidAbility);
+    user.setStatInfo(statInfo);
+    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
     const isInven = user.findMountingItemByInven(equippedItem);
     const itemInfo = getItemById(equippedItem);
@@ -70,7 +70,7 @@ function updateEquip(equippedItem, findItem, user) {
     });
     user.socket.write(response);
   } else {
-    user.updateItemId(itemType, itemId);
+    user.setItemId(itemType, itemId);
 
     statInfo = {
       level,
@@ -87,8 +87,8 @@ function updateEquip(equippedItem, findItem, user) {
     const updateCritical = critRate + addCritical;
     const updateAvoidAbility = avoidRate + addAvoidance;
 
-    user.updateStatInfo(statInfo);
-    user.updateCriAvoid(updateCritical, updateAvoidAbility);
+    user.setStatInfo(statInfo);
+    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
     if (user.getMountingItemQuantity(itemId) === 1) {
       user.deleteMountingItem(itemId);

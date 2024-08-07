@@ -2,8 +2,8 @@ import pools from '../database.js';
 import { SQL_GAME_QUERIES } from './game.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 
-export const findMonstersByDungeonId = async (dungeonId) => {
-  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.FIND_MONSTERS_BY_DUNGEON_ID, [
+export const findMonstersByDungeonMonsters = async (dungeonId) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.FIND_MONSTERS_BY_DUNGEON_MONSTERS, [
     dungeonId,
   ]);
 
@@ -52,6 +52,12 @@ export const getAllItemData = async () => {
 
 export const getMonster = async () => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MONSTER, []);
+
+  return toCamelCase(rows);
+};
+
+export const getDungeonMonster = async () => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_DUNGEON_MONSTER, []);
 
   return toCamelCase(rows);
 };

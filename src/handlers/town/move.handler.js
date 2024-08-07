@@ -11,7 +11,7 @@ const moveTownHandler = async ({ socket, payload }) => {
     const { transform } = payload;
     const curUser = getUserBySocket(socket);
 
-    curUser.updatePosition(transform);
+    curUser.setPosition(transform);
 
     const moveTownResponse = createResponse('response', 'S_Move', {
       playerId: curUser.playerId,

@@ -1,4 +1,4 @@
-import { getItemById } from '../../../session/item.session.js';
+import { getItemById } from '../../../assets/item.assets.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
 
@@ -82,7 +82,7 @@ const sellItemHandler = async (user, message) => {
       }
 
       const addGold = itemCost * Number(quantity) * 0.7;
-      user.plusGold(Math.floor(addGold));
+      user.setGold(user.gold + Math.floor(addGold));
       user.decPotion(sellItem.itemId, Number(quantity));
 
       if (user.getPotionItemQuantity(sellItem.itemId) === 0) {
@@ -118,7 +118,7 @@ const sellItemHandler = async (user, message) => {
       }
 
       const addGold = itemCost * Number(quantity) * 0.7;
-      user.plusGold(Math.floor(addGold));
+      user.setGold(user.gold + Math.floor(addGold));
       user.decMountingItem(sellItem.itemId, Number(quantity));
 
       if (user.getMountingItemQuantity(sellItem.itemId) === 0) {
