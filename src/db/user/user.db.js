@@ -72,7 +72,7 @@ export const findMonstersByDungeonMonsters = async (dungeonId) => {
   return toCamelCase(rows);
 };
 
-export const findMonsterByMonsters = async (monsterId) => {
+export const findMonsterById = async (monsterId) => {
   const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_MONSTER_BY_MONSTERS, [monsterId]);
 
   return toCamelCase(rows[0]);

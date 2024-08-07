@@ -10,27 +10,27 @@ export const findMonstersByDungeonMonsters = async (dungeonId) => {
   return toCamelCase(rows);
 };
 
-export const findMonsterByMonsters = async (monsterId) => {
+export const findMonsterById = async (monsterId) => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.FIND_MONSTER_BY_MONSTERS, [
     monsterId,
   ]);
 
   return toCamelCase(rows[0]);
 };
-
-export const getMonsterEffect = async (monsterId) => {
+//getMonsterEffectByIdById
+export const getMonsterEffectById = async (monsterId) => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_MONSTER_EFFECT, [monsterId]);
 
   return toCamelCase(rows[0]).monsterEffect;
 };
 
-export const getLevelTable = async () => {
+export const getAllLevelData = async () => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_LEVEL_TABLE, []);
 
   return toCamelCase(rows);
 };
 
-export const getDungeonItems = async (dungeonCode) => {
+export const findItemsByDungeonCode = async (dungeonCode) => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_DUNGEON_ITEMS, [dungeonCode]);
 
   return toCamelCase(rows);
@@ -42,7 +42,7 @@ export const getItem = async (itemId) => {
   return toCamelCase(rows[0]);
 };
 
-export const getItemTable = async () => {
+export const getAllItemData = async () => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_ITEM_TABLE, []);
 
   return toCamelCase(rows);

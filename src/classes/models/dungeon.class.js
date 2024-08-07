@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { getDungeonItems, getItem } from '../../db/game/game.db.js';
+import { findItemsByDungeonCode, getItem } from '../../db/game/game.db.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
@@ -71,7 +71,7 @@ class InstanceDungeon {
     this.mountingItems = []; // random mounting item list
     this.potions = []; // random potion list
 
-    const dungeonItems = await getDungeonItems(dungeonCode + 5000);
+    const dungeonItems = await findItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
       const itemInfo = await getItem(item.itemId);
       if (itemInfo.itemType === 'potion') {

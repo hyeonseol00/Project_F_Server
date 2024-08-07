@@ -3,9 +3,9 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import {
-  findMonsterByMonsters,
+  findMonsterById,
   findMonstersByDungeonMonsters,
-  getMonsterEffect,
+  getMonsterEffectById,
 } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
@@ -46,7 +46,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterCritical,
         monsterCriticalAttack,
       } = monsterAsset;
-      const effectCode = await getMonsterEffect(monsterId);
+      const effectCode = await getMonsterEffectById(monsterId);
 
       const monster = {
         monsterIdx: i,
