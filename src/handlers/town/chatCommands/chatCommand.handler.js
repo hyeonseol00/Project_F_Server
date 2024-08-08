@@ -3,7 +3,7 @@ import { getAllUsersInTeam, getUserByNickname } from '../../../session/user.sess
 
 const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
-    ? `[System] ${targetUser.nickname} 는 이미 팀이 있습니다.`
+    ? `[System] ${targetUser.nickname} 은(는) 이미 팀이 있습니다.`
     : `[System] 이미 팀이 있습니다.`;
   targetUser = targetUser || sender;
 
@@ -23,7 +23,7 @@ const notFoundTeam = (sender, targetUser = undefined) => {
 
 const alreadyHaveTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
-    ? `[System] ${targetUser.nickname} 는 이미 팀이 있습니다.`
+    ? `[System] ${targetUser.nickname} 은(는) 이미 팀이 있습니다.`
     : `[System] 이미 팀이 있습니다.`;
   targetUser = targetUser || sender;
 
