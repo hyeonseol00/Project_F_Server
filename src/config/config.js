@@ -7,6 +7,7 @@ import {
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
   PLAYER_MAX_LEVEL,
+  RESPAWN_HP,
   WORLD_LEVEL_1_CONFIG,
   WORLD_LEVEL_2_CONFIG,
   WORLD_LEVEL_3_CONFIG,
@@ -173,6 +174,7 @@ export const config = {
   },
   battleScene: {
     maxLevel: PLAYER_MAX_LEVEL,
+    respawnHp: RESPAWN_HP,
   },
   worldLevels: {
     1: WORLD_LEVEL_1_CONFIG,

@@ -1,4 +1,5 @@
 export const PLAYER_MAX_LEVEL = 20;
+export const RESPAWN_HP = 50;
 
 export const WORLD_LEVEL_1_CONFIG = { hpRating: 1, attackRating: 1, expRating: 1, goldRating: 1 };
 export const WORLD_LEVEL_2_CONFIG = {
