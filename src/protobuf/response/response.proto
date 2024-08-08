@@ -158,7 +158,7 @@ message S_UseItem{
 message S_BossTryAttack{
 }
 
-message S_SetPlayerHp{
+message S_SetPlayerHpHatchery{
 	int32 playerId = 1;
 	float playerCurHp = 2;
 }

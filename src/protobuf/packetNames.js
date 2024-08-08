@@ -30,7 +30,7 @@ export const packetNames = {
     S_TryAttack: 'response.S_TryAttack',
     S_BossMove: 'response.S_BossMove',
     S_BossTryAttack: 'response.S_BossTryAttack',
-    S_SetPlayerHp: 'response.S_SetPlayerHp',
+    S_SetPlayerHpHatchery: 'response.S_SetPlayerHpHatchery',
     S_DespawnHatchery: 'response.S_DespawnHatchery',
   },
   town: {
