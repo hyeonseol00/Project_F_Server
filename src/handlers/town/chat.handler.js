@@ -24,7 +24,7 @@ const chatHandler = async ({ socket, payload }) => {
       if (!chatCommandHandler) {
         const invalidCommandResponse = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
-          chatMsg: `[System] Invalid Command: Please check your command`,
+          chatMsg: `[System] 잘못된 커맨드: 커맨드를 확인해보세요.`,
         });
         socket.write(invalidCommandResponse);
         return;
