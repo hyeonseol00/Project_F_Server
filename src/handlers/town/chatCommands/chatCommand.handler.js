@@ -195,7 +195,7 @@ export const joinTeamHandler = (sender, message) => {
   for (const member of teamMembers) {
     let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} 가 팀에 가입했습니다!`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀에 가입했습니다!`,
     });
     member.socket.write(joinResponse);
   }
@@ -226,7 +226,7 @@ export const leaveTeamHandler = (sender, message) => {
   for (const member of teamMembers) {
     let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} 가 팀을 탈퇴했습니다.`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀을 탈퇴했습니다.`,
     });
     member.socket.write(joinResponse);
   }
@@ -254,7 +254,7 @@ export const inviteTeamHandler = (sender, message) => {
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: `[System] ${sender.nickname} 가 팀 초대를 했습니다.`,
+    chatMsg: `[System] ${sender.nickname} 이(가) 팀 초대를 했습니다.`,
   });
   targetUser.socket.write(response);
 };
@@ -285,7 +285,7 @@ export const acceptTeamHandler = (sender, message) => {
   teamMembers.forEach((member) => {
     const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} 가 팀에 가입했습니다!`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀에 가입했습니다!`,
     });
     member.socket.write(joinResponse);
   });
@@ -320,7 +320,7 @@ export const kickMemberHandler = (sender, message) => {
   for (const member of teamMembers) {
     let response = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${targetUser.nickname} 가 팀에서 추방되었습니다.`,
+      chatMsg: `[System] ${targetUser.nickname} 이(가) 팀에서 추방되었습니다.`,
     });
     member.socket.write(response);
   }
