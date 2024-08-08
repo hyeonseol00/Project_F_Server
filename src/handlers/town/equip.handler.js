@@ -56,6 +56,7 @@ export const equipHandler = (user, message) => {
     return;
   }
 
+  // updateEquip(findItem.itemType, findItem, user);
   switch (findItem.itemType) {
     case 'weapon':
       updateEquip(weapon, findItem, user);

@@ -29,7 +29,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       userInfo = await getUserInfoFromDB(socket, nickname, characterClass);
     } else {
       // 첫 접속이 아닌 town으로 다시 돌아온 경우 세션 불러오고, DB에 저장
-      userInfo = await getUserInfoFromSessionAndUpdateDB(userExist);
+      userInfo = await getUserInfoFromSession(userExist);
     }
     const curUser = userInfo.curUser;
     const statInfo = userInfo.statInfo;
@@ -120,10 +120,6 @@ const enterTownHandler = async ({ socket, payload }) => {
 const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   // DB에서 user, character 정보 가져오기
   let userInDB = await findUserByUsername(nickname);
-  if (!userInDB) {
-    await insertUserByUsername(nickname);
-    userInDB = await findUserByUsername(nickname);
-  }
 
   // character 처음 생성하는 거면 character DB에 추가
   let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
@@ -180,7 +176,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   return { curUser, statInfo };
 };
 
-const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
+const getUserInfoFromSession = async (userExist) => {
   const curUser = userExist;
 
   // user 세션의 potions중 quantity 0인 potion 삭제
