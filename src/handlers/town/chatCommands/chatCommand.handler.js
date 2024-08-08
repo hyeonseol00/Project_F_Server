@@ -1,11 +1,10 @@
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { getAllUsersInTeam, getUserByNickname } from '../../../session/user.session.js';
-import { findUserByUsername, findCharacterByUserIdAndClass } from '../../../db/user/user.db.js';
 
 const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
-    ? `[System] ${targetUser.nickname} don't have team...`
-    : `[System] You don't have team...`;
+    ? `[System] ${targetUser.nickname} 은(는) 이미 팀이 있습니다.`
+    : `[System] 이미 팀이 있습니다.`;
   targetUser = targetUser || sender;
 
   // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
@@ -24,8 +23,8 @@ const notFoundTeam = (sender, targetUser = undefined) => {
 
 const alreadyHaveTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
-    ? `[System] ${targetUser.nickname} have already team...`
-    : `[System] You have already team...`;
+    ? `[System] ${targetUser.nickname} 은(는) 이미 팀이 있습니다.`
+    : `[System] 이미 팀이 있습니다.`;
   targetUser = targetUser || sender;
 
   // 해당 유저가 팀이 있으면, 해당 사실을 해당 유저에게 전송합니다.
@@ -47,7 +46,7 @@ const notFoundUser = (sender, targetUser = undefined) => {
   if (!targetUser) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] The user cannot be found`,
+      chatMsg: `[System] 해당 유저를 찾을 수 없습니다.`,
     });
     sender.socket.write(rejectResponse);
 
@@ -67,7 +66,7 @@ const notFoundUserInTeam = (sender, targetUser = undefined) => {
   if (!foundTargetUser) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] The user cannot be found in team`,
+      chatMsg: `[System] 팀에서 해당 유저를 찾을 수 없습니다.`,
     });
     sender.socket.write(rejectResponse);
 
@@ -81,7 +80,7 @@ const alreadyInvited = (sender, targetUser = undefined) => {
   if (targetUser.invitedTeams?.includes(sender.teamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] This user has already been invited.`,
+      chatMsg: `[System] 해당 유저는 이미 초대되었습니다.`,
     });
     sender.socket.write(response);
     return true;
@@ -93,7 +92,7 @@ const notFoundInvitation = (sender, targetUser = undefined) => {
   if (!targetUser || !sender.invitedTeams.includes(targetUser.teamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: '[System] You were not invited to this team.',
+      chatMsg: '[System] 당신은 팀에 초대되지 않았습니다.',
     });
     sender.socket.write(response);
     return true;
@@ -110,7 +109,7 @@ export const sendDirectMessage = (sender, message) => {
   const recipient = getUserByNickname(recipientNickname);
 
   if (!recipient) {
-    console.error(`Recipient not found: ${recipientNickname}`);
+    console.error(`상대방을 찾을 수 없습니다: ${recipientNickname}`);
     return;
   }
 
@@ -128,7 +127,7 @@ export const sendDirectMessage = (sender, message) => {
     sender.socket.write(senderChatResponse); // 발신자에게 메시지 전송
     recipient.socket.write(recipientChatResponse); // 수신자에게 메시지 전송
   } catch (error) {
-    console.error(`Failed to send message to recipient: ${error.msg}`);
+    console.error(`상대방에게 메시지를 보내지 못했습니다: ${error.msg}`);
   }
 };
 
@@ -172,7 +171,7 @@ export const createTeamHandler = (sender, message) => {
   sender.teamId = teamId;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: '[System] Team create successfully!',
+    chatMsg: '[System] 팀이 생성되었습니다!',
   });
   sender.socket.write(response);
 };
@@ -197,7 +196,7 @@ export const joinTeamHandler = (sender, message) => {
   sender.isOwner = false;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: '[System] Team join successfully!',
+    chatMsg: '[System] 팀에 가입했습니다!',
   });
   sender.socket.write(response);
 
@@ -205,7 +204,7 @@ export const joinTeamHandler = (sender, message) => {
   for (const member of teamMembers) {
     let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} join your team!`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀에 가입했습니다!`,
     });
     member.socket.write(joinResponse);
   }
@@ -225,7 +224,7 @@ export const leaveTeamHandler = (sender, message) => {
   sender.isOwner = undefined;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: '[System] Team leave successfully!',
+    chatMsg: '[System] 팀을 탈퇴했습니다!',
   });
   sender.socket.write(response);
 
@@ -236,7 +235,7 @@ export const leaveTeamHandler = (sender, message) => {
   for (const member of teamMembers) {
     let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} left your team`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀을 탈퇴했습니다.`,
     });
     member.socket.write(joinResponse);
   }
@@ -264,7 +263,7 @@ export const inviteTeamHandler = (sender, message) => {
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: `[System] ${sender.nickname} invited you to join their team.`,
+    chatMsg: `[System] ${sender.nickname} 이(가) 팀 초대를 했습니다.`,
   });
   targetUser.socket.write(response);
 };
@@ -283,7 +282,7 @@ export const acceptTeamHandler = (sender, message) => {
   sender.isOwner = false;
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: '[System] Successfully joined the team!',
+    chatMsg: '[System] 팀 가입에 성공적으로 완료했습니다!',
   });
   sender.socket.write(response);
 
@@ -295,7 +294,7 @@ export const acceptTeamHandler = (sender, message) => {
   teamMembers.forEach((member) => {
     const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${sender.nickname} joined your team!`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 팀에 가입했습니다!`,
     });
     member.socket.write(joinResponse);
   });
@@ -319,7 +318,7 @@ export const kickMemberHandler = (sender, message) => {
   targetUser.isOwner = undefined;
   const kickResponse = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: '[System] You are kicked at team',
+    chatMsg: '[System] 팀에서 추방되었습니다.',
   });
   targetUser.socket.write(kickResponse);
 
@@ -330,7 +329,7 @@ export const kickMemberHandler = (sender, message) => {
   for (const member of teamMembers) {
     let response = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
-      chatMsg: `[System] ${targetUser.nickname} are kicked at team`,
+      chatMsg: `[System] ${targetUser.nickname} 이(가) 팀에서 추방되었습니다.`,
     });
     member.socket.write(response);
   }
@@ -340,7 +339,7 @@ export const sendTeamList = (sender) => {
   if (!sender.teamId) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
-      chatMsg: `[System] You don't have a team...`,
+      chatMsg: `[System] 가입된 팀이 없습니다.`,
     });
     sender.socket.write(response);
     return;
@@ -350,7 +349,7 @@ export const sendTeamList = (sender) => {
   const memberList = teamMembers.map((member) => member.nickname).join(', ');
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: `[System] Team members: ${memberList}`,
+    chatMsg: `[System] 팀 멤버: ${memberList}`,
   });
   sender.socket.write(response);
 };
