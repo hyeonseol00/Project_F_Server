@@ -184,13 +184,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
   const curUser = userExist;
 
-  // user 현재 상태 DB에 저장
-  await updateCharacterStatus(curUser);
-
-  // user items 저장
-  const sessionItems = [...curUser.potions, ...curUser.mountingItems];
-  await updateCharacterItems(curUser.characterId, sessionItems);
-
   // user 세션의 potions중 quantity 0인 potion 삭제
   for (let i = curUser.potions.length - 1; i >= 0; i--) {
     const potion = curUser.potions[i];
