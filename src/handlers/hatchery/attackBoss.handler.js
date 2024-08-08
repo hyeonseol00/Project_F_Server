@@ -17,8 +17,10 @@ const attackBossHatcheryHandler = async ({ socket, payload }) => {
     }
 
     hatcherySession.boss.hp -= decreaseHp;
+
+    const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
     const attackBossResponse = createResponse('response', 'S_SetHatcheryBossHp', {
-      bossCurHp: hatcherySession.boss.hp,
+      bossCurHp,
     });
 
     const players = hatcherySession.players;
