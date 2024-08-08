@@ -1,14 +1,13 @@
 import { getItemById } from '../../assets/item.assets.js';
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
-import { getUserItemsByCharacterId, updateCharacterItems } from '../../db/user/items/items.db.js';
+import { getUserItemsByCharacterId } from '../../db/user/items/items.db.js';
 import {
   findCharacterByUserIdAndClass,
   findUserByUsername,
   getJobInfo,
   insertCharacter,
   insertUserByUsername,
-  updateCharacterStatus,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
