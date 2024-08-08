@@ -3,6 +3,7 @@ import updateUnEquip from '../../utils/unequip.js';
 
 export const unequipHandler = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory } = user.equipment;
+  console.log(user.equipment);
 
   switch (message) {
     case 'weapon':

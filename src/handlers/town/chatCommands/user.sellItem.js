@@ -2,11 +2,6 @@ import { getItemById } from '../../../assets/item.assets.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
 
-// user 객체 내에 포션 아이템을 찾는 함수 추가
-function findPotionById(user, itemId) {
-  return user.potions.find((potion) => potion.itemId === itemId);
-}
-
 const sellItemHandler = async (user, message) => {
   const [id, quantity] = message.split(' ');
   const sellItem = getItemById(Number(id));
@@ -59,10 +54,10 @@ const sellItemHandler = async (user, message) => {
   const itemCost = sellItem.itemCost;
   // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
   if (Number(id) === sellItem.itemId) {
-    const findPotion = findPotionById(user, Number(id));
-    const findItem = user.findMountingItemByInven(Number(id));
+    const findItem = user.getItem(Number(id));
+    const findItemInfo = getItemById(Number(id));
 
-    if (!findPotion && !findItem) {
+    if (!findItem) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
         chatMsg: `[System] 인벤토리에 아이템이 존재하지 않습니다. `,
@@ -71,11 +66,11 @@ const sellItemHandler = async (user, message) => {
       return;
     }
 
-    if (findPotion && findPotion.itemType === 'potion') {
-      if (findPotion.quantity < Number(quantity)) {
+    if (findItemInfo.itemType === 'potion') {
+      if (findItem.quantity < Number(quantity)) {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
-          chatMsg: `[System] 포션을 ${findPotion.quantity}개 이상 판매할 수 없습니다. `,
+          chatMsg: `[System] 포션을 ${findItem.quantity}개 이상 판매할 수 없습니다. `,
         });
         user.socket.write(response);
         return;
@@ -83,10 +78,10 @@ const sellItemHandler = async (user, message) => {
 
       const addGold = itemCost * Number(quantity) * 0.7;
       user.setGold(user.gold + Math.floor(addGold));
-      user.decPotion(sellItem.itemId, Number(quantity));
+      user.decItem(sellItem.itemId, Number(quantity));
 
-      if (user.getPotionItemQuantity(sellItem.itemId) === 0) {
-        user.deletePotionItem(sellItem.itemId);
+      if (user.getItemQuantity(sellItem.itemId) === 0) {
+        user.deleteItem(sellItem.itemId);
       }
 
       const response = createResponse('response', 'S_Chat', {
@@ -99,7 +94,7 @@ const sellItemHandler = async (user, message) => {
       const sellItemResponse = createResponse('response', 'S_SellItem', {
         item: {
           id,
-          quantity: user.getPotionItemQuantity(id),
+          quantity: user.getItemQuantity(id),
         },
         gold: user.gold,
       });
@@ -107,7 +102,7 @@ const sellItemHandler = async (user, message) => {
       return;
     }
 
-    if (findItem && findItem.itemType !== 'potion') {
+    if (findItemInfo.itemType !== 'potion') {
       if (findItem.quantity < Number(quantity)) {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
@@ -119,10 +114,10 @@ const sellItemHandler = async (user, message) => {
 
       const addGold = itemCost * Number(quantity) * 0.7;
       user.setGold(user.gold + Math.floor(addGold));
-      user.decMountingItem(sellItem.itemId, Number(quantity));
+      user.decItem(sellItem.itemId, Number(quantity));
 
-      if (user.getMountingItemQuantity(sellItem.itemId) === 0) {
-        user.deleteMountingItem(sellItem.itemId);
+      if (user.getItemQuantity(sellItem.itemId) === 0) {
+        user.deleteItem(sellItem.itemId);
       }
 
       const response = createResponse('response', 'S_Chat', {
@@ -135,9 +130,7 @@ const sellItemHandler = async (user, message) => {
       const sellItemResponse = createResponse('response', 'S_SellItem', {
         item: {
           id,
-          quantity: user.findMountingItemByInven(id)
-            ? user.findMountingItemByInven(id).quantity
-            : 0,
+          quantity: user.getItem(id) ? user.getItem(id).quantity : 0,
         },
         gold: user.gold,
       });

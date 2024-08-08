@@ -1,3 +1,4 @@
+import { getItemById } from '../../../assets/item.assets.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
@@ -66,13 +67,13 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
       dungeon.battleSceneStatus = config.sceneStatus.confirm;
       break;
     case config.actionButton.item:
-      const items = player.potions;
-      items.sort((a, b) => a.itemId - b.itemId);
+      const items = player.getPotionItems();
       for (const item of items) {
-        if (item.quantity < 1) btns.push({ msg: item.name + ` x0`, enable: false });
-        else if (item.requireLevel > playerStatInfo.level) {
-          btns.push({ msg: item.name + ` x${item.quantity}`, enable: false });
-        } else btns.push({ msg: item.name + ` x${item.quantity}`, enable: true });
+        const itemInfo = getItemById(item.itemId);
+        if (item.quantity < 1) btns.push({ msg: itemInfo.itemName + ` x0`, enable: false });
+        else if (itemInfo.requireLevel > playerStatInfo.level) {
+          btns.push({ msg: itemInfo.itemName + ` x${itemInfo.quantity}`, enable: false });
+        } else btns.push({ msg: itemInfo.itemName + ` x${item.quantity}`, enable: true });
       }
       btns.push({ msg: '취소', enable: true });
       const itemsBattleLog = {

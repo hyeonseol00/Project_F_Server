@@ -2,11 +2,6 @@ import { getItemById } from '../../../assets/item.assets.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
 
-// user 객체 내에 포션 아이템을 찾는 함수 추가
-function findPotionById(user, itemId) {
-  return user.potions.find((potion) => potion.itemId === itemId);
-}
-
 export const useHandler = (user, message) => {
   const { hp, maxHp, mp, maxMp, level } = user.playerInfo.statInfo;
 
@@ -20,7 +15,8 @@ export const useHandler = (user, message) => {
   }
 
   const itemId = Number(message);
-  const findItem = findPotionById(user, itemId);
+  const findItem = user.getItem(itemId);
+  const findItemInfo = getItemById(itemId);
 
   if (!findItem) {
     console.log(`아이템을 찾을 수 없습니다. itemId: ${itemId}`);
@@ -32,8 +28,8 @@ export const useHandler = (user, message) => {
     return;
   }
 
-  if (findItem.itemType !== 'potion') {
-    console.log(`아이템 유형이 포션이 아닙니다. itemType: ${findItem.itemType}`);
+  if (findItemInfo.itemType !== 'potion') {
+    console.log(`아이템 유형이 포션이 아닙니다. itemType: ${findItemInfo.itemType}`);
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 사용 가능한 아이템이 아닙니다.`,
@@ -42,10 +38,8 @@ export const useHandler = (user, message) => {
     return;
   }
 
-  // `getItemById` 함수로 포션의 상세 정보를 가져옴
-  const itemInfo = getItemById(itemId);
-  const { itemHp, itemMp, requireLevel } = itemInfo;
-  const { quantity, name: itemName } = findItem;
+  const { itemHp, itemMp, requireLevel, itemName } = findItemInfo;
+  const { quantity } = findItem;
 
   console.log(
     `사용하려는 아이템: ${itemName}, HP 증가량: ${itemHp}, MP 증가량: ${itemMp}, 현재 수량: ${quantity}`,
@@ -77,21 +71,20 @@ export const useHandler = (user, message) => {
   // 상태 업데이트
   user.playerInfo.statInfo.hp = newHp;
   user.playerInfo.statInfo.mp = newMp;
-  user.decPotion(itemId, 1);
-
-  const updatedQuantity = user.getPotionItemQuantity(itemId);
-  if (updatedQuantity === 0) {
-    user.deletePotionItem(itemId);
-  }
 
   // 인벤토리 업데이트
-  const invenItem = user.findMountingItemByInven(itemId);
+  const invenItem = user.getItem(itemId);
   if (invenItem) {
     if (invenItem.quantity <= 1) {
-      user.removeItemFromInven(itemId);
+      user.deleteItem(itemId);
     } else {
-      invenItem.quantity -= 1;
+      user.decItem(itemId, 1);
     }
+  }
+
+  const updatedQuantity = user.getItemQuantity(itemId);
+  if (updatedQuantity === 0) {
+    user.deleteItem(itemId);
   }
 
   // S_UseItem 패킷 전송
