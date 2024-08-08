@@ -14,6 +14,7 @@ import moveHatcheryHandler from './hatchery/move.handler.js';
 import tryAttackHatcheryHandler from './hatchery/tryAttack.handler.js';
 import attackBossHatcheryHandler from './hatchery/attackBoss.handler.js';
 import leaveHatcheryHandler from './hatchery/leaveHatchery.handler.js';
+import playerHitHatcheryHandler from './hatchery/playerHit.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -67,6 +68,10 @@ const handlers = {
   [PACKET_TYPE.C_LeaveHatchery]: {
     handler: leaveHatcheryHandler,
     protoType: 'hatchery.C_LeaveHatchery',
+  },
+  [PACKET_TYPE.C_PlayerHit]: {
+    handler: playerHitHatcheryHandler,
+    protoType: 'hatchery.C_PlayerHit',
   },
 };
 
