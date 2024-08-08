@@ -1,6 +1,7 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { findUserByUsername } from '../../db/user/user.db.js';
+import { getUserByNickname } from '../../session/user.session.js';
 
 const loginHandler = async ({ socket, payload }) => {
   try {
@@ -23,7 +24,11 @@ const loginHandler = async ({ socket, payload }) => {
       if (!userInDB || userInDB.password !== password) {
         flag = false;
         message = '아이디 또는 비밀번호가 틀렸습니다.';
-      } else {
+      } else if(getUserByNickname(nickname)){
+        flag = false;
+        message = '이미 접속 중인 유저입니다';
+      }
+        else {
         message = '로그인을 성공했습니다.';
       }
     }
