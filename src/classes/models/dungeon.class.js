@@ -15,14 +15,14 @@ class InstanceDungeon {
     this.selectItem = null;
   }
 
-  addMonster(idx, id, hp, power, name, effectCode, exp, gold, critical, criticalAttack) {
+  addMonster(idx, id, hp, power, name, monsterEffect, exp, gold, critical, criticalAttack) {
     const monster = new Monster(
       idx,
       id,
       hp,
       power,
       name,
-      effectCode,
+      monsterEffect,
       exp,
       gold,
       critical,

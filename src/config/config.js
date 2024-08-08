@@ -7,6 +7,7 @@ import {
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
   PLAYER_MAX_LEVEL,
+  RESPAWN_HP,
   WORLD_LEVEL_1_CONFIG,
   WORLD_LEVEL_2_CONFIG,
   WORLD_LEVEL_3_CONFIG,
@@ -55,6 +56,7 @@ import {
 } from '../constants/env.js';
 import {
   BOSS_ATTACK_RANGE,
+  BOSS_ATTACK_SPEED,
   BOSS_ID,
   BOSS_INIT_TRANSFORM,
   BOSS_TARGET_INTERVAL,
@@ -169,9 +171,11 @@ export const config = {
     bossTargetIntervalId: BOSS_TARGET_INTERVAL_ID,
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
+    bossAttackSpeed: BOSS_ATTACK_SPEED,
   },
   battleScene: {
     maxLevel: PLAYER_MAX_LEVEL,
+    respawnHp: RESPAWN_HP,
   },
   worldLevels: {
     1: WORLD_LEVEL_1_CONFIG,

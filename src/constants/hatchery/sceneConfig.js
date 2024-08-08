@@ -5,3 +5,4 @@ export const BOSS_TARGET_INTERVAL_ID = 'bossTargetPlayer';
 export const BOSS_TARGET_INTERVAL = 500;
 export const BOSS_ATTACK_RANGE = 2;
 export const DROP_ITEMS_QUANTITY = 6;
+export const BOSS_ATTACK_SPEED = 3000;
