@@ -155,3 +155,41 @@ message S_UseItem{
   ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
 
+// 퀘스트 수락
+message S_AcceptQuest {
+  QuestInfo quest = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// 퀘스트 업데이트
+message S_UpdateQuest {
+  QuestInfo quest = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// 퀘스트 완료
+message S_CompleteQuest {
+  int32 questId = 1;
+  bool success = 2;
+  string message = 3;
+  QuestInfo quest = 4;
+}
+
+// 퀘스트 정보
+message QuestInfo {
+  int32 questId = 1;
+  string questName = 2;
+  string questDescription = 3;
+  int32 questStatus = 4;
+  repeated QuestObjective objectives = 5;
+}
+
+// 퀘스트 목표
+message QuestObjective {
+  int32 objectiveId = 1;
+  string description = 2;
+  int32 currentProgress = 3;
+  int32 targetProgress = 4;
+}

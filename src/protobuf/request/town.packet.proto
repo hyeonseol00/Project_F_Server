@@ -72,3 +72,19 @@ message C_UseItem{
  int32 itemId = 1;
 }
 // =======================================================
+// 퀘스트 수락
+message C_AcceptQuest {
+  int32 questId = 1;
+}
+
+// 퀘스트 업데이트
+message C_UpdateQuest {
+  int32 questId = 1;
+  int32 objectiveId = 2;
+  int32 progress = 3;
+}
+
+// 퀘스트 완료
+message C_CompleteQuest {
+  int32 questId = 1;
+}
