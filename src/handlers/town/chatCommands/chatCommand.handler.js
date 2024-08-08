@@ -152,6 +152,15 @@ export const sendMessageToTeam = (sender, message) => {
 };
 
 export const createTeamHandler = (sender, message) => {
+  if (message) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: '[System] /createTeam 만 입력해주세요.',
+    });
+    sender.socket.write(response);
+    return;
+  }
+
   const teamId = `TeamName ${Date.now()}`;
 
   // 예외처리: 1. 팀에 이미 들어간 경우
