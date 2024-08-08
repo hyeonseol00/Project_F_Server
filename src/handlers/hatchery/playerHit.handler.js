@@ -1,6 +1,6 @@
-import { getHatcherySession } from '../../session/hatchery.session';
-import { getUserBySocket } from '../../session/user.session';
-import { createResponse } from '../../utils/response/createResponse';
+import { getHatcherySession } from '../../session/hatchery.session.js';
+import { getUserBySocket } from '../../session/user.session.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 const playerHitHatcheryHandler = async ({ socket, payload }) => {
   try {
