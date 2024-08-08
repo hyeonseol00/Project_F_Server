@@ -14,10 +14,13 @@ export const onError = (socket) => (err) => {
   const hatcherySession = getHatcherySession();
 
   if (user) {
+    const sessionItems = [...user.potions, ...user.mountingItems];
+
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
 
     updateCharacterStatus(user);
+    updateCharacterItems(user.characterId, sessionItems);
   }
   removeDungeon(user.nickname);
 

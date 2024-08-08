@@ -10,7 +10,6 @@ import { getHatcherySession } from '../session/hatchery.session.js';
 export const onEnd = (socket) => () => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
-  const playerStatus = user.playerInfo.statInfo;
   const hatcherySession = getHatcherySession();
 
   if (user) {
