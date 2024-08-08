@@ -3,50 +3,37 @@ class User {
     playerId,
     nickname,
     characterClass,
-    characterId,
     socket,
-    experience,
-    normalCode,
-    singleSkillCode,
-    wideSkillCode,
+    effect,
     potions,
     mountingItems,
-    critical,
-    criticalAttack,
-    avoidAbility,
-    gold,
-    worldLevel,
-    skillPoint,
-    weapon,
-    armor,
-    gloves,
-    shoes,
-    accessory,
+    character,
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
-    this.characterId = characterId;
+    this.characterId = character.characterId;
     this.socket = socket;
-    this.experience = experience;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
     this.potions = potions;
     this.mountingItems = mountingItems;
-    this.experience = experience;
-    this.critical = critical;
-    this.criticalAttack = criticalAttack;
-    this.avoidAbility = avoidAbility;
-    this.gold = gold;
-    this.worldLevel = worldLevel;
-    this.skillPoint = skillPoint;
-    this.weapon = weapon;
-    this.armor = armor;
-    this.gloves = gloves;
-    this.shoes = shoes;
-    this.accessory = accessory;
+    this.gold = character.gold;
+    this.worldLevel = character.worldLevel;
+    this.skillPoint = character.skillPoint;
+    this.equipment = {
+      weapon: character.weapon,
+      armor: character.armor,
+      gloves: character.gloves,
+      shoes: character.shoes,
+      accessory: character.accessory,
+    };
 
-    this.effectCode = { normal: normalCode, single: singleSkillCode, wide: wideSkillCode };
+    this.effectCode = {
+      normal: effect.baseEffect,
+      single: effect.singleEffect,
+      wide: effect.wideEffect,
+    };
   }
 
   setPlayerInfo(playerInfo) {
@@ -61,7 +48,7 @@ class User {
     return { ...this.playerInfo };
   }
 
-  updatePosition(transform) {
+  setPosition(transform) {
     this.playerInfo.transform = transform;
     this.lastUpdateTime = Date.now();
   }
@@ -71,9 +58,9 @@ class User {
     this.teamId = teamId;
   }
 
-  updateLevel(level, experience) {
+  setLevel(level, experience) {
     this.playerInfo.statInfo.level = level;
-    this.experience = experience;
+    this.playerInfo.statInfo.exp = experience;
   }
 
   getPotionIdx(name) {
@@ -108,9 +95,9 @@ class User {
     return findItem;
   }
 
-  updateCriAvoid(critical, avoidAbility) {
-    this.critical = critical;
-    this.avoidAbility = avoidAbility;
+  setCriAvoid(critical, avoidAbility) {
+    this.playerInfo.statInfo.critRate = critical;
+    this.playerInfo.statInfo.avoidRate = avoidAbility;
   }
 
   pushMountingItem(item) {
@@ -138,29 +125,11 @@ class User {
     this.mountingItems[findIdx].quantity += quantity;
   }
 
-  updateItemId(itemType, itemId) {
-    switch (itemType) {
-      case 'weapon':
-        this.weapon = itemId;
-        break;
-      case 'armor':
-        this.armor = itemId;
-        break;
-      case 'gloves':
-        this.gloves = itemId;
-        break;
-      case 'shoes':
-        this.shoes = itemId;
-        break;
-      case 'accessory':
-        this.accessory = itemId;
-        break;
-      default:
-        break;
-    }
+  setItemId(itemType, itemId) {
+    this.equipment[itemType] = itemId;
   }
 
-  updateStatInfo(statInfo) {
+  setStatInfo(statInfo) {
     this.playerInfo.statInfo = statInfo;
   }
 
@@ -172,12 +141,8 @@ class User {
     return 0;
   }
 
-  plusGold(itemCost) {
-    this.gold += itemCost;
-  }
-
-  minusGold(itemCost) {
-    this.gold -= itemCost;
+  setGold(itemCost) {
+    this.gold = itemCost;
   }
 
   addPotion(itemId, quantity) {

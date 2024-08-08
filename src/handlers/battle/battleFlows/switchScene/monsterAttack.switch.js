@@ -76,7 +76,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
     }
 
     const isAvoid = Math.floor(Math.random() * 101);
-    if (isAvoid <= player.avoidAbility) {
+    if (isAvoid <= playerStatInfo.avoidRate) {
       message = `몬스터 ${monster.name}이(가) ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${monster.name}의 공격을 회피했습니다!`;
       finalDamage = 0;
       effectCode = -1;
@@ -106,8 +106,6 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
       hp: playerStatInfo.hp,
     });
     socket.write(playerHp);
-
-    // console.log('playerHp', player_statInfo.hp);
 
     dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
     dungeon.accTargetIdx();

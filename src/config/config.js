@@ -6,6 +6,14 @@ import {
 } from '../constants/battle/actionSceneButton.js';
 import { NORMAL_HIT, SINGLE_SKILL, WIDE_AREA_SKILL } from '../constants/battle/attackType.js';
 import {
+  PLAYER_MAX_LEVEL,
+  WORLD_LEVEL_1_CONFIG,
+  WORLD_LEVEL_2_CONFIG,
+  WORLD_LEVEL_3_CONFIG,
+  WORLD_LEVEL_4_CONFIG,
+  WORLD_LEVEL_5_CONFIG,
+} from '../constants/battle/battleSceneConfig.js';
+import {
   SCENE_CHOOSE_TARGET,
   SCENE_MESSAGE_WINDOW,
   SCENE_CHOOSE_ACTION,
@@ -161,5 +169,19 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
   },
-  maxLevel: 20,
+  battleScene: {
+    maxLevel: PLAYER_MAX_LEVEL,
+  },
+  worldLevels: {
+    1: WORLD_LEVEL_1_CONFIG,
+    2: WORLD_LEVEL_2_CONFIG,
+    3: WORLD_LEVEL_3_CONFIG,
+    4: WORLD_LEVEL_4_CONFIG,
+    5: WORLD_LEVEL_5_CONFIG,
+  },
+  levelThresholds: {
+    level1: 5,
+    level2: 10,
+    level3: 15,
+  },
 };

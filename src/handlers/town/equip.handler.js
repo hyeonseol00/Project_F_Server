@@ -1,10 +1,10 @@
 import isInteger from '../../utils/isInteger.js';
 import updateEquip from '../../utils/equip.js';
-import { getItemById } from '../../session/item.session.js';
+import { getItemById } from '../../assets/item.assets.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 export const equipHandler = (user, message) => {
-  const { weapon, armor, gloves, shoes, accessory } = user;
+  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
   const { level } = user.playerInfo.statInfo;
 
   if (!isInteger(message)) {
@@ -45,7 +45,8 @@ export const equipHandler = (user, message) => {
     return;
   }
 
-  if (level < findItem.requireLevel) {
+  const { itemId, itemType, name, requireLevel } = findItem;
+  if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] ${name} 장비는 레벨 ${requireLevel} 이상만 착용할 수 있습니다.`,

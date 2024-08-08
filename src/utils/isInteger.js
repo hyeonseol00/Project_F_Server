@@ -1,11 +1,17 @@
-//입력이 정수인지 확인하는 함수
-function isInteger(string) {
-  string += ''; // 문자열로 변환
-  string = string.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
-  if (string === '' || isNaN(string)) return false; // 빈 문자열이거나 숫자가 아닌 경우 false 반환
+// Lodash 라이브러리를 가져옵니다.
+import _ from 'lodash';
 
-  const num = Number(string);
-  return Number.isInteger(num); // 정수인지 확인
+// 입력이 정수인지 확인하는 함수
+function isInteger(string) {
+  // 입력을 문자열로 변환하고 양쪽 공백을 제거합니다.
+  const trimmedString = _.trim(string);
+
+  // 문자열이 빈 문자열이거나 숫자가 아니면 false를 반환합니다.
+  if (trimmedString === '' || _.isNaN(trimmedString)) return false;
+
+  // 숫자로 변환 후 정수인지 확인합니다.
+  const num = Number(trimmedString);
+  return _.isInteger(num);
 }
 
 export default isInteger;

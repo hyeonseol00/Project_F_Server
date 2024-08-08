@@ -1,16 +1,18 @@
 -- 외래키 문제로 데이터 먼저 삭제
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE Levels;
-DROP TABLE Dungeons;
-DROP TABLE Dungeon_Monsters;
-DROP TABLE Dungeon_Items;
-DROP TABLE Effects;
-DROP TABLE Monsters;
-DROP TABLE Items;
+DROP TABLE levels;
+DROP TABLE dungeons;
+DROP TABLE dungeon_monsters;
+DROP TABLE dungeon_items;
+DROP TABLE effects;
+DROP TABLE monsters;
+DROP TABLE items;
+DROP TABLE shops;
+DROP TABLE shop_Items;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-CREATE TABLE IF NOT EXISTS Effects
+CREATE TABLE IF NOT EXISTS effects
 (
   effect_id INTEGER NOT NULL PRIMARY KEY,
   effect_name VARCHAR(100) NOT NULL,
@@ -20,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Effects
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Dungeons
+CREATE TABLE IF NOT EXISTS dungeons
 (
   dungeon_id INTEGER NOT NULL PRIMARY KEY,
   dungeon_name VARCHAR(100) NOT NULL,
@@ -30,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Dungeons
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Monsters
+CREATE TABLE IF NOT EXISTS monsters
 (
   monster_id INTEGER NOT NULL PRIMARY KEY,
   monster_name VARCHAR(100) NOT NULL,
@@ -46,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Monsters
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Dungeon_Monsters
+CREATE TABLE IF NOT EXISTS dungeon_monsters
 (
   dungeon_monster_id INTEGER NOT NULL PRIMARY KEY,
   dungeon_id INTEGER,
@@ -55,11 +57,11 @@ CREATE TABLE IF NOT EXISTS Dungeon_Monsters
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (dungeon_id) REFERENCES Dungeons(dungeon_id),
-  FOREIGN KEY (monster_id) REFERENCES Monsters(monster_id)
+  FOREIGN KEY (dungeon_id) REFERENCES dungeons(dungeon_id),
+  FOREIGN KEY (monster_id) REFERENCES monsters(monster_id)
 );
 
-CREATE TABLE IF NOT EXISTS Shops
+CREATE TABLE IF NOT EXISTS shops
 (
   shop_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   shop_name VARCHAR(100) UNIQUE NOT NULL,
@@ -69,7 +71,7 @@ CREATE TABLE IF NOT EXISTS Shops
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Items
+CREATE TABLE IF NOT EXISTS items
 (
   item_id INTEGER PRIMARY KEY,
   item_name VARCHAR(100) NOT NULL,
@@ -91,7 +93,7 @@ CREATE TABLE IF NOT EXISTS Items
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Shop_Items
+CREATE TABLE IF NOT EXISTS shop_items
 (
   shop_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   shop_id INTEGER,
@@ -102,11 +104,11 @@ CREATE TABLE IF NOT EXISTS Shop_Items
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (shop_id) REFERENCES Shops(shop_id),
-  FOREIGN KEY (item_id) REFERENCES Items(item_id)
+  FOREIGN KEY (shop_id) REFERENCES shops(shop_id),
+  FOREIGN KEY (item_id) REFERENCES items(item_id)
 );
 
-CREATE TABLE IF NOT EXISTS Dungeon_Items
+CREATE TABLE IF NOT EXISTS dungeon_items
 (
   dungeon_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   dungeon_id INTEGER NOT NULL,
@@ -118,7 +120,7 @@ CREATE TABLE IF NOT EXISTS Dungeon_Items
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Levels
+CREATE TABLE IF NOT EXISTS levels
 (
   level_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   required_exp INTEGER NOT NULL,
@@ -141,7 +143,7 @@ CREATE TABLE IF NOT EXISTS Levels
 -- 데이터 삽입
 
 -- 레벨 데이터 삽입
-INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, critical, critical_attack, avoid_ability, world_level ,skill_point) VALUES 
+INSERT INTO levels (level_id, required_exp, hp, mp, attack, defense, magic, speed, critical, critical_attack, avoid_ability, world_level ,skill_point) VALUES 
 (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
 (2, 100, 10, 10, 2, 2, 2, 2, 1, 1, 1, 1, 1),
 (3, 250, 10, 10, 2, 2, 2, 2, 1, 1, 1, 1, 1),
@@ -164,7 +166,7 @@ INSERT INTO Levels (level_id, required_exp, hp, mp, attack, defense, magic, spee
 (20, 10450, 60, 60, 12, 12, 12, 12, 2, 2, 2, 5, 2);
 
 -- 던전 데이터 삽입
-INSERT INTO Dungeons (dungeon_id, dungeon_name, required_level) VALUES
+INSERT INTO dungeons (dungeon_id, dungeon_name, required_level) VALUES
 (5001, "바람부는 평원", 1),
 (5002, "얼어붙은 언덕", 1),
 (5003, "만년설산", 1),
@@ -173,7 +175,7 @@ INSERT INTO Dungeons (dungeon_id, dungeon_name, required_level) VALUES
 (5006, "결투장", 1);
 
 -- 몬스터 데이터 삽입 (*외래키 문제로 Dungeon_Monsters 보다 먼저 삽입되야 함*)
-INSERT INTO Monsters (monster_id, monster_name, monster_hp, monster_attack, monster_exp, monster_effect , monster_gold, monster_critical, monster_critical_attack) VALUES
+INSERT INTO monsters (monster_id, monster_name, monster_hp, monster_attack, monster_exp, monster_effect , monster_gold, monster_critical, monster_critical_attack) VALUES
 (2001, "빨간버섯", 300, 60, 10, 3005 , 100, 10, 150),
 (2002, "외눈슬라임", 300, 60, 10, 3005 , 100, 10, 150),
 (2003, "가시외눈달팽이", 300, 60, 10, 3004 , 100, 10, 150),
@@ -205,7 +207,7 @@ INSERT INTO Monsters (monster_id, monster_name, monster_hp, monster_attack, mons
 (2029, "리저드킹", 3000, 180, 300, 3027 , 5000, 30, 150);
 
 -- 던전 별 출현 몬스터 데이터 삽입
-INSERT INTO Dungeon_Monsters (dungeon_monster_id, dungeon_id, monster_id) VALUES
+INSERT INTO dungeon_monsters (dungeon_monster_id, dungeon_id, monster_id) VALUES
 (1, 5001, 2001),
 (2, 5001, 2002),
 (3, 5001, 2003),
@@ -235,7 +237,7 @@ INSERT INTO Dungeon_Monsters (dungeon_monster_id, dungeon_id, monster_id) VALUES
 (27, 5005, 2029);
 
 -- 이펙트 데이터 삽입
-INSERT INTO Effects (effect_id, effect_name, effect_type) VALUES
+INSERT INTO effects (effect_id, effect_name, effect_type) VALUES
 (3001, "Effect1", "단일 대상"),
 (3002, "Effect2", "단일 대상"),
 (3003, "Effect3", "단일 대상"),
@@ -265,7 +267,7 @@ INSERT INTO Effects (effect_id, effect_name, effect_type) VALUES
 (3027, "Effect27", "전체 대상");
 
 -- 장착 아이템 데이터 삽입
-INSERT INTO Items (item_id, item_name, item_description, item_type, item_hp, item_mp, item_attack, item_defense, item_magic, item_speed, item_cost, require_level, item_avoidance, item_critical, can_sell)
+INSERT INTO items (item_id, item_name, item_description, item_type, item_hp, item_mp, item_attack, item_defense, item_magic, item_speed, item_cost, require_level, item_avoidance, item_critical, can_sell)
 VALUES 
 (1, '초심자의 USB', '', 'accessory', 100, 100, 0, 50, 0, 0, 1000, 1, 0, 0, 1),
 (2, '불꽃의 USB', '', 'accessory', 200, 100, 0, 100, 50, 0, 5000, 5, 0.05, 0, 1),
@@ -321,7 +323,7 @@ VALUES
 
 
 -- 던전 별 보상 아이템 데이터 삽입
-INSERT INTO `Dungeon_Items` (dungeon_item_id, dungeon_id, item_id, is_potion, item_probability) VALUES
+INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, item_id, is_potion, item_probability) VALUES
 (1, 5001, 46, true, 30),
 (2, 5001, 47, true, 30),
 (3, 5001, 48, true, 30),

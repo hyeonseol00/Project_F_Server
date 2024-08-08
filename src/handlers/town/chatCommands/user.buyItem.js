@@ -1,7 +1,7 @@
-import { getItemById } from '../../session/item.session.js';
-import Item from '../../classes/models/item.class.js';
-import { createResponse } from '../../utils/response/createResponse.js';
-import isInteger from '../../utils/isInteger.js';
+import { getItemById } from '../../../assets/item.assets.js';
+import Item from '../../../classes/models/item.class.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
+import isInteger from '../../../utils/isInteger.js';
 
 // user 객체 내에 포션 아이템을 찾는 함수 추가
 function findPotionById(user, itemId) {
@@ -67,22 +67,13 @@ const buyItemHandler = async (user, message) => {
       // 소비 아이템
       const potionIdx = user.getPotionIdx(buyItem.itemName);
       if (potionIdx === -1) {
-        potion = new Item(
-          buyItem.itemId,
-          buyItem.itemType,
-          buyItem.itemName,
-          buyItem.itemHp,
-          buyItem.itemMp,
-          buyItem.requireLevel,
-          Number(quantity),
-          buyItem,
-        );
+        potion = new Item(Number(quantity), buyItem);
         user.pushPotionItem(potion);
       } else {
         user.addPotion(buyItem.itemId, Number(quantity));
       }
 
-      user.minusGold(itemCost);
+      user.setGold(user.gold - itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
       potion = findPotionById(user, buyItem.itemId);
@@ -113,22 +104,13 @@ const buyItemHandler = async (user, message) => {
       let item = null;
       const itemInx = user.getMountingItemIdx(buyItem.itemName);
       if (itemInx === -1) {
-        item = new Item(
-          buyItem.itemId,
-          buyItem.itemType,
-          buyItem.itemName,
-          buyItem.itemHp,
-          buyItem.itemMp,
-          buyItem.requireLevel,
-          Number(quantity),
-          buyItem,
-        );
+        item = new Item(Number(quantity), buyItem);
         user.pushMountingItem(item);
       } else {
         user.addMountingItem(buyItem.itemId, Number(quantity));
         item = user.findMountingItemByInven(buyItem.itemId);
       }
-      user.minusGold(itemCost);
+      user.setGold(user.gold - itemCost);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,

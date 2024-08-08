@@ -11,8 +11,8 @@ const attackBossHatchery = async ({ socket, payload }) => {
     let decreaseHp = playerStatInfo.atk;
 
     const isCritical = Math.floor(Math.random() * 101);
-    if (isCritical <= player.critical) {
-      const criticalRate = player.criticalAttack / 100;
+    if (isCritical <= playerStatInfo.critRate) {
+      const criticalRate = playerStatInfo.critDmg / 100;
       decreaseHp = playerStatInfo.atk * criticalRate;
     }
 

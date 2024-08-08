@@ -2,13 +2,11 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
-import {
-  findMonsterByMonsters,
-  findMonstersByDungeonMonsters,
-  getMonsterEffect,
-} from '../../db/game/game.db.js';
+import { getMonsterEffectById } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
+import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
+import { getMonsterById } from '../../assets/monster.assets.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -21,50 +19,21 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const dungeon = addDungeon(nickname, player, dungeonCode);
     gameSession.removeUser(user.playerId);
 
-    const monsters = await findMonstersByDungeonMonsters(dungeonCode + 5000);
+    const monsters = getMonsterByDungeonId(dungeonCode + 5000);
 
-    let hpRating = 0;
-    let attackRating = 0;
-    let expRating = 0;
-    let goldRating = 0;
-    switch (player.worldLevel) {
-      case 1:
-        hpRating = 1;
-        attackRating = 1;
-        expRating = 1;
-        goldRating = 1;
-        break;
-      case 2:
-        hpRating = 1.2;
-        attackRating = 1.2;
-        expRating = 1.2;
-        goldRating = 1.2;
-        break;
-      case 3:
-        hpRating = 1.5;
-        attackRating = 1.5;
-        expRating = 1.5;
-        goldRating = 1.5;
-        break;
-      case 4:
-        hpRating = 2;
-        attackRating = 2;
-        expRating = 2;
-        goldRating = 2;
-        break;
-      case 5:
-        hpRating = 3;
-        attackRating = 3;
-        expRating = 3;
-        goldRating = 3;
-        break;
-    }
+    const worldLevels = config.worldLevels;
+
+    const {
+      hpRating = 1,
+      attackRating = 1,
+      expRating = 1,
+      goldRating = 1,
+    } = worldLevels[user.worldLevel] || {};
 
     const monsterStatus = [];
+
     for (let i = 0; i < 3; i++) {
-      const monsterDB = await findMonsterByMonsters(
-        monsters[Math.floor(Math.random() * monsters.length)].monsterId,
-      );
+      const monsterDB = monsters[Math.floor(Math.random() * monsters.length)].monsterId;
       const {
         monsterId,
         monsterHp,
@@ -74,8 +43,9 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterGold,
         monsterCritical,
         monsterCriticalAttack,
-      } = monsterDB;
-      const effectCode = await getMonsterEffect(monsterId);
+      } = getMonsterById(monsterDB);
+
+      const effectCode = await getMonsterEffectById(monsterId);
 
       const monster = {
         monsterIdx: i,

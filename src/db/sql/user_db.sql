@@ -1,10 +1,10 @@
 -- 외래키 문제로 데이터 먼저 삭제
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE Jobs;
-DROP TABLE Characters;
+DROP TABLE jobs;
+DROP TABLE characters;
 SET FOREIGN_KEY_CHECKS = 1;
 
-CREATE TABLE IF NOT EXISTS Jobs
+CREATE TABLE IF NOT EXISTS jobs
 (
   job_id INTEGER NOT NULL PRIMARY KEY,
   job_name VARCHAR(50) NOT NULL UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Jobs
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Users
+CREATE TABLE IF NOT EXISTS users
 (
   user_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Users
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Characters
+CREATE TABLE IF NOT EXISTS characters
 (
   character_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_id INTEGER,
@@ -67,11 +67,11 @@ CREATE TABLE IF NOT EXISTS Characters
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (user_id) REFERENCES Users(user_id),
-  FOREIGN KEY (job_id) REFERENCES Jobs(job_id)
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (job_id) REFERENCES jobs(job_id)
 );
 
-CREATE TABLE IF NOT EXISTS Character_Items
+CREATE TABLE IF NOT EXISTS character_Items
 (
   character_item_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   character_id INTEGER,
@@ -81,13 +81,13 @@ CREATE TABLE IF NOT EXISTS Character_Items
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (character_id) REFERENCES Characters(character_id)
+  FOREIGN KEY (character_id) REFERENCES characters(character_id)
 );
 
 -- 데이터 삽입
 
 -- Jobs 데이터 삽입
-INSERT INTO Jobs (job_id , job_name , base_hp, base_mp, base_attack, base_defense, base_magic, base_speed, base_critical, base_critical_attack, base_avoid_ability, wide_effect, base_effect, single_effect ) VALUE 
+INSERT INTO jobs (job_id , job_name , base_hp, base_mp, base_attack, base_defense, base_magic, base_speed, base_critical, base_critical_attack, base_avoid_ability, wide_effect, base_effect, single_effect ) VALUE 
 ( 1001, "섭르탄" , 1000, 40 , 50 , 80 , 100 , 10 , 5, 150, 5, 3024, 3004, 3012 ),
 ( 1002, "클르탄" , 500, 60 , 80 , 40 , 100 , 10 , 5, 150, 5, 3024 , 3004 , 3001),
 ( 1003, "디르탄" , 600 , 90 , 40, 60 , 100 , 10 , 5, 150, 5, 3024, 3004, 3015),

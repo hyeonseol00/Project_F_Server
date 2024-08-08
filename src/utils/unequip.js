@@ -1,14 +1,16 @@
-import { getItemById } from '../session/item.session.js';
+import { getItemById } from '../assets/item.assets.js';
 import { createResponse } from './response/createResponse.js';
 import Item from '../classes/models/item.class.js';
 
 let statInfo;
+const quantity = 1;
+const itemId = 0;
 function updateUnEquip(uneqipItem, user) {
-  const { critical, avoidAbility } = user;
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+    user.playerInfo.statInfo;
 
   const uneqipItemInfo = getItemById(uneqipItem);
-  user.updateItemId(uneqipItemInfo.itemType, 0);
+  user.setItemId(uneqipItemInfo.itemType, itemId);
 
   statInfo = {
     level,
@@ -22,27 +24,18 @@ function updateUnEquip(uneqipItem, user) {
     speed: speed - uneqipItemInfo.itemSpeed,
   };
 
-  const updateCritical = critical - uneqipItemInfo.itemCritical;
-  const updateAvoidAbility = avoidAbility - uneqipItemInfo.itemAvoidance;
+  const updateCritical = critRate - uneqipItemInfo.itemCritical;
+  const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
 
-  user.updateStatInfo(statInfo);
-  user.updateCriAvoid(updateCritical, updateAvoidAbility);
+  user.setStatInfo(statInfo);
+  user.setCriAvoid(updateCritical, updateAvoidAbility);
 
   const isInven = user.findMountingItemByInven(uneqipItemInfo.itemId);
   if (!isInven) {
-    const item = new Item(
-      uneqipItemInfo.itemId,
-      uneqipItemInfo.itemType,
-      uneqipItemInfo.itemName,
-      uneqipItemInfo.itemHp,
-      uneqipItemInfo.itemMp,
-      uneqipItemInfo.requireLevel,
-      1,
-      uneqipItemInfo,
-    );
+    const item = new Item(quantity, uneqipItemInfo);
     user.pushMountingItem(item);
   } else {
-    user.addMountingItem(uneqipItemInfo.itemId, 1);
+    user.addMountingItem(uneqipItemInfo.itemId, quantity);
   }
 
   const response = createResponse('response', 'S_Chat', {

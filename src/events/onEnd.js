@@ -7,44 +7,19 @@ import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
 import { getHatcherySession } from '../session/hatchery.session.js';
 
-export const onEnd = (socket) => async () => {
+export const onEnd = (socket) => () => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(config.session.townId);
-  const playerStatus = user.playerInfo.statInfo;
   const hatcherySession = getHatcherySession();
 
   if (user) {
-    await updateCharacterStatus(
-      playerStatus.level,
-      user.experience,
-      playerStatus.hp,
-      playerStatus.maxHp,
-      playerStatus.mp,
-      playerStatus.maxMp,
-      playerStatus.atk,
-      playerStatus.def,
-      playerStatus.magic,
-      // user.speed,
-      playerStatus.speed,
-      user.critical,
-      user.criticalAttack,
-      user.avoidAbility,
-      user.gold,
-      user.skillPoint,
-      user.weapon,
-      user.armor,
-      user.gloves,
-      user.shoes,
-      user.accessory,
-      user.nickname,
-      user.characterClass,
-    );
-
     const sessionItems = [...user.potions, ...user.mountingItems];
-    await updateCharacterItems(user.characterId, sessionItems);
 
     gameSession.removeUser(user.playerId);
     hatcherySession.removePlayer(user.nickname);
+
+    updateCharacterStatus(user);
+    updateCharacterItems(user.characterId, sessionItems);
   }
   removeDungeon(user.nickname);
 

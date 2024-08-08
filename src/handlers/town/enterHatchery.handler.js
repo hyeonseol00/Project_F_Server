@@ -5,7 +5,7 @@ import { getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const enterHatcheryHandler = async ({ socket, payload }) => {
+const enterHatcheryHandler = ({ socket, payload }) => {
   try {
     const gameSession = getGameSession(config.session.townId);
     const hatcherySession = getHatcherySession();

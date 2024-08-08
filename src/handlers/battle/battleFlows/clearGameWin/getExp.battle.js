@@ -1,6 +1,6 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
-import { getLevelById } from '../../../../session/level.session.js';
+import { getLevelById } from '../../../../assets/level.assets.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
@@ -12,13 +12,12 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     const playerLevel = playerStatus.level; // 유저의 현재 레벨
 
     let levelTable;
-    if (playerLevel < config.maxLevel) {
+    if (playerLevel < config.battleScene.maxLevel) {
       levelTable = getLevelById(playerLevel + 1);
     } else {
       levelTable = getLevelById(1);
     }
     const {
-      levelId,
       requiredExp,
       hp,
       mp,
@@ -39,10 +38,10 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       monsterExp += monster.exp;
       gold += monster.gold;
     }
-    const playerExp = monsterExp + player.experience;
+    const playerExp = monsterExp + playerStatus.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
-    if (requiredExp <= playerExp && playerLevel < config.maxLevel) {
-      player.updateLevel(playerLevel + 1, playerExp - requiredExp);
+    if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
+      player.setLevel(playerLevel + 1, playerExp - requiredExp);
       playerStatus.maxHp += hp;
       playerStatus.maxMp += mp;
       playerStatus.hp = playerStatus.maxHp;
@@ -51,11 +50,15 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       playerStatus.def += defense;
       playerStatus.magic += magic;
       playerStatus.speed += speed;
-      player.critical += critical;
-      player.criticalAttack += criticalAttack;
-      player.avoidAbility += avoidAbility;
+      playerStatus.critRate += critical;
+      playerStatus.critDmg += criticalAttack;
+      playerStatus.avoidRate += avoidAbility;
       player.gold += gold;
       player.skillPoint += skillPoint;
+
+      if ((playerLevel + 1) % 5 === 0) {
+        player.worldLevel++;
+      }
 
       const message = `경험치 ${monsterExp}, 골드 ${gold}, 스킬포인트 ${skillPoint}를 획득했습니다!\n
 레벨 ${playerLevel + 1}이 되었습니다!\n
@@ -68,7 +71,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         btns,
       };
     } else {
-      player.experience += monsterExp;
+      playerStatus.exp += monsterExp;
       player.gold += gold;
 
       battleLog = {

@@ -8,13 +8,13 @@ import {
   acceptTeamHandler,
   kickMemberHandler,
   sendTeamList,
-} from './town/chatCommand.handler.js';
+} from './town/chatCommands/chatCommand.handler.js';
 import { equipHandler } from './town/equip.handler.js';
-import buyItemHandler from './town/user.buyItem.js';
-import sellItemHandler from './town/user.sellItem.js';
+import buyItemHandler from './town/chatCommands/user.buyItem.js';
+import sellItemHandler from './town/chatCommands/user.sellItem.js';
 import { unequipHandler } from './town/unequip.handler.js';
 import { skillPointHandler } from './town/skillPoint.handler.js';
-import useHandler from './town/use.handler.js';
+import useHandler from './town/chatCommands/use.handler.js';
 
 const chatCommands = new Map([
   // ---------common cmd begin------------
@@ -36,6 +36,7 @@ const chatCommands = new Map([
   ['unequip', unequipHandler],
   ['ueq', unequipHandler],
   ['upAbility', skillPointHandler],
+  ['use', useHandler],
 ]);
 
 export default chatCommands;

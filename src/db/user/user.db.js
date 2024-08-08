@@ -64,20 +64,6 @@ export const getJobInfo = async (jobId) => {
   return toCamelCase(rows[0]);
 };
 
-export const findMonstersByDungeonMonsters = async (dungeonId) => {
-  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_MONSTERS_BY_DUNGEON_MONSTERS, [
-    dungeonId,
-  ]);
-
-  return toCamelCase(rows);
-};
-
-export const findMonsterByMonsters = async (monsterId) => {
-  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_MONSTER_BY_MONSTERS, [monsterId]);
-
-  return toCamelCase(rows[0]);
-};
-
 export const findJobById = async (jobId) => {
   const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_JOB_BY_ID, [jobId]);
 
@@ -108,52 +94,37 @@ export const getCharacterWideEffectCode = async (jobId) => {
   return toCamelCase(rows[0]).wideEffect;
 };
 
-export const updateCharacterStatus = async (
-  characterLevel,
-  experience,
-  curHp,
-  maxHp,
-  curMp,
-  maxMp,
-  attack,
-  defense,
-  magic,
-  speed,
-  critical,
-  criticalAttack,
-  avoidAbility,
-  gold,
-  skillPoint,
-  weapon,
-  armor,
-  gloves,
-  shoes,
-  accessory,
-  characterName,
-  jobId,
-) => {
+export const updateCharacterStatus = async (user) => {
+  const statInfo = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, speed, critRate, critDmg, avoidRate, exp, def, magic } =
+    statInfo;
+
+  const { nickname, characterClass, gold, worldLevel, skillPoint } = user;
+  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
+
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
-    characterLevel,
-    experience,
-    curHp,
+    level,
+    exp,
+    hp,
     maxHp,
-    curMp,
+    mp,
     maxMp,
-    attack,
-    defense,
+    atk,
+    def,
     magic,
     speed,
-    critical,
-    criticalAttack,
-    avoidAbility,
+    critRate,
+    critDmg,
+    avoidRate,
     gold,
+    worldLevel,
     skillPoint,
     weapon,
     armor,
     gloves,
     shoes,
     accessory,
-    characterName,
-    jobId,
+    nickname,
+    characterClass,
   ]);
 };

@@ -1,11 +1,12 @@
 import Item from '../classes/models/item.class.js';
 import { createResponse } from './response/createResponse.js';
-import { getItemById } from '../session/item.session.js';
+import { getItemById } from '../assets/item.assets.js';
 
 let statInfo;
+const quantity = 1;
 function updateEquip(equippedItem, findItem, user) {
-  const { critical, avoidAbility } = user;
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+    user.playerInfo.statInfo;
 
   const {
     itemId,
@@ -23,7 +24,7 @@ function updateEquip(equippedItem, findItem, user) {
 
   if (equippedItem !== 0) {
     const equippedItemInfo = getItemById(equippedItem);
-    user.updateItemId(itemType, itemId);
+    user.setItemId(itemType, itemId);
 
     statInfo = {
       level,
@@ -39,37 +40,28 @@ function updateEquip(equippedItem, findItem, user) {
       speed: speed + addSpeed - equippedItemInfo.itemSpeed,
     };
 
-    const updateCritical = critical + addCritical - equippedItemInfo.itemCritical;
-    const updateAvoidAbility = avoidAbility + addAvoidance - equippedItemInfo.itemAvoidance;
+    const updateCritical = critRate + addCritical - equippedItemInfo.itemCritical;
+    const updateAvoidAbility = avoidRate + addAvoidance - equippedItemInfo.itemAvoidance;
 
-    user.updateStatInfo(statInfo);
-    user.updateCriAvoid(updateCritical, updateAvoidAbility);
+    user.setStatInfo(statInfo);
+    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
     const isInven = user.findMountingItemByInven(equippedItem);
     const itemInfo = getItemById(equippedItem);
     if (!isInven) {
-      const item = new Item(
-        itemInfo.itemId,
-        itemInfo.itemType,
-        itemInfo.itemName,
-        itemInfo.itemHp,
-        itemInfo.itemMp,
-        itemInfo.requireLevel,
-        1,
-        itemInfo,
-      );
+      const item = new Item(quantity, itemInfo);
       user.pushMountingItem(item);
       if (user.getMountingItemQuantity(itemId) === 1) {
         user.deleteMountingItem(itemId);
       } else {
-        user.decMountingItem(itemId, 1);
+        user.decMountingItem(itemId, quantity);
       }
     } else {
-      user.addMountingItem(isInven.itemId, 1);
+      user.addMountingItem(isInven.itemId, quantity);
       if (user.getMountingItemQuantity(itemId) === 1) {
         user.deleteMountingItem(itemId);
       } else {
-        user.decMountingItem(itemId, 1);
+        user.decMountingItem(itemId, quantity);
       }
     }
 
@@ -79,7 +71,7 @@ function updateEquip(equippedItem, findItem, user) {
     });
     user.socket.write(response);
   } else {
-    user.updateItemId(itemType, itemId);
+    user.setItemId(itemType, itemId);
 
     statInfo = {
       level,
@@ -93,16 +85,16 @@ function updateEquip(equippedItem, findItem, user) {
       speed: speed + addSpeed,
     };
 
-    const updateCritical = critical + addCritical;
-    const updateAvoidAbility = avoidAbility + addAvoidance;
+    const updateCritical = critRate + addCritical;
+    const updateAvoidAbility = avoidRate + addAvoidance;
 
-    user.updateStatInfo(statInfo);
-    user.updateCriAvoid(updateCritical, updateAvoidAbility);
+    user.setStatInfo(statInfo);
+    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
     if (user.getMountingItemQuantity(itemId) === 1) {
       user.deleteMountingItem(itemId);
     } else {
-      user.decMountingItem(itemId, 1);
+      user.decMountingItem(itemId, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {
