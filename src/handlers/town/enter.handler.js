@@ -52,13 +52,13 @@ const enterTownHandler = async ({ socket, payload }) => {
     };
 
     const equipment = {
-      weapon: curUser.weapon,
-      armor: curUser.armor,
-      gloves: curUser.gloves,
-      shoes: curUser.shoes,
-      accessory: curUser.accessory,
+      weapon: curUser.equipment.weapon,
+      armor: curUser.equipment.armor,
+      gloves: curUser.equipment.gloves,
+      shoes: curUser.equipment.shoes,
+      accessory: curUser.equipment.accessory,
     };
-
+    
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
