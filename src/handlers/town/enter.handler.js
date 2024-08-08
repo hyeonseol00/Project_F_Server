@@ -1,4 +1,3 @@
-import { getItemById } from '../../assets/item.assets.js';
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
 import { getUserItemsByCharacterId } from '../../db/user/items/items.db.js';
@@ -29,19 +28,15 @@ const enterTownHandler = async ({ socket, payload }) => {
       userInfo = await getUserInfoFromDB(socket, nickname, characterClass);
     } else {
       // 첫 접속이 아닌 town으로 다시 돌아온 경우 세션 불러오고, DB에 저장
-      userInfo = await getUserInfoFromSessionAndUpdateDB(userExist);
+      userInfo = await getUserInfoFromSession(userExist);
     }
     const curUser = userInfo.curUser;
     const statInfo = userInfo.statInfo;
 
     const items = [
-      ...curUser.mountingItems.map((item) => ({
+      ...curUser.items.map((item) => ({
         id: item.itemId,
         quantity: item.quantity,
-      })),
-      ...curUser.potions.map((potion) => ({
-        id: potion.itemId,
-        quantity: potion.quantity,
       })),
     ];
 
@@ -120,10 +115,6 @@ const enterTownHandler = async ({ socket, payload }) => {
 const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   // DB에서 user, character 정보 가져오기
   let userInDB = await findUserByUsername(nickname);
-  if (!userInDB) {
-    await insertUserByUsername(nickname);
-    userInDB = await findUserByUsername(nickname);
-  }
 
   // character 처음 생성하는 거면 character DB에 추가
   let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
@@ -134,32 +125,16 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
   const effect = await getJobInfo(character.jobId);
 
-  const userItems = await getUserItemsByCharacterId(character.characterId);
-  const userPotions = [];
-  const userMountingItems = [];
-  for (const userItem of userItems) {
-    const itemInfo = getItemById(userItem.itemId);
-    const item = new Item(userItem.quantity, itemInfo);
-    if (itemInfo.itemType === 'potion') {
-      // 소비 아이템
-      userPotions.push(item);
-    } else {
-      // 장착 아이템
-      userMountingItems.push(item);
-    }
+  const userItemInDB = await getUserItemsByCharacterId(character.characterId);
+  const userItems = [];
+  for (const userItem of userItemInDB) {
+    const item = new Item(userItem.itemId, userItem.quantity);
+    userItems.push(item);
   }
 
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-  const curUser = addUser(
-    socket,
-    nickname,
-    characterClass,
-    effect,
-    userPotions,
-    userMountingItems,
-    character,
-  );
+  const curUser = addUser(socket, nickname, characterClass, effect, userItems, character);
 
   const statInfo = {
     level: character.characterLevel,
@@ -180,22 +155,14 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   return { curUser, statInfo };
 };
 
-const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
+const getUserInfoFromSession = async (userExist) => {
   const curUser = userExist;
 
-  // user 세션의 potions중 quantity 0인 potion 삭제
-  for (let i = curUser.potions.length - 1; i >= 0; i--) {
-    const potion = curUser.potions[i];
-    if (potion.quantity === 0) {
-      curUser.potions.splice(i, 1);
-    }
-  }
-
-  // user 세션의 mountingItems중 quantity 0인 item 삭제
-  for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
-    const item = curUser.mountingItems[i];
+  // user 세션의 items중 quantity 0인 item 삭제
+  for (let i = curUser.items.length - 1; i >= 0; i--) {
+    const item = curUser.items[i];
     if (item.quantity === 0) {
-      curUser.mountingItems.splice(i, 1);
+      curUser.item.splice(i, 1);
     }
   }
 

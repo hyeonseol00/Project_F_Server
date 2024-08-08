@@ -61,6 +61,7 @@ import {
   BOSS_INIT_TRANSFORM,
   BOSS_TARGET_INTERVAL,
   BOSS_TARGET_INTERVAL_ID,
+  DROP_ITEMS_QUANTITY,
   MAX_PLAYERS,
 } from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
@@ -187,5 +188,8 @@ export const config = {
     level1: 5,
     level2: 10,
     level3: 15,
+  },
+  dropItem: {
+    quantity: DROP_ITEMS_QUANTITY,
   },
 };

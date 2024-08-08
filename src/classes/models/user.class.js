@@ -1,14 +1,5 @@
 class User {
-  constructor(
-    playerId,
-    nickname,
-    characterClass,
-    socket,
-    effect,
-    potions,
-    mountingItems,
-    character,
-  ) {
+  constructor(playerId, nickname, characterClass, socket, effect, items, character) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
@@ -16,8 +7,7 @@ class User {
     this.socket = socket;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
-    this.potions = potions;
-    this.mountingItems = mountingItems;
+    this.items = items;
     this.gold = character.gold;
     this.worldLevel = character.worldLevel;
     this.skillPoint = character.skillPoint;
@@ -63,66 +53,49 @@ class User {
     this.playerInfo.statInfo.exp = experience;
   }
 
-  getPotionIdx(name) {
-    for (const potionIdx in this.potions) {
-      if (this.potions[potionIdx].name === name) {
-        return potionIdx;
-      }
-    }
-    return -1;
-  }
-
   getPotionsAccount() {
     let count = 0;
-    for (const potion of this.potions) {
-      count += potion.quantity;
+    for (const item of this.items) {
+      if (item.isPotion === false) continue;
+      count += item.quantity;
     }
     return count;
   }
 
-  getMountingItemIdx(name) {
-    for (const itemIdx in this.mountingItems) {
-      if (this.mountingItems[itemIdx].name === name) {
+  getItemIdx(itemId) {
+    for (const itemIdx in this.items) {
+      if (this.items[itemIdx].itemId === itemId) {
         return itemIdx;
       }
     }
     return -1;
   }
 
-  findMountingItemByInven(itemId) {
-    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
+  getItem(itemId) {
+    const findItem = this.items.find((item) => item.itemId === itemId);
 
     return findItem;
   }
 
-  setCriAvoid(critical, avoidAbility) {
-    this.playerInfo.statInfo.critRate = critical;
-    this.playerInfo.statInfo.avoidRate = avoidAbility;
+  pushItem(item) {
+    this.items.push(item);
   }
 
-  pushMountingItem(item) {
-    this.mountingItems.push(item);
-  }
-
-  pushPotionItem(item) {
-    this.potions.push(item);
-  }
-
-  deleteMountingItem(itemId) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
+  deleteItem(itemId) {
+    const findIdx = this.items.findIndex((item) => item.itemId === itemId);
     if (findIdx !== -1) {
-      this.mountingItems.splice(findIdx, 1);
+      this.items.splice(findIdx, 1);
     }
   }
 
-  decMountingItem(itemId, quantity) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity -= quantity;
+  decItem(itemId, quantity) {
+    const findIdx = this.items.findIndex((item) => item.itemId === itemId);
+    this.items[findIdx].quantity -= quantity;
   }
 
-  addMountingItem(itemId, quantity) {
-    const findIdx = this.mountingItems.findIndex((item) => item.itemId === itemId);
-    this.mountingItems[findIdx].quantity += quantity;
+  addItem(itemId, quantity) {
+    const findIdx = this.items.findIndex((item) => item.itemId === itemId);
+    this.items[findIdx].quantity += quantity;
   }
 
   setItemId(itemType, itemId) {
@@ -133,8 +106,8 @@ class User {
     this.playerInfo.statInfo = statInfo;
   }
 
-  getMountingItemQuantity(itemId) {
-    const findItem = this.mountingItems.find((item) => item.itemId === itemId);
+  getItemQuantity(itemId) {
+    const findItem = this.items.find((item) => item.itemId === itemId);
     if (findItem) {
       return findItem.quantity;
     }
@@ -145,34 +118,20 @@ class User {
     this.gold = itemCost;
   }
 
-  addPotion(itemId, quantity) {
-    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
-    this.potions[findIdx].quantity += quantity;
-  }
-
-  decPotion(itemId, quantity) {
-    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
-    this.potions[findIdx].quantity -= quantity;
-  }
-
-  getPotionItemQuantity(itemId) {
-    const findItem = this.potions.find((item) => item.itemId === itemId);
-    if (findItem) {
-      return findItem.quantity;
-    }
-    return 0;
-  }
-
-  deletePotionItem(itemId) {
-    const findIdx = this.potions.findIndex((item) => item.itemId === itemId);
-    if (findIdx !== -1) {
-      this.potions.splice(findIdx, 1);
-    }
-  }
-
   skillPointUpdate(statInfo) {
     this.playerInfo.statInfo = statInfo;
     this.skillPoint = statInfo.skillPoint;
+  }
+
+  getPotionItems() {
+    const potions = [];
+    for (const item of this.items) {
+      if (item.isPotion) {
+        potions.push(item);
+      }
+    }
+    potions.sort((a, b) => a.itemId - b.itemId);
+    return potions;
   }
 }
 
