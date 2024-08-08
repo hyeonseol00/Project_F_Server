@@ -14,6 +14,7 @@ class Hatchery {
     this.players = [];
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
+    this.lastAttackTime = Date.now();
 
     this.initMonster({ ...config.hatchery.bossInitTransform });
   }
@@ -146,6 +147,15 @@ class Hatchery {
 
     for (const player of this.players) {
       player.socket.write(bossMoveResponse);
+    }
+
+    const elapsedAttackTime = Date.now() - this.lastAttackTime;
+    if (inRange && elapsedAttackTime > config.hatchery.bossAttackSpeed) {
+      const bossAttackResponse = createResponse('response', 'S_BossTryAttack', {});
+      for (const player of this.players) {
+        player.socket.write(bossAttackResponse);
+      }
+      this.lastAttackTime = Date.now();
     }
 
     this.lastUpdateTime = Date.now();

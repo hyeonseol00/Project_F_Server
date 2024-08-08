@@ -155,3 +155,14 @@ message S_UseItem{
   ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
 
+message S_BossTryAttack{
+}
+
+message S_SetPlayerHpHatchery{
+	int32 playerId = 1;
+	float playerCurHp = 2;
+}
+
+message S_DespawnHatchery{
+	int32 playerId = 1;
+}

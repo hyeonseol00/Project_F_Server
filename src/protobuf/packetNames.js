@@ -29,6 +29,9 @@ export const packetNames = {
     S_UnequipWeapon: 'response.S_UnequipWeapon',
     S_TryAttack: 'response.S_TryAttack',
     S_BossMove: 'response.S_BossMove',
+    S_BossTryAttack: 'response.S_BossTryAttack',
+    S_SetPlayerHpHatchery: 'response.S_SetPlayerHpHatchery',
+    S_DespawnHatchery: 'response.S_DespawnHatchery',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -53,6 +56,7 @@ export const packetNames = {
     C_AttackBoss: 'hatchery.C_AttackBoss',
     C_TryAttack: 'hatchery.C_TryAttack',
     C_LeaveHatchery: 'hatchery.C_LeaveHatchery',
+    C_PlayerHit: 'hatchery.C_PlayerHit',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',
