@@ -2,23 +2,14 @@ import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import { getRegistCount } from './GaApplication.session.js';
 
-export const addUser = (
-  socket,
-  nickname,
-  characterClass,
-  effect,
-  potions,
-  mountingItems,
-  character,
-) => {
+export const addUser = (socket, nickname, characterClass, effect, items, character) => {
   const user = new User(
     getRegistCount(),
     nickname,
     characterClass,
     socket,
     effect,
-    potions,
-    mountingItems,
+    items,
     character,
   );
   userSessions.push(user);

@@ -6,11 +6,14 @@ let statInfo;
 const quantity = 1;
 const itemId = 0;
 function updateUnEquip(uneqipItem, user) {
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
     user.playerInfo.statInfo;
 
   const uneqipItemInfo = getItemById(uneqipItem);
   user.setItemId(uneqipItemInfo.itemType, itemId);
+
+  const updateCritical = critRate - uneqipItemInfo.itemCritical;
+  const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
 
   statInfo = {
     level,
@@ -22,20 +25,20 @@ function updateUnEquip(uneqipItem, user) {
     def: def - uneqipItemInfo.itemDefense,
     magic: magic - uneqipItemInfo.itemMagic,
     speed: speed - uneqipItemInfo.itemSpeed,
+    critRate: updateCritical,
+    critDmg,
+    avoidRate: updateAvoidAbility,
+    exp,
   };
 
-  const updateCritical = critRate - uneqipItemInfo.itemCritical;
-  const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
-
   user.setStatInfo(statInfo);
-  user.setCriAvoid(updateCritical, updateAvoidAbility);
 
-  const isInven = user.findMountingItemByInven(uneqipItemInfo.itemId);
+  const isInven = user.getItem(uneqipItemInfo.itemId);
   if (!isInven) {
-    const item = new Item(quantity, uneqipItemInfo);
-    user.pushMountingItem(item);
+    const item = new Item(uneqipItem, quantity);
+    user.pushItem(item);
   } else {
-    user.addMountingItem(uneqipItemInfo.itemId, quantity);
+    user.addItem(uneqipItemInfo.itemId, quantity);
   }
 
   const response = createResponse('response', 'S_Chat', {

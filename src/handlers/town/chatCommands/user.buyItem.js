@@ -3,11 +3,6 @@ import Item from '../../../classes/models/item.class.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
 
-// user 객체 내에 포션 아이템을 찾는 함수 추가
-function findPotionById(user, itemId) {
-  return user.potions.find((potion) => potion.itemId === itemId);
-}
-
 const buyItemHandler = async (user, message) => {
   // 유저가 사고 싶은 아이템 ID 가져오기
   const [id, quantity] = message.split(' ');
@@ -65,18 +60,18 @@ const buyItemHandler = async (user, message) => {
 
     if (buyItem.itemType === 'potion') {
       // 소비 아이템
-      const potionIdx = user.getPotionIdx(buyItem.itemName);
+      const potionIdx = user.getItemIdx(buyItem.itemId);
       if (potionIdx === -1) {
-        potion = new Item(Number(quantity), buyItem);
-        user.pushPotionItem(potion);
+        potion = new Item(Number(id), Number(quantity));
+        user.pushItem(potion);
       } else {
-        user.addPotion(buyItem.itemId, Number(quantity));
+        user.addItem(buyItem.itemId, Number(quantity));
       }
 
       user.setGold(user.gold - itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
-      potion = findPotionById(user, buyItem.itemId);
+      potion = user.getItem(buyItem.itemId);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
@@ -102,13 +97,13 @@ const buyItemHandler = async (user, message) => {
     } else {
       // 장비 아이템
       let item = null;
-      const itemInx = user.getMountingItemIdx(buyItem.itemName);
-      if (itemInx === -1) {
-        item = new Item(Number(quantity), buyItem);
-        user.pushMountingItem(item);
+      const itemIdx = user.getItemIdx(buyItem.itemId);
+      if (itemIdx === -1) {
+        item = new Item(Number(id), Number(quantity));
+        user.pushItem(item);
       } else {
-        user.addMountingItem(buyItem.itemId, Number(quantity));
-        item = user.findMountingItemByInven(buyItem.itemId);
+        user.addItem(buyItem.itemId, Number(quantity));
+        item = user.getItem(buyItem.itemId);
       }
       user.setGold(user.gold - itemCost);
 
