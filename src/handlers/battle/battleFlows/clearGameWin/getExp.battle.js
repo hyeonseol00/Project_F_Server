@@ -1,6 +1,7 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
+import { updateQuestHandler } from '../../../town/quest.handler.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
@@ -37,7 +38,13 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       const monster = dungeon.monsters[i];
       monsterExp += monster.exp;
       gold += monster.gold;
+      // 퀘스트 진행 상황 업데이트
+      updateQuestHandler({
+        socket,
+        payload: { questId: player.currentQuestId, objectiveId: monster.monsterIdx, progress: 1 },
+      });
     }
+
     const playerExp = monsterExp + playerStatus.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {

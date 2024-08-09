@@ -7,6 +7,7 @@ import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
+import { updateQuestHandler } from './quest.handler.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -67,6 +68,11 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterCritical,
         monsterCriticalAttack,
       );
+      // 퀘스트 진행 상황 업데이트
+      updateQuestHandler({
+        socket,
+        payload: { questId: user.currentQuestId, objectiveId: monster.monsterIdx, progress: 1 },
+      });
     }
 
     const dungeonInfo = {
