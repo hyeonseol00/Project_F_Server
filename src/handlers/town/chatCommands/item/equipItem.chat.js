@@ -1,9 +1,12 @@
-import isInteger from '../../utils/isInteger.js';
-import updateEquip from '../../utils/equip.js';
-import { getItemById } from '../../assets/item.assets.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import { getAllUsersInTeam, getUserByNickname } from '../../../../session/user.session.js';
+import isInteger from '../../../../utils/isInteger.js';
+import updateEquip from '../../../../utils/equip.js';
+import updateUnEquip from '../../../../utils/unequip.js';
+import { getItemById } from '../../../../assets/item.assets.js';
+import Item from '../../../../classes/models/item.class.js';
 
-export const equipHandler = (user, message) => {
+export const equipItem = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory } = user.equipment;
   const { level } = user.playerInfo.statInfo;
 

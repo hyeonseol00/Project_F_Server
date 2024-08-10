@@ -3,7 +3,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket, getAllUsers } from '../../session/user.session.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
-import chatCommands from '../chatCommands.js';
+import chatCommandMappings from './chatCommands/chatCommandMappings.js';
 
 const chatHandler = async ({ socket, payload }) => {
   const { playerId, chatMsg } = payload;
@@ -11,54 +11,45 @@ const chatHandler = async ({ socket, payload }) => {
     const user = getUserBySocket(socket);
     if (!user) throw new Error('유저를 찾을 수 없습니다.');
 
-    // 게임 세션을 가져옵니다.
     const gameSession = getGameSession(config.session.townId);
     if (!gameSession) throw new Error('게임 세션을 찾을 수 없습니다.');
 
     // '/'으로 시작하면 채팅 명령어, 그렇지 않으면 전체 채팅으로 판단한다.
     if (chatMsg[0] === '/') {
-      const { commandType, message } = parseCommand(chatMsg);
+      const { commandType, message } = parseCommandMessage(chatMsg);
 
       // 해당 커멘트에 맞는 핸들러를 가져오고 실행합니다.
-      const chatCommandHandler = chatCommands.get(commandType);
+      const chatCommandHandler = chatCommandMappings.get(commandType);
       if (!chatCommandHandler) {
         const invalidCommandResponse = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
-          chatMsg: `[System] 잘못된 커맨드: 커맨드를 확인해보세요.`,
+          chatMsg: `[System] 존재하지 않는 명령어입니다. /help로 확인하세요.`,
         });
         socket.write(invalidCommandResponse);
         return;
       }
 
+      // 해당 명령어 핸들러 실행
       chatCommandHandler(user, message);
 
-      // console.log(chatCommandHandler);
     } else {
-      // 전체 채팅 실행.
-      sendGlobalMessage(user, chatMsg);
+      sendMessageToAll(user, chatMsg);
     }
+    
   } catch (err) {
     handleError(socket, err.message, '채팅 전송 중 에러가 발생했습니다: ' + err.message);
   }
 };
 
-function parseCommand(command) {
+function parseCommandMessage(command) {
   const firstSpaceIdx = command.indexOf(' ');
-
-  let commandType, message;
-
-  if (firstSpaceIdx === -1) {
-    commandType = command.substring(1); // /w, /team 같은 명령어 파싱
-    message = '';
-    return { commandType, message };
-  }
-  commandType = command.substring(1, firstSpaceIdx); // /w, /team 같은 명령어 파싱
-  message = command.substring(firstSpaceIdx + 1);
+  const commandType = firstSpaceIdx !== -1 ? command.substring(0, firstSpaceIdx) : command;
+  const message = firstSpaceIdx !== -1 ? command.substring(firstSpaceIdx + 1) : null;
 
   return { commandType, message };
 }
 
-function sendGlobalMessage(sender, message) {
+function sendMessageToAll(sender, message) {
   const allUsers = getAllUsers();
 
   const chatResponse = createResponse('response', 'S_Chat', {
@@ -70,7 +61,6 @@ function sendGlobalMessage(sender, message) {
     user.socket.write(chatResponse);
   });
 
-  // console.log(`Global message from ${sender.nickname}: ${message}`);
 }
 
 export default chatHandler;

@@ -1,5 +1,5 @@
-import { createResponse } from '../../utils/response/createResponse.js';
-import isInteger from '../../utils/isInteger.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
+import isInteger from '../../../utils/isInteger.js';
 
 export const skillPointHandler = async (user, message) => {
   const { skillPoint } = user;
