@@ -1,9 +1,9 @@
-import isInteger from '../../utils/isInteger.js';
-import updateEquip from '../../utils/equip.js';
-import { getItemById } from '../../assets/item.assets.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import isInteger from '../../../../utils/isInteger.js';
+import updateEquip from '../../../../utils/equip.js';
+import { getItemById } from '../../../../assets/item.assets.js';
 
-export const equipHandler = (user, message) => {
+export const equipItem = (user, message) => {
   const { weapon, armor, gloves, shoes, accessory } = user.equipment;
   const { level } = user.playerInfo.statInfo;
 
@@ -26,8 +26,6 @@ export const equipHandler = (user, message) => {
   }
 
   const isItemByTable = getItemById(Number(message));
-  const findItem = user.getItem(Number(message));
-  const findItemInfo = getItemById(findItem.itemId);
   if (!isItemByTable) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -36,7 +34,10 @@ export const equipHandler = (user, message) => {
     user.socket.write(response);
 
     return;
-  } else if (!findItem) {
+  } 
+
+  const findItem = user.getItem(Number(message));
+  if (!findItem) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] ${user.nickname}의 인벤토리에 아이템이 존재하지 않습니다.`,
@@ -46,6 +47,7 @@ export const equipHandler = (user, message) => {
     return;
   }
 
+  const findItemInfo = getItemById(findItem.itemId);
   const { itemId, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
