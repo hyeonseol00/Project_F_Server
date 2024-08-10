@@ -33,7 +33,7 @@ export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };
 
-export const getAllUsersInTeam = (teamId) => {
+export const getAllMembersInTeam = (teamId) => {
   return userSessions.filter((user) => user.teamId === teamId);
 };
 

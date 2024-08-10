@@ -113,14 +113,28 @@ export const targetToSelf = (sender, targetUser = undefined) => {
   return false;
 };
 
-export const checkParams = (sender, params, expectedParamsN = 1) => {
-  console.log(params);
+export const includeInvalidParams = (sender, params) => {
+  // console.log(params);
+  const expectedParamsN = params.length;
   const filterdParams = params.filter(param => (param !== " " && param !== ""));
   
   if (filterdParams.length !== expectedParamsN) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 잘못된 명령어 사용법입니다. /help로 확인하세요.',
+    });
+    sender.socket.write(response);
+    return true;
+  }
+
+  return false;
+};
+
+export const notHaveKickAuthority = (sender) => {
+  if (!sender.isOwner) {
+    const response = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: '[System] 해당 유저를 추방할 권한이 없습니다',
     });
     sender.socket.write(response);
     return true;

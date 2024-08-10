@@ -3,7 +3,7 @@ import { sendMessageToTeam } from './team/sendMessageToTeam.chat.js';
 import { createTeam } from './team/createTeam.chat.js';
 import { joinTeam } from './team/joinTeam.chat.js';
 import { leaveTeam } from './team/leaveTeam.chat.js';
-import { inviteTeam } from './team/inviteTeam.chat.js';
+import { inviteToTeam } from './team/inviteToTeam.chat.js';
 import { acceptTeam } from './team/acceptTeam.chat.js';
 import { kickMember } from './team/kickMember.chat.js';
 import { sendTeamList } from './team/sendTeamList.chat.js';
@@ -21,7 +21,7 @@ const chatCommandMappings = new Map([
   ['/createTeam', createTeam],
   ['/joinTeam', joinTeam],
   ['/leaveTeam', leaveTeam],
-  ['/inviteTeam', inviteTeam],
+  ['/inviteTeam', inviteToTeam],
   ['/acceptTeam', acceptTeam],
   ['/kickMember', kickMember],
   ['/memlist', sendTeamList],

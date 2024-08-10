@@ -1,5 +1,5 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
-import { getAllUsersInTeam, getUserByNickname } from '../../../../session/user.session.js';
+import { getAllMembersInTeam, getUserByNickname } from '../../../../session/user.session.js';
 import isInteger from '../../../../utils/isInteger.js';
 import updateEquip from '../../../../utils/equip.js';
 import updateUnEquip from '../../../../utils/unequip.js';

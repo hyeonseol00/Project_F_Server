@@ -1,17 +1,16 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
-import { notFoundUser, targetToSelf, checkParams } from '../exceptions.js';
+import { notFoundUser, targetToSelf, includeInvalidParams } from '../exceptions.js';
+import { splitAtFirstSpace } from '../../../../utils/parser/messageParser.js';
 
 export const sendDirectMessage = (sender, message) => {
-  const params = message.split(' ');
-  const expectedParamsN = 2;
-  const recipientNickname = params[0];
-  const msg = params[1];
-
+  const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
+  const params = [recipientNickname, msg];
   const recipient = getUserByNickname(recipientNickname);
 
+  // 예외처리
   if (
-    checkParams(sender, params, expectedParamsN) ||
+    includeInvalidParams(sender, params) ||
     targetToSelf(sender, recipient) ||
     notFoundUser(sender, recipient)
   ) {
