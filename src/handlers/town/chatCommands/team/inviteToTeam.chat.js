@@ -5,16 +5,14 @@ import {
   alreadyHaveTeam,
   notFoundUser,
   alreadyInvited,
-  includeInvalidParams,
 } from '../exceptions.js';
 
 export const inviteToTeam = (sender, message) => {
     const invitedNickname = message;
     const targetUser = getUserByNickname(invitedNickname);
   
-    // 예외처리: 1. 팀이 없는 경우 2.해당 유저가 없는 경우 3.해당 유저가 이미 팀이 있는 경우 4.유저가 이미 초대를 한 경우
+    // 예외처리: 1. 팀이 없는 경우 2. 해당 유저가 없는 경우 3. 해당 유저가 이미 팀이 있는 경우 4.유저가 이미 초대를 한 경우
     if (
-      includeInvalidParams(sender, [message]) ||
       notFoundTeam(sender) ||
       notFoundUser(sender, targetUser) ||
       alreadyHaveTeam(sender, targetUser) ||
@@ -31,7 +29,7 @@ export const inviteToTeam = (sender, message) => {
   
     const response = createResponse('response', 'S_Chat', {
       playerId: targetUser.playerId,
-      chatMsg: `[System] ${sender.nickname} 이(가) 팀 초대를 했습니다.`,
+      chatMsg: `[System] ${sender.nickname} 이(가) 당신을 팀에 초대하였습니다.`,
     });
     targetUser.socket.write(response);
   };
