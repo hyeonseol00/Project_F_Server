@@ -23,7 +23,7 @@ export const acceptTeam = (sender, message) => {
   sender.invitedTeams = sender.invitedTeams.filter((id) => id !== targetUser.teamId);
 
   // 팀 멤버들에게 본인이 들어왔다는 메시지를 전송합니다.
-  const teamMembers = getAllMembersInTeam(targetUser.teamId);
+  const teamMembers = getAllMembersInTeam(targetUser.teamId).filter(member => member.playerId !== sender.playerId);
   teamMembers.forEach((member) => {
     const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,

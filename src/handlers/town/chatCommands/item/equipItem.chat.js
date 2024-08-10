@@ -26,8 +26,6 @@ export const equipItem = (user, message) => {
   }
 
   const isItemByTable = getItemById(Number(message));
-  const findItem = user.getItem(Number(message));
-  const findItemInfo = getItemById(findItem.itemId);
   if (!isItemByTable) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -36,7 +34,10 @@ export const equipItem = (user, message) => {
     user.socket.write(response);
 
     return;
-  } else if (!findItem) {
+  } 
+
+  const findItem = user.getItem(Number(message));
+  if (!findItem) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] ${user.nickname}의 인벤토리에 아이템이 존재하지 않습니다.`,
@@ -46,6 +47,7 @@ export const equipItem = (user, message) => {
     return;
   }
 
+  const findItemInfo = getItemById(findItem.itemId);
   const { itemId, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {

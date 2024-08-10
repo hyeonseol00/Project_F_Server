@@ -92,6 +92,11 @@ export const unequipItem = (user, message) => {
         }
         break;
       default:
+        const response = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: '[System] itemType은 weapon, armor, gloves, shoes, accessory 중 하나입니다',
+        });
+        user.socket.write(response);
         break;
     }
   };

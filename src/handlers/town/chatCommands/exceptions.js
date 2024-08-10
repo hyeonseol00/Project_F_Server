@@ -1,4 +1,5 @@
 import { createResponse } from "../../../utils/response/createResponse.js";
+import { getAllMembersInTeam } from "../../../session/user.session.js";
 
 export const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
@@ -56,7 +57,7 @@ export const notFoundUser = (sender, targetUser = undefined) => {
 };
 
 export const notFoundUserInTeam = (sender, targetUser = undefined) => {
-  const teamMembers = getAllUsersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
+  const teamMembers = getAllMembersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
   const foundTargetUser = teamMembers
     .map((member) => member.nickname)
     .includes(targetUser.nickname);
