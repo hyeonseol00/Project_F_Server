@@ -5,6 +5,8 @@ import { getHatcherySession } from '../session/hatchery.session.js';
 import { getUserBySocket, removeUser } from '../session/user.session.js';
 import CustomError from '../utils/error/customError.js';
 import { handleError } from '../utils/error/errorHandler.js';
+import { updateCharacterStatus } from '../db/user/user.db.js';
+import { updateCharacterItems } from '../db/user/items/items.db.js';
 
 export const onError = (socket) => (err) => {
   try {

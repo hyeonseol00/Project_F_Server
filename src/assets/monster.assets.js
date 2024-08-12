@@ -1,19 +1,18 @@
 import { getDungeonMonster, getMonster } from '../db/game/game.db.js';
 import { redisCli } from '../init/redis/redis.js';
-
-const monsterTable = 'monsterTable:';
-const dungeonMonsterTable = 'dungeonMonsterTable';
+import { config } from '../config/config.js';
 
 export const loadMonsterTable = async () => {
-  const monsterComponet = await getMonster();
+  const monsterComponent = await getMonster();
 
-  monsterComponet.forEach(async (monster) => {
-    await redisCli.set(`${monsterTable}${monster.monsterId}`, JSON.stringify(monster));
+  monsterComponent.forEach(async (monster) => {
+    await redisCli.hSet(`${config.redisKey.monsterTable}`, `${monster.monsterId}`, JSON.stringify(monster));
   });
+
 };
 
 export const getMonsterById = async (monsterId) => {
-  const monsterData = await redisCli.get(`${monsterTable}${monsterId}`);
+  const monsterData = await redisCli.hGet(`${config.redisKey.monsterTable}`, `${monsterId}`);
 
   if (monsterId !== 0) {
     return JSON.parse(monsterData);
@@ -21,13 +20,13 @@ export const getMonsterById = async (monsterId) => {
 };
 
 export const loadDungeonMonster = async () => {
-  const dungeonMonsterComponet = await getDungeonMonster();
+  const dungeonMonsterComponent = await getDungeonMonster();
 
-  await redisCli.set(`${dungeonMonsterTable}`, JSON.stringify(dungeonMonsterComponet));
+  await redisCli.set(`${config.redisKey.dungeonTable}`, JSON.stringify(dungeonMonsterComponent));
 };
 
 export const getMonsterByDungeonId = async (dungeonId) => {
-  const dungeonMonsterData = await redisCli.get(`${dungeonMonsterTable}`);
+  const dungeonMonsterData = await redisCli.get(`${config.redisKey.dungeonTable}`);
 
   const dungeonMonster = JSON.parse(dungeonMonsterData).filter(
     (dungeon) => dungeon.dungeonId === dungeonId,

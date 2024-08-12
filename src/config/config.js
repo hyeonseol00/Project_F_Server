@@ -80,6 +80,12 @@ import {
   TEXTCOLOR_R,
 } from '../constants/screenText.js';
 import { TOWN_SESSION_ID } from '../constants/session.js';
+import {
+  ITEM_TABLE_KEY,
+  LEVEL_TABLE_KEY,
+  MONSTER_TABLE_KEY,
+  DUNGEON_TABLE_KEY,
+} from '../constants/redisKey.js';
 
 export const config = {
   server: {
@@ -117,6 +123,12 @@ export const config = {
     port: REDIS_PORT,
     username: REDIS_USERNAME,
     password: REDIS_PASSWORD,
+  },
+  redisKey: {
+    itemTable: ITEM_TABLE_KEY,
+    monsterTable: MONSTER_TABLE_KEY,
+    levelTable: LEVEL_TABLE_KEY,
+    dungeonTable: DUNGEON_TABLE_KEY,
   },
   sceneStatus: {
     message: SCENE_MESSAGE_WINDOW,
