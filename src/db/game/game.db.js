@@ -65,6 +65,16 @@ export const getUserQuests = async (userId) => {
 };
 
 export const addUserQuest = async (userId, questId, progress = 0, status = 'NOT_STARTED') => {
+  const [existingQuest] = await pools.TOWN_MONSTER.query(
+    `SELECT * FROM user_quests WHERE user_id = ? AND quest_id = ?`,
+    [userId, questId],
+  );
+
+  if (existingQuest.length > 0) {
+    console.log(`유저 ${userId}는 이미 퀘스트 ${questId}를 가지고 있습니다.`);
+    return false;
+  }
+
   await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.ADD_USER_QUEST, [
     userId,
     questId,

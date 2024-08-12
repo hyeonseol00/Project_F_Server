@@ -9,7 +9,7 @@ import {
   kickMemberHandler,
   sendTeamList,
 } from './town/chatCommands/chatCommand.handler.js';
-import { questRewardHandler } from './town/questReward.handler.js';
+import questRewardHandler from './town/questReward.handler.js';
 import {
   acceptQuestHandler,
   getQuestsHandler,

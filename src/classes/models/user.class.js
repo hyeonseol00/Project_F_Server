@@ -7,12 +7,12 @@ class User {
     effect,
     potions,
     mountingItems,
-    character,
+    character = {},
   ) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.characterClass = characterClass;
-    this.characterId = character.characterId;
+    this.characterId = character.characterId || 0;
     this.socket = socket;
     this.lastUpdateTime = Date.now();
     this.playerInfo = {};
@@ -34,6 +34,7 @@ class User {
       single: effect.singleEffect,
       wide: effect.wideEffect,
     };
+    this.quests = [];
   }
 
   setPlayerInfo(playerInfo) {

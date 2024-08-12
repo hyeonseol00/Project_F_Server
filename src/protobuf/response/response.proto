@@ -176,24 +176,12 @@ message S_CompleteQuest {
   QuestInfo quest = 4;
 }
 
-// 퀘스트 정보
-message QuestInfo {
-  int32 questId = 1;
-  string questName = 2;
-  string questDescription = 3;
-  int32 questStatus = 4;
-  repeated QuestObjective objectives = 5;
-}
-
-// 퀘스트 목표
-message QuestObjective {
-  int32 objectiveId = 1;
-  string description = 2;
-  int32 currentProgress = 3;
-  int32 targetProgress = 4;
-}
-
 // 퀘스트 목록 응답
 message S_GetQuests {
   repeated QuestInfo quests = 1;
+}
+// 퀘스트 시작 메시지 추가
+message S_EnterQuest {
+  QuestInfo quest = 1;
+  string message = 2;
 }

@@ -36,13 +36,9 @@ const enterTownHandler = async ({ socket, payload }) => {
     const statInfo = userInfo.statInfo;
 
     const items = [
-      ...curUser.mountingItems.map((item) => ({
+      ...curUser.items.map((item) => ({
         id: item.itemId,
         quantity: item.quantity,
-      })),
-      ...curUser.potions.map((potion) => ({
-        id: potion.itemId,
-        quantity: potion.quantity,
       })),
     ];
 
@@ -144,34 +140,24 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
   }
 
+  // 디버깅 로그 추가: character 객체가 정의되지 않은 경우 확인
+  console.log('Character data:', character);
+  if (!character || !character.characterId) {
+    throw new Error('Character data is not properly initialized.');
+  }
+
   const effect = await getJobInfo(character.jobId);
 
-  const userItems = await getUserItemsByCharacterId(character.characterId);
-  const userPotions = [];
-  const userMountingItems = [];
-  for (const userItem of userItems) {
-    const itemInfo = getItemById(userItem.itemId);
-    const item = new Item(userItem.quantity, itemInfo);
-    if (itemInfo.itemType === 'potion') {
-      // 소비 아이템
-      userPotions.push(item);
-    } else {
-      // 장착 아이템
-      userMountingItems.push(item);
-    }
+  const userItemInDB = await getUserItemsByCharacterId(character.characterId);
+  const userItems = [];
+  for (const userItem of userItemInDB) {
+    const item = new Item(userItem.itemId, userItem.quantity);
+    userItems.push(item);
   }
 
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-  const curUser = addUser(
-    socket,
-    nickname,
-    characterClass,
-    effect,
-    userPotions,
-    userMountingItems,
-    character,
-  );
+  const curUser = addUser(socket, nickname, characterClass, effect, userItems, character);
 
   const statInfo = {
     level: character.characterLevel,
@@ -190,28 +176,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   };
 
   return { curUser, statInfo };
-};
-
-const getUserInfoFromSessionAndUpdateDB = async (userExist) => {
-  const curUser = userExist;
-
-  // user 세션의 potions중 quantity 0인 potion 삭제
-  for (let i = curUser.potions.length - 1; i >= 0; i--) {
-    const potion = curUser.potions[i];
-    if (potion.quantity === 0) {
-      curUser.potions.splice(i, 1);
-    }
-  }
-
-  // user 세션의 mountingItems중 quantity 0인 item 삭제
-  for (let i = curUser.mountingItems.length - 1; i >= 0; i--) {
-    const item = curUser.mountingItems[i];
-    if (item.quantity === 0) {
-      curUser.mountingItems.splice(i, 1);
-    }
-  }
-
-  return { curUser, statInfo: curUser.playerInfo.statInfo };
 };
 
 export default enterTownHandler;

@@ -29,6 +29,11 @@ export const packetNames = {
     S_UnequipWeapon: 'response.S_UnequipWeapon',
     S_TryAttack: 'response.S_TryAttack',
     S_BossMove: 'response.S_BossMove',
+    S_AcceptQuest: 'response.S_AcceptQuest',
+    S_UpdateQuest: 'response.S_UpdateQuest',
+    S_CompleteQuest: 'response.S_CompleteQuest',
+    S_GetQuests: 'response.S_GetQuests',
+    S_EnterQuest: 'response.S_EnterQuest',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -44,6 +49,10 @@ export const packetNames = {
     C_UseItem: 'town.C_UseItem',
     C_EquipWeapon: 'town.C_EquipWeapon',
     C_UnequipWeapon: 'town.C_UnequipWeapon',
+    C_AcceptQuest: 'town.C_AcceptQuest',
+    C_UpdateQuest: 'town.C_UpdateQuest',
+    C_CompleteQuest: 'town.C_CompleteQuest',
+    C_GetQuests: 'town.C_GetQuests',
   },
   battle: {
     C_PlayerResponse: 'battle.C_PlayerResponse',
@@ -69,5 +78,7 @@ export const packetNames = {
     BtnInfo: 'custom.BtnInfo',
     UnitVector: 'custom.UnitVector',
     ItemInfo: 'custom.ItemInfo',
+    QuestInfo: 'custom.QuestInfo',
+    QuestObjective: 'custom.QuestObjective',
   },
 };

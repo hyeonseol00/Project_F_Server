@@ -7,7 +7,7 @@ import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
-import { questProgressHandler } from './questProgress.handler.js';
+import { questProgressHandler } from './quest.handler.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {

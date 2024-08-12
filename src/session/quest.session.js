@@ -1,4 +1,4 @@
-import { questSessions } from './session.js';
+import { questSessions } from './sessions.js';
 import Quest from '../classes/models/quest.class.js';
 import { config } from '../config/config.js';
 import { addUserQuest } from '../db/game/game.db.js';
@@ -98,36 +98,36 @@ export const getAllQuestSessions = () => {
 };
 
 export const checkAndStartQuest = (user) => {
-  // 먼저 모든 이전 퀘스트가 완료되었는지 확인
-  const completedAllPreviousQuests = quests
-    .slice(0, -1) // 마지막 퀘스트를 제외한 모든 퀘스트
-    .every((quest) => {
-      const userQuest = user.quests.find((q) => q.questId === quest.questId);
-      return userQuest && userQuest.status === '완료';
-    });
+  // user.quests가 undefined인 경우 빈 배열로 처리
+  const userQuests = user.quests || [];
+
+  if (!user.playerInfo || !user.playerInfo.statInfo) {
+    console.error('user.playerInfo 또는 user.playerInfo.statInfo가 정의되지 않았습니다.');
+    return null;
+  }
+
+  const userLevel = user.playerInfo.statInfo.level;
+
+  const completedAllPreviousQuests = quests.slice(0, -1).every((quest) => {
+    const userQuest = userQuests.find((q) => q.questId === quest.questId);
+    return userQuest && userQuest.status === '완료';
+  });
 
   let questToStart;
-
   if (completedAllPreviousQuests) {
-    // 모든 이전 퀘스트가 완료되었을 때 최종 퀘스트를 시작
-    questToStart = quests.find((quest) => quest.questId === 5); // 최종 퀘스트
+    questToStart = quests.find((quest) => quest.questId === 5);
   } else {
-    // 일반 퀘스트를 레벨에 따라 시작
-    questToStart = quests.find((quest) => quest.level === user.playerInfo.statInfo.level);
+    questToStart = quests.find((quest) => quest.level === userLevel);
   }
 
   if (questToStart) {
-    addQuestSession(
-      questToStart.questId,
-      questToStart.questName,
-      questToStart.questDescription,
-      questToStart.level,
-      questToStart.monsterCount,
-      questToStart.rewardExp,
-      questToStart.rewardGold,
-    );
-    addUserQuest(user.playerId, questToStart.questId);
-    return questToStart;
+    console.log(`시작할 퀘스트: ${JSON.stringify(questToStart)}`);
+    const success = addUserQuest(user.playerId, questToStart.questId);
+    if (success) {
+      return questToStart;
+    }
+  } else {
+    console.error('시작할 수 있는 퀘스트가 없습니다.');
   }
 
   return null;

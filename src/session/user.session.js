@@ -22,6 +22,12 @@ export const addUser = (
     mountingItems,
     character,
   );
+
+  if (!user.playerId) {
+    console.error('User ID is not correctly initialized.');
+    return null;
+  }
+
   userSessions.push(user);
 
   const quest = checkAndStartQuest(user);
@@ -49,6 +55,7 @@ export const getUserById = (id) => {
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
 };
+
 export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };

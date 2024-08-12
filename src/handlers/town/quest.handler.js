@@ -34,7 +34,13 @@ const acceptQuestHandler = async ({ socket, payload }) => {
       message: '퀘스트를 성공적으로 수락했습니다.',
     });
 
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `퀘스트 수락: ${quest.questName}`,
+    });
+
     socket.write(response);
+    socket.write(chatResponse);
   } catch (err) {
     handleError(socket, err);
   }
@@ -48,6 +54,14 @@ const getQuestsHandler = async ({ socket }) => {
 
     const response = createResponse('response', 'S_GetQuests', { quests });
     socket.write(response);
+
+    const questNames = quests.map((quest) => quest.questName).join(', ');
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `현재 진행 중인 퀘스트: ${questNames}`,
+    });
+
+    socket.write(chatResponse);
   } catch (err) {
     handleError(socket, err);
   }
@@ -69,7 +83,7 @@ const questProgressHandler = async ({ socket, payload }) => {
     const currentProgress = quest.progress; // 현재 잡은 몬스터 수
     const totalProgress = quest.monsterCount; // 목표 몬스터 수
 
-    const message = `퀘스트 진행 상황이 업데이트되었습니다. 현재 진행 상황: ${currentProgress}/${totalProgress} 몬스터 처치.`;
+    const message = `퀘스트 진행 상황: ${currentProgress}/${totalProgress} 몬스터 처치 완료.`;
 
     // 응답 생성
     const response = createResponse('response', 'S_UpdateQuestProgress', {
@@ -78,6 +92,13 @@ const questProgressHandler = async ({ socket, payload }) => {
     });
 
     socket.write(response);
+
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: message,
+    });
+
+    socket.write(chatResponse);
   } catch (err) {
     handleError(socket, err);
   }
@@ -101,6 +122,13 @@ const completeQuestHandler = async ({ socket, payload }) => {
     });
 
     socket.write(response);
+
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `퀘스트 완료: ${quest.questName}`,
+    });
+
+    socket.write(chatResponse);
   } catch (err) {
     handleError(socket, err);
   }

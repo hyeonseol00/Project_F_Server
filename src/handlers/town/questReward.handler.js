@@ -24,6 +24,8 @@ const questRewardHandler = async ({ socket, payload }) => {
     // 레벨업 로직
     const playerLevel = user.playerInfo.statInfo.level;
     const nextLevelData = getLevelById(playerLevel + 1);
+    let levelUpMessage = '';
+
     if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
       // 레벨업 처리
       playerExp -= nextLevelData.requiredExp;
@@ -42,13 +44,12 @@ const questRewardHandler = async ({ socket, payload }) => {
       user.playerInfo.skillPoint += nextLevelData.skillPoint;
 
       // 레벨업 메시지
-      const levelUpMessage = `레벨업! ${playerLevel + 1} 레벨이 되었습니다!\n
+      levelUpMessage = `레벨업! ${playerLevel + 1} 레벨이 되었습니다!\n
         최대 체력: +${nextLevelData.hp}, 최대 마나: +${nextLevelData.mp}\n
         공격력: +${nextLevelData.attack}, 방어력: +${nextLevelData.defense}, 마법력: +${nextLevelData.magic}\n
         속도: +${nextLevelData.speed}, 크리티컬 확률: +${nextLevelData.critical}\n
         회피 확률: +${nextLevelData.avoidAbility}, 스킬 포인트: +${nextLevelData.skillPoint}`;
 
-      // 채팅 메시지로 레벨업 정보 전송
       const chatMessageResponse = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
         chatMsg: levelUpMessage,
@@ -66,12 +67,10 @@ const questRewardHandler = async ({ socket, payload }) => {
     // DB에 퀘스트 상태 업데이트
     await updateQuestProgress(user.playerId, questId, 100, '보상 완료');
 
-    // 보상 결과를 사용자에게 전송
-    const rewardResponse = createResponse('response', 'S_CompleteQuest', {
-      questId,
-      success: true,
-      message: `퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`,
-      quest: null,
+    const rewardMessage = `퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`;
+    const rewardResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: rewardMessage,
     });
 
     socket.write(rewardResponse);
