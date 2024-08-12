@@ -1,7 +1,7 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
-import { updateQuestHandler } from '../../../town/quest.handler.js';
+import { questProgressHandler } from '../../../town/quest.handler.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
@@ -39,9 +39,13 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       monsterExp += monster.exp;
       gold += monster.gold;
       // 퀘스트 진행 상황 업데이트
-      updateQuestHandler({
+      questProgressHandler({
         socket,
-        payload: { questId: player.currentQuestId, objectiveId: monster.monsterIdx, progress: 1 },
+        payload: {
+          questId: player.currentQuestId,
+          monsterId: monster.monsterIdx,
+          progressIncrement: 1,
+        },
       });
     }
 

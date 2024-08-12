@@ -154,7 +154,6 @@ message S_UnequipWeapon{
 message S_UseItem{
   ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
-
 // 퀘스트 수락
 message S_AcceptQuest {
   QuestInfo quest = 1;
@@ -192,4 +191,9 @@ message QuestObjective {
   string description = 2;
   int32 currentProgress = 3;
   int32 targetProgress = 4;
+}
+
+// 퀘스트 목록 응답
+message S_GetQuests {
+  repeated QuestInfo quests = 1;
 }

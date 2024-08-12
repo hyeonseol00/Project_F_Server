@@ -1,6 +1,7 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { questProgressHandler } from '../town/quest.handler.js';
 
 const attackBossHatchery = async ({ socket, payload }) => {
   try {
@@ -24,6 +25,17 @@ const attackBossHatchery = async ({ socket, payload }) => {
     const players = hatcherySession.players;
     for (const player of players) {
       player.socket.write(attackBossResponse);
+    }
+    // 최종 보스 처치 퀘스트의 진행 상황 업데이트
+    if (hatcherySession.boss.hp <= 0) {
+      questProgressHandler({
+        socket,
+        payload: {
+          questId: player.currentQuestId,
+          monsterId: hatcherySession.boss.monsterId,
+          progressIncrement: 1, // 보스 처치로 진행 상황 1 증가
+        },
+      });
     }
   } catch (err) {
     handleError(socket, err);

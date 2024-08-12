@@ -80,11 +80,13 @@ message C_AcceptQuest {
 // 퀘스트 업데이트
 message C_UpdateQuest {
   int32 questId = 1;
-  int32 objectiveId = 2;
-  int32 progress = 3;
+  int32 progress = 2;
 }
 
 // 퀘스트 완료
 message C_CompleteQuest {
   int32 questId = 1;
 }
+
+// 퀘스트 목록 요청
+message C_GetQuests {}

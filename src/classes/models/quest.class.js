@@ -15,7 +15,7 @@ class Quest {
     this.monsterCount = monsterCount;
     this.rewardExp = rewardExp;
     this.rewardGold = rewardGold;
-    this.status = 'NOT_STARTED'; // 초기 상태는 NOT_STARTED
+    this.status = 'NOT_STARTED';
     this.progress = 0;
   }
 

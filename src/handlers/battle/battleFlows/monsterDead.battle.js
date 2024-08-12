@@ -2,9 +2,23 @@ import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToMonsterAttackScene from './switchScene/monsterAttack.switch.js';
 import switchToMonsterDeadScene from './switchScene/monsterDead.switch.js';
+import { questProgressHandler } from '../../town/quest.handler.js';
 
 export default function monsterDeadScene(responseCode, dungeon, socket) {
   if (responseCode == 1) {
+    const monster = dungeon.monsters[dungeon.targetMonsterIdx]; // 현재 타겟 몬스터
+    const user = dungeon.player; // 현재 플레이어
+
+    // 몬스터가 죽었을 때 퀘스트 진행 상황을 업데이트
+    questProgressHandler({
+      socket,
+      payload: {
+        questId: user.currentQuestId,
+        monsterId: monster.monsterId,
+        progressIncrement: 1, // 진행상황 1 증가
+      },
+    });
+
     if (dungeon.isMonstersAllDead()) {
       const btns = [{ msg: '다음', enable: true }];
       const battleLog = {

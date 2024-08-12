@@ -1,92 +1,109 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
-import { findQuestById, updateQuestProgress, addUserQuest } from '../../db/game/game.db.js';
-import { checkAndStartQuest } from '../../session/quest.session.js';
+import {
+  findQuestById,
+  updateQuestProgress,
+  addUserQuest,
+  getUserQuests,
+} from '../../db/game/game.db.js';
 
+// 퀘스트 수락 핸들러
 const acceptQuestHandler = async ({ socket, payload }) => {
   try {
     const { questId } = payload;
     const user = getUserBySocket(socket);
 
-    // 유저가 이미 수락한 퀘스트인지 확인
-    const existingQuest = await getUserQuests(user.playerId);
-    const questAccepted = existingQuest.find((quest) => quest.questId === questId);
+    const existingQuests = await getUserQuests(user.playerId);
+    const questAccepted = existingQuests.find((quest) => quest.questId === questId);
 
     if (questAccepted) {
-      throw new Error('Quest already accepted');
+      throw new Error('이미 수락한 퀘스트입니다.');
     }
 
-    // 퀘스트 정보 가져오기
     const quest = await findQuestById(questId);
-
     if (!quest) {
-      throw new Error('Quest not found');
+      throw new Error('존재하지 않는 퀘스트입니다.');
     }
 
-    // 유저 퀘스트 추가
     await addUserQuest(user.playerId, questId);
 
-    // 응답 생성
-    const acceptQuestResponse = createResponse('response', 'S_AcceptQuest', {
+    const response = createResponse('response', 'S_AcceptQuest', {
       quest,
       success: true,
-      message: 'Quest accepted successfully',
+      message: '퀘스트를 성공적으로 수락했습니다.',
     });
 
-    socket.write(acceptQuestResponse);
+    socket.write(response);
   } catch (err) {
     handleError(socket, err);
   }
 };
 
-const updateQuestHandler = async ({ socket, payload }) => {
+// 유저 퀘스트 목록 조회 핸들러
+const getQuestsHandler = async ({ socket }) => {
   try {
-    const { questId, objectiveId, progress } = payload;
     const user = getUserBySocket(socket);
+    const quests = await getUserQuests(user.playerId);
 
-    // 유저 퀘스트 진행 상황 업데이트
-    await updateQuestProgress(user.playerId, questId, progress, 'IN_PROGRESS');
+    const response = createResponse('response', 'S_GetQuests', { quests });
+    socket.write(response);
+  } catch (err) {
+    handleError(socket, err);
+  }
+};
 
-    // 퀘스트 정보 가져오기
+// 퀘스트 진행 상황 업데이트 핸들러
+const questProgressHandler = async ({ socket, payload }) => {
+  try {
+    const user = getUserBySocket(socket);
+    const { questId, monsterId, progressIncrement } = payload;
+
+    // 퀘스트 진행 상황 업데이트
+    await updateQuestProgress(user.playerId, questId, monsterId, progressIncrement);
+
+    // 업데이트된 퀘스트 정보 가져오기
     const quest = await findQuestById(questId);
 
+    // 현재 진행 상황 계산
+    const currentProgress = quest.progress; // 현재 잡은 몬스터 수
+    const totalProgress = quest.monsterCount; // 목표 몬스터 수
+
+    const message = `퀘스트 진행 상황이 업데이트되었습니다. 현재 진행 상황: ${currentProgress}/${totalProgress} 몬스터 처치.`;
+
     // 응답 생성
-    const updateQuestResponse = createResponse('response', 'S_UpdateQuest', {
-      quest,
+    const response = createResponse('response', 'S_UpdateQuestProgress', {
       success: true,
-      message: 'Quest progress updated successfully',
+      message,
     });
 
-    socket.write(updateQuestResponse);
+    socket.write(response);
   } catch (err) {
     handleError(socket, err);
   }
 };
 
+// 퀘스트 완료 핸들러
 const completeQuestHandler = async ({ socket, payload }) => {
   try {
     const { questId } = payload;
     const user = getUserBySocket(socket);
 
-    // 유저 퀘스트 진행 상황 완료 처리
-    await updateQuestProgress(user.playerId, questId, 100, 'COMPLETED');
+    await updateQuestProgress(user.playerId, questId, 100, '완료');
 
-    // 퀘스트 정보 가져오기
     const quest = await findQuestById(questId);
 
-    // 응답 생성
-    const completeQuestResponse = createResponse('response', 'S_CompleteQuest', {
+    const response = createResponse('response', 'S_CompleteQuest', {
       questId,
       success: true,
-      message: 'Quest completed successfully',
+      message: '퀘스트를 성공적으로 완료했습니다.',
       quest,
     });
 
-    socket.write(completeQuestResponse);
+    socket.write(response);
   } catch (err) {
     handleError(socket, err);
   }
 };
 
-export { acceptQuestHandler, updateQuestHandler, completeQuestHandler };
+export { acceptQuestHandler, getQuestsHandler, completeQuestHandler, questProgressHandler };

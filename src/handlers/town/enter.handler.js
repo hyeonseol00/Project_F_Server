@@ -13,6 +13,7 @@ import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { checkAndStartQuest } from '../../session/quest.session.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -87,6 +88,17 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 현재 유저에게 응답을 보냄
     socket.write(enterTownResponse);
+    // 새로운 유저가 접속 시 퀘스트 확인
+    const currentQuest = checkAndStartQuest(curUser);
+
+    if (currentQuest) {
+      const questResponse = createResponse('response', 'S_EnterQuest', {
+        quest: currentQuest,
+        message: '진행 중인 퀘스트가 있습니다.',
+      });
+
+      socket.write(questResponse);
+    }
 
     // ---------- enter 끝 -----------------
 
