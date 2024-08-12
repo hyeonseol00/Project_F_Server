@@ -18,3 +18,7 @@ export const DB2_PASSWORD = process.env.DB2_PASSWORD || 'password1';
 export const DB2_HOST = process.env.DB2_HOST || 'localhost';
 export const DB2_PORT = process.env.DB2_PORT || 3306;
 
+export const REDIS_HOST = process.env.REDIS_HOST || 'redis';
+export const REDIS_PORT = process.env.REDIS_PORT || '10000';
+export const REDIS_USERNAME = process.env.REDIS_USERNAME || 'default';
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || 'aaaa';
