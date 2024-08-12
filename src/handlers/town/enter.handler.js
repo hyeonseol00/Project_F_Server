@@ -23,6 +23,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     const gameSession = await getGameSession(config.session.townId);
 
     let userInfo;
+
     if (!userExist) {
       // 첫 입장에서만 DB에서 정보 불러오기
       userInfo = await getUserInfoFromDB(socket, nickname, characterClass);
@@ -157,7 +158,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
 const getUserInfoFromSession = async (userExist) => {
   const curUser = userExist;
-
   // user 세션의 items중 quantity 0인 item 삭제
   for (let i = curUser.items.length - 1; i >= 0; i--) {
     const item = curUser.items[i];

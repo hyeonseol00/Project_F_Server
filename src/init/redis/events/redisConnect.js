@@ -3,10 +3,10 @@ import { loadItemTable } from '../../../assets/item.assets.js';
 import { loadMonsterTable } from '../../../assets/monster.assets.js';
 import { loadDungeonMonster } from '../../../assets/monster.assets.js';
 import { loadDungeonItem } from '../../../assets/item.assets.js';
-
+import { remove2 } from '../../../session/user.session.js';
 export const redisConnect = async () => {
   console.info('Redis connected');
-
+  // await remove2();
   await loadLevelTable();
   await loadItemTable();
   await loadMonsterTable();

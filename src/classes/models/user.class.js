@@ -132,6 +132,24 @@ class User {
     potions.sort((a, b) => a.itemId - b.itemId);
     return potions;
   }
+
+  static fromJSON(jsonData) {
+    return new User(
+      jsonData.playerId,
+      jsonData.nickname,
+      jsonData.characterClass,
+      jsonData.characterId,
+      jsonData.socket,
+      jsonData.playerInfo,
+      jsonData.items,
+      jsonData.gold,
+      jsonData.worldLevel,
+      jsonData.skillPoint,
+      jsonData.equipment,
+      jsonData.effectCode,
+    );
+  }
+  //
 }
 
 export default User;
