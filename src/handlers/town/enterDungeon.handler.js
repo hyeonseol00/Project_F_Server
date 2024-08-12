@@ -40,13 +40,12 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterHp,
         monsterAttack,
         monsterName,
+        monsterEffect,
         monsterExp,
         monsterGold,
         monsterCritical,
         monsterCriticalAttack,
       } = getMonsterById(monsterDB);
-
-      const effectCode = await getMonsterEffectById(monsterId);
 
       const monster = {
         monsterIdx: i,
@@ -62,7 +61,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterHp * hpRating,
         monsterAttack * attackRating,
         monsterName,
-        effectCode,
+        monsterEffect,
         monsterExp * expRating,
         monsterGold * goldRating,
         monsterCritical,

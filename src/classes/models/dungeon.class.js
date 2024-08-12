@@ -15,14 +15,14 @@ class InstanceDungeon {
     this.selectItem = null;
   }
 
-  addMonster(idx, id, hp, power, name, effectCode, exp, gold, critical, criticalAttack) {
+  addMonster(idx, id, hp, power, name, monsterEffect, exp, gold, critical, criticalAttack) {
     const monster = new Monster(
       idx,
       id,
       hp,
       power,
       name,
-      effectCode,
+      monsterEffect,
       exp,
       gold,
       critical,
@@ -76,15 +76,14 @@ class InstanceDungeon {
       const itemInfo = getItemById(item.itemId);
       if (itemInfo.itemType === 'potion') {
         // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
-        const potion = new Item(dungeonCode, itemInfo);
+        const potion = new Item(item.itemId, dungeonCode);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.potions.push(this.items.length); // items에 저장될 idx
         }
         this.items.push(potion);
       } else {
-        const quantity = 1;
-        const mountingItem = new Item(quantity, itemInfo);
+        const mountingItem = new Item(item.itemId);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.mountingItems.push(this.items.length); // items에 저장될 idx

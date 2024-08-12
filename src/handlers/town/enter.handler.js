@@ -1,4 +1,3 @@
-import { getItemById } from '../../assets/item.assets.js';
 import Item from '../../classes/models/item.class.js';
 import { config } from '../../config/config.js';
 import { getUserItemsByCharacterId } from '../../db/user/items/items.db.js';
@@ -7,7 +6,6 @@ import {
   findUserByUsername,
   getJobInfo,
   insertCharacter,
-  insertUserByUsername,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
@@ -30,7 +28,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       userInfo = await getUserInfoFromDB(socket, nickname, characterClass);
     } else {
       // 첫 접속이 아닌 town으로 다시 돌아온 경우 세션 불러오고, DB에 저장
-      userInfo = await getUserInfoFromSessionAndUpdateDB(userExist);
+      userInfo = await getUserInfoFromSession(userExist);
     }
     const curUser = userInfo.curUser;
     const statInfo = userInfo.statInfo;
@@ -54,11 +52,11 @@ const enterTownHandler = async ({ socket, payload }) => {
     };
 
     const equipment = {
-      weapon: curUser.weapon,
-      armor: curUser.armor,
-      gloves: curUser.gloves,
-      shoes: curUser.shoes,
-      accessory: curUser.accessory,
+      weapon: curUser.equipment.weapon,
+      armor: curUser.equipment.armor,
+      gloves: curUser.equipment.gloves,
+      shoes: curUser.equipment.shoes,
+      accessory: curUser.equipment.accessory,
     };
 
     const playerInfo = {
@@ -128,10 +126,6 @@ const enterTownHandler = async ({ socket, payload }) => {
 const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   // DB에서 user, character 정보 가져오기
   let userInDB = await findUserByUsername(nickname);
-  if (!userInDB) {
-    await insertUserByUsername(nickname);
-    userInDB = await findUserByUsername(nickname);
-  }
 
   // character 처음 생성하는 거면 character DB에 추가
   let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
@@ -176,6 +170,20 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   };
 
   return { curUser, statInfo };
+};
+
+const getUserInfoFromSession = async (userExist) => {
+  const curUser = userExist;
+
+  // user 세션의 items중 quantity 0인 item 삭제
+  for (let i = curUser.items.length - 1; i >= 0; i--) {
+    const item = curUser.items[i];
+    if (item.quantity === 0) {
+      curUser.item.splice(i, 1);
+    }
+  }
+
+  return { curUser, statInfo: curUser.playerInfo.statInfo };
 };
 
 export default enterTownHandler;

@@ -4,102 +4,110 @@ import { getItemById } from '../assets/item.assets.js';
 
 let statInfo;
 const quantity = 1;
-function updateEquip(equippedItem, findItem, user) {
-  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, avoidRate } =
+function updateEquip(equippedItem, findItemInfo, user) {
+  const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
     user.playerInfo.statInfo;
 
   const {
     itemId,
     itemType,
-    name,
-    addHp,
-    addMp,
-    addAttack,
-    addDefense,
-    addMagic,
-    addSpeed,
-    addAvoidance,
-    addCritical,
-  } = findItem;
+    itemName,
+    itemHp,
+    itemMp,
+    itemAttack,
+    itemDefense,
+    itemMagic,
+    itemSpeed,
+    itemAvoidance,
+    itemCritical,
+  } = findItemInfo;
 
   if (equippedItem !== 0) {
     const equippedItemInfo = getItemById(equippedItem);
     user.setItemId(itemType, itemId);
 
+    const updateCritical = critRate + itemCritical - equippedItemInfo.itemCritical;
+    const updateAvoidAbility = avoidRate + itemAvoidance - equippedItemInfo.itemAvoidance;
+
     statInfo = {
       level,
       hp:
-        maxHp + addHp - equippedItemInfo.itemHp < hp ? maxHp + addHp - equippedItemInfo.itemHp : hp,
-      maxHp: maxHp + addHp - equippedItemInfo.itemHp,
+        maxHp + itemHp - equippedItemInfo.itemHp < hp
+          ? maxHp + itemHp - equippedItemInfo.itemHp
+          : hp,
+      maxHp: maxHp + itemHp - equippedItemInfo.itemHp,
       mp:
-        maxMp + addMp - equippedItemInfo.itemMp < mp ? maxMp + addMp - equippedItemInfo.itemMp : mp,
-      maxMp: maxMp + addMp - equippedItemInfo.itemMp,
-      atk: atk + addAttack - equippedItemInfo.itemAttack,
-      def: def + addDefense - equippedItemInfo.itemDefense,
-      magic: magic + addMagic - equippedItemInfo.itemMagic,
-      speed: speed + addSpeed - equippedItemInfo.itemSpeed,
+        maxMp + itemMp - equippedItemInfo.itemMp < mp
+          ? maxMp + itemMp - equippedItemInfo.itemMp
+          : mp,
+      maxMp: maxMp + itemMp - equippedItemInfo.itemMp,
+      atk: atk + itemAttack - equippedItemInfo.itemAttack,
+      def: def + itemDefense - equippedItemInfo.itemDefense,
+      magic: magic + itemMagic - equippedItemInfo.itemMagic,
+      speed: speed + itemSpeed - equippedItemInfo.itemSpeed,
+      critRate: updateCritical,
+      critDmg,
+      avoidRate: updateAvoidAbility,
+      exp,
     };
 
-    const updateCritical = critRate + addCritical - equippedItemInfo.itemCritical;
-    const updateAvoidAbility = avoidRate + addAvoidance - equippedItemInfo.itemAvoidance;
-
     user.setStatInfo(statInfo);
-    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
-    const isInven = user.findMountingItemByInven(equippedItem);
-    const itemInfo = getItemById(equippedItem);
+    const isInven = user.getItem(equippedItem);
     if (!isInven) {
-      const item = new Item(quantity, itemInfo);
-      user.pushMountingItem(item);
-      if (user.getMountingItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
+      const item = new Item(equippedItem, quantity);
+      user.pushItem(item);
+      if (user.getItemQuantity(itemId) === 1) {
+        user.deleteItem(itemId);
       } else {
-        user.decMountingItem(itemId, quantity);
+        user.decItem(itemId, quantity);
       }
     } else {
-      user.addMountingItem(isInven.itemId, quantity);
-      if (user.getMountingItemQuantity(itemId) === 1) {
-        user.deleteMountingItem(itemId);
+      user.addItem(isInven.itemId, quantity);
+      if (user.getItemQuantity(itemId) === 1) {
+        user.deleteItem(itemId);
       } else {
-        user.decMountingItem(itemId, quantity);
+        user.decItem(itemId, quantity);
       }
     }
 
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] ${equippedItemInfo.itemName}을(를) 해제하고 ${name}을(를) 장착했습니다.`,
+      chatMsg: `[System] ${equippedItemInfo.itemName}을(를) 해제하고 ${itemName}을(를) 장착했습니다.`,
     });
     user.socket.write(response);
   } else {
     user.setItemId(itemType, itemId);
+    const updateCritical = critRate + itemCritical;
+    const updateAvoidAbility = avoidRate + itemAvoidance;
 
     statInfo = {
       level,
       hp: hp,
-      maxHp: maxHp + addHp,
+      maxHp: maxHp + itemHp,
       mp: mp,
-      maxMp: maxMp + addMp,
-      atk: atk + addAttack,
-      def: def + addDefense,
-      magic: magic + addMagic,
-      speed: speed + addSpeed,
+      maxMp: maxMp + itemMp,
+      atk: atk + itemAttack,
+      def: def + itemDefense,
+      magic: magic + itemMagic,
+      speed: speed + itemSpeed,
+      critRate: updateCritical,
+      critDmg,
+      avoidRate: updateAvoidAbility,
+      exp,
     };
 
-    const updateCritical = critRate + addCritical;
-    const updateAvoidAbility = avoidRate + addAvoidance;
-
     user.setStatInfo(statInfo);
-    user.setCriAvoid(updateCritical, updateAvoidAbility);
 
-    if (user.getMountingItemQuantity(itemId) === 1) {
-      user.deleteMountingItem(itemId);
+    if (user.getItemQuantity(itemId) === 1) {
+      user.deleteItem(itemId);
     } else {
-      user.decMountingItem(itemId, quantity);
+      user.decItem(itemId, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] ${name}을(를) 장착했습니다.`,
+      chatMsg: `[System] ${itemName}을(를) 장착했습니다.`,
     });
     user.socket.write(response);
   }

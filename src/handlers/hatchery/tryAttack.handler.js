@@ -2,7 +2,7 @@ import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const tryAttackHatchery = async ({ socket, payload }) => {
+const tryAttackHatcheryHandler = async ({ socket, payload }) => {
   try {
     const user = getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
@@ -23,4 +23,4 @@ const tryAttackHatchery = async ({ socket, payload }) => {
   }
 };
 
-export default tryAttackHatchery;
+export default tryAttackHatcheryHandler;

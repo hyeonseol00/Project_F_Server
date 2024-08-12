@@ -6,27 +6,32 @@ import { removeDungeon } from '../session/dungeon.session.js';
 import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
 import { getHatcherySession } from '../session/hatchery.session.js';
+import { handleError } from '../utils/error/errorHandler.js';
 
 export const onEnd = (socket) => () => {
-  const user = getUserBySocket(socket);
-  const gameSession = getGameSession(config.session.townId);
-  const hatcherySession = getHatcherySession();
+  try {
+    const user = getUserBySocket(socket);
+    const gameSession = getGameSession(config.session.townId);
+    const hatcherySession = getHatcherySession();
 
-  if (user) {
-    const sessionItems = [...user.potions, ...user.mountingItems];
+    if (user) {
+      const sessionItems = [...user.potions, ...user.mountingItems];
 
-    gameSession.removeUser(user.playerId);
-    hatcherySession.removePlayer(user.nickname);
+      gameSession.removeUser(user.playerId);
+      hatcherySession.removePlayer(user.nickname);
 
-    updateCharacterStatus(user);
-    updateCharacterItems(user.characterId, sessionItems);
+      updateCharacterStatus(user);
+      updateCharacterItems(user.characterId, sessionItems);
+    }
+    removeDungeon(user.nickname);
+
+    console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
+    console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
+
+    removeUser(socket);
+
+    leaveTownHandler(socket, user);
+  } catch (err) {
+    handleError(socket, err);
   }
-  removeDungeon(user.nickname);
-
-  console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
-  console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
-
-  removeUser(socket);
-
-  leaveTownHandler(socket, user);
 };

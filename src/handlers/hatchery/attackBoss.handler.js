@@ -3,7 +3,7 @@ import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { questProgressHandler } from '../town/quest.handler.js';
 
-const attackBossHatchery = async ({ socket, payload }) => {
+const attackBossHatcheryHandler = async ({ socket, payload }) => {
   try {
     const player = getUserBySocket(socket);
     const playerStatInfo = player.playerInfo.statInfo;
@@ -18,8 +18,10 @@ const attackBossHatchery = async ({ socket, payload }) => {
     }
 
     hatcherySession.boss.hp -= decreaseHp;
+
+    const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
     const attackBossResponse = createResponse('response', 'S_SetHatcheryBossHp', {
-      bossCurHp: hatcherySession.boss.hp,
+      bossCurHp,
     });
 
     const players = hatcherySession.players;
@@ -42,4 +44,4 @@ const attackBossHatchery = async ({ socket, payload }) => {
   }
 };
 
-export default attackBossHatchery;
+export default attackBossHatcheryHandler;

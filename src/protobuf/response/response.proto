@@ -185,3 +185,14 @@ message S_EnterQuest {
   QuestInfo quest = 1;
   string message = 2;
 }
+message S_BossTryAttack{
+}
+
+message S_SetPlayerHpHatchery{
+	int32 playerId = 1;
+	float playerCurHp = 2;
+}
+
+message S_DespawnHatchery{
+	int32 playerId = 1;
+}

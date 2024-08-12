@@ -3,23 +3,14 @@ import User from '../classes/models/user.class.js';
 import { getRegistCount } from './GaApplication.session.js';
 import { checkAndStartQuest } from './quest.session.js';
 
-export const addUser = (
-  socket,
-  nickname,
-  characterClass,
-  effect,
-  potions,
-  mountingItems,
-  character,
-) => {
+export const addUser = (socket, nickname, characterClass, effect, items, character) => {
   const user = new User(
     getRegistCount(),
     nickname,
     characterClass,
     socket,
     effect,
-    potions,
-    mountingItems,
+    items,
     character,
   );
 
@@ -60,7 +51,7 @@ export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };
 
-export const getAllUsersInTeam = (teamId) => {
+export const getAllMembersInTeam = (teamId) => {
   return userSessions.filter((user) => user.teamId === teamId);
 };
 
