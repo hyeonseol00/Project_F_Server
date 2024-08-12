@@ -6,7 +6,7 @@ import { config } from '../../config/config.js';
 
 const animHandler = async ({ socket, userId, payload }) => {
   try {
-    const user = getUserBySocket(socket);
+    const user = await getUserBySocket(socket);
     if (!user) throw new Error('유저를 찾을 수 없습니다.');
 
     const session = getGameSession(config.session.townId);

@@ -1,14 +1,10 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam, getUserByNickname } from '../../../../session/user.session.js';
-import {
-  alreadyHaveTeam,
-  notFoundUser,
-  notFoundTeam,
-} from '../exceptions.js';
+import { alreadyHaveTeam, notFoundUser, notFoundTeam } from '../exceptions.js';
 
-export const joinTeam = (sender, message) => {
+export const joinTeam = async (sender, message) => {
   const nickname = message;
-  const targetUser = getUserByNickname(nickname);
+  const targetUser = await getUserByNickname(nickname);
 
   // 예외처리: 1. 팀에 이미 들어간 경우, 2. 해당 유저가 없는경우, 3. 해당 유저가 팀이 없는 경우
   if (
@@ -19,7 +15,7 @@ export const joinTeam = (sender, message) => {
     return;
   }
 
-  const teamMembers = getAllMembersInTeam(targetUser.teamId); // 팀 멤버들을 불러옵니다.
+  const teamMembers = await getAllMembersInTeam(targetUser.teamId); // 팀 멤버들을 불러옵니다.
 
   // 본인을 팀에 넣고, 메세지 전송
   sender.setTeam(targetUser.teamId, false);

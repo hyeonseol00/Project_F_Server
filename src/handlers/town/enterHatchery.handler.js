@@ -5,11 +5,11 @@ import { getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const enterHatcheryHandler = ({ socket, payload }) => {
+const enterHatcheryHandler = async ({ socket, payload }) => {
   try {
     const gameSession = getGameSession(config.session.townId);
     const hatcherySession = getHatcherySession();
-    const user = getUserBySocket(socket);
+    const user = await getUserBySocket(socket);
 
     const { hp, maxHp, name, transform, speed } = hatcherySession.boss;
     const { posX, posY, posZ, rot } = transform;

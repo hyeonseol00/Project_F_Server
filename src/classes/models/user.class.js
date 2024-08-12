@@ -25,7 +25,6 @@ class User {
       wide: effect.wideEffect,
     };
   }
-
   setPlayerInfo(playerInfo) {
     this.playerInfo = playerInfo;
   }
@@ -43,7 +42,7 @@ class User {
     this.lastUpdateTime = Date.now();
   }
 
-  setTeam(teamId, isOwner=null) {
+  setTeam(teamId, isOwner = null) {
     this.teamId = teamId;
     this.isOwner = isOwner;
   }

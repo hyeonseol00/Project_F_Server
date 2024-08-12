@@ -1,6 +1,6 @@
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getAllUsers, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -9,7 +9,7 @@ const moveTownHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(config.session.townId);
     const users = gameSession.users;
     const { transform } = payload;
-    const curUser = getUserBySocket(socket);
+    const curUser = await getUserBySocket(socket);
 
     curUser.setPosition(transform);
 

@@ -2,8 +2,8 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam } from '../../../../session/user.session.js';
 import { notFoundTeam } from '../exceptions.js';
 
-export const sendMessageToTeam = (sender, message) => {
-  const teamMembers = getAllMembersInTeam(sender.teamId);
+export const sendMessageToTeam = async (sender, message) => {
+  const teamMembers = await getAllMembersInTeam(sender.teamId);
 
   // 예외처리: 1.떠날 팀이 없는 경우
   if (notFoundTeam(sender)) {

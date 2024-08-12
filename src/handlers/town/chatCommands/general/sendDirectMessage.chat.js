@@ -3,10 +3,10 @@ import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundUser, targetToSelf, includeInvalidParams } from '../exceptions.js';
 import { splitAtFirstSpace } from '../../../../utils/parser/messageParser.js';
 
-export const sendDirectMessage = (sender, message) => {
+export const sendDirectMessage = async (sender, message) => {
   const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
   const params = [recipientNickname, msg];
-  const recipient = getUserByNickname(recipientNickname);
+  const recipient = await getUserByNickname(recipientNickname);
 
   // 예외처리
   if (

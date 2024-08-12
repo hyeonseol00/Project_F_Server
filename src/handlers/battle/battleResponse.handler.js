@@ -19,7 +19,7 @@ import chooseItemScene from './battleFlows/clearGameWin/chooseItem.clearGame.js'
 import dropItemScene from './battleFlows/clearGameWin/dropItem.clearGame.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
-  const user = getUserBySocket(socket);
+  const user = await getUserBySocket(socket);
   const dungeon = getDungeonByUserId(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
 

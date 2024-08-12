@@ -4,7 +4,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 const tryAttackHatcheryHandler = async ({ socket, payload }) => {
   try {
-    const user = getUserBySocket(socket);
+    const user = await getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
     const players = hatcherySession.players;
 

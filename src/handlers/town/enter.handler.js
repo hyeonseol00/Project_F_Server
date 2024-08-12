@@ -17,10 +17,10 @@ const enterTownHandler = async ({ socket, payload }) => {
   try {
     const { nickname } = payload;
     const characterClass = payload.class;
-    const userExist = getUserBySocket(socket);
+    const userExist = await getUserBySocket(socket);
 
     // 게임세션을 가져온다.
-    const gameSession = getGameSession(config.session.townId);
+    const gameSession = await getGameSession(config.session.townId);
 
     let userInfo;
     if (!userExist) {
@@ -58,7 +58,7 @@ const enterTownHandler = async ({ socket, payload }) => {
       shoes: curUser.equipment.shoes,
       accessory: curUser.equipment.accessory,
     };
-    
+
     const playerInfo = {
       playerId: curUser.playerId,
       nickname,
@@ -134,7 +134,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-  const curUser = addUser(socket, nickname, characterClass, effect, userItems, character);
+  const curUser = await addUser(socket, nickname, characterClass, effect, userItems, character);
 
   const statInfo = {
     level: character.characterLevel,

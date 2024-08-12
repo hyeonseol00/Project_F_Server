@@ -7,9 +7,9 @@ import {
   targetToSelf,
 } from '../exceptions.js';
 
-export const kickMember = (sender, message) => {
+export const kickMember = async (sender, message) => {
   const nickname = message;
-  const targetUser = getUserByNickname(nickname);
+  const targetUser = await getUserByNickname(nickname);
 
   // 예외처리: 1. 본인을 지정한 경우 2. 팀이 없는 경우, 3. 해당 유저가 팀에 없는 경우, 4. 추방 권한이 없는 경우
   if (
@@ -30,7 +30,7 @@ export const kickMember = (sender, message) => {
   targetUser.socket.write(kickResponse);
 
   // 팀 전체에게 메세지 전송(현재 타겟 유저는 강퇴된 상태)
-  const teamMembers = getAllMembersInTeam(sender.teamId);
+  const teamMembers = await getAllMembersInTeam(sender.teamId);
   for (const member of teamMembers) {
     let response = createResponse('response', 'S_Chat', {
       playerId: member.playerId,

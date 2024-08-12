@@ -11,7 +11,7 @@ import { getMonsterById } from '../../assets/monster.assets.js';
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
-    const user = getUserBySocket(socket);
+    const user = await getUserBySocket(socket);
     const { nickname } = user;
 
     const gameSession = getGameSession(config.session.townId);

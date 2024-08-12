@@ -2,7 +2,7 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam } from '../../../../session/user.session.js';
 import { notFoundTeam } from '../exceptions.js';
 
-export const leaveTeam = (sender) => {
+export const leaveTeam = async (sender) => {
   const teamId = sender.teamId;
 
   // 예외처리: 1.떠날 팀이 없는 경우
@@ -19,7 +19,7 @@ export const leaveTeam = (sender) => {
   sender.socket.write(response);
 
   // 팀 전체에게 메세지 전송(현재 본인은 나간 상태)
-  const teamMembers = getAllMembersInTeam(teamId);
+  const teamMembers = await getAllMembersInTeam(teamId);
   for (const member of teamMembers) {
     let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,

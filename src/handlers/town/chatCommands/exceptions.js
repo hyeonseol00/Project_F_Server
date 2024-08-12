@@ -1,5 +1,5 @@
-import { createResponse } from "../../../utils/response/createResponse.js";
-import { getAllMembersInTeam } from "../../../session/user.session.js";
+import { createResponse } from '../../../utils/response/createResponse.js';
+import { getAllMembersInTeam } from '../../../session/user.session.js';
 
 export const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
@@ -56,8 +56,8 @@ export const notFoundUser = (sender, targetUser = undefined) => {
   return false;
 };
 
-export const notFoundUserInTeam = (sender, targetUser = undefined) => {
-  const teamMembers = getAllMembersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
+export const notFoundUserInTeam = async (sender, targetUser = undefined) => {
+  const teamMembers = await getAllMembersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
   const foundTargetUser = teamMembers
     .map((member) => member.nickname)
     .includes(targetUser.nickname);
@@ -117,8 +117,8 @@ export const targetToSelf = (sender, targetUser = undefined) => {
 export const includeInvalidParams = (sender, params) => {
   // console.log(params);
   const expectedParamsN = params.length;
-  const filterdParams = params.filter(param => (param !== " " && param !== ""));
-  
+  const filterdParams = params.filter((param) => param !== ' ' && param !== '');
+
   if (filterdParams.length !== expectedParamsN) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
