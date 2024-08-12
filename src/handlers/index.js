@@ -15,12 +15,6 @@ import tryAttackHatcheryHandler from './hatchery/tryAttack.handler.js';
 import attackBossHatcheryHandler from './hatchery/attackBoss.handler.js';
 import leaveHatcheryHandler from './hatchery/leaveHatchery.handler.js';
 import playerHitHatcheryHandler from './hatchery/playerHit.handler.js';
-import {
-  acceptQuestHandler,
-  completeQuestHandler,
-  getQuestsHandler,
-  questProgressHandler,
-} from './town/quest.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {

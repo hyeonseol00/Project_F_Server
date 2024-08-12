@@ -136,7 +136,7 @@ export const getUserQuests = async (characterId) => {
 
 export const addUserQuest = async (characterId, questId, killCount = 0, status = 'NOT_STARTED') => {
   const [existingQuest] = await pools.TOWN_MONSTER.query(
-    `SELECT * FROM user_quests WHERE user_id = ? AND quest_id = ?`,
+    `SELECT * FROM user_quests WHERE character_id = ? AND quest_id = ?`,
     [characterId, questId],
   );
 
@@ -160,4 +160,13 @@ export const updateQuestProgress = async (characterId, questId, killCount, statu
     characterId,
     questId,
   ]);
+};
+
+export const getQuestsByLevel = async (level) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.GET_QUESTS_BY_LEVEL, [level]);
+  return rows;
+};
+
+export const removeUserQuest = async (characterId, questId) => {
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.REMOVE_USER_QUEST, [characterId, questId]);
 };

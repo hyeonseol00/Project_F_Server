@@ -38,15 +38,6 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       const monster = dungeon.monsters[i];
       monsterExp += monster.exp;
       gold += monster.gold;
-      // 퀘스트 진행 상황 업데이트
-      questProgressHandler({
-        socket,
-        payload: {
-          questId: player.currentQuestId,
-          monsterId: monster.monsterIdx,
-          progressIncrement: 1,
-        },
-      });
     }
 
     const playerExp = monsterExp + playerStatus.exp;

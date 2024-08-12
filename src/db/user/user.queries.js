@@ -29,4 +29,12 @@ export const SQL_QUEST_QUERIES = {
     INSERT INTO user_quests (character_id, quest_id, kill_count, status)
     VALUES (?, ?, ?, ?)
   `,
+  GET_QUESTS_BY_LEVEL: `
+  SELECT * FROM quests
+  WHERE level_required <= ?
+`,
+  REMOVE_USER_QUEST: `
+  DELETE FROM user_quests
+  WHERE character_id = ? AND quest_id = ?
+`,
 };

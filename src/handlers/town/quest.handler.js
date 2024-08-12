@@ -1,9 +1,15 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { updateQuestProgress, addUserQuest, getUserQuests } from '../../db/user/user.db.js';
+import {
+  updateQuestProgress,
+  addUserQuest,
+  getUserQuests,
+  getQuestsByLevel,
+  removeUserQuest,
+} from '../../db/user/user.db.js';
 import { getquestById } from '../../assets/quests.assets.js';
-import { getUserBySocket } from '../../session/user.session.js';
 import isInteger from '../../utils/isInteger.js';
+import { getUserBySocket } from '../../session/user.session.js';
 
 // 퀘스트 수락 핸들러
 const acceptQuestHandler = async (sender, message) => {
@@ -31,8 +37,9 @@ const acceptQuestHandler = async (sender, message) => {
       throw new Error('존재하지 않는 퀘스트입니다.');
     }
 
-    await addUserQuest(user.characterId, questId);
+    await addUserQuest(user.characterId, questId, 0, 'IN_PROGRESS');
 
+    user.currentQuestId = questId;
     const currentQuestInfo = getquestById(quest.questId);
     const objectives = {
       objectiveId: currentQuestInfo.questId,
@@ -44,7 +51,7 @@ const acceptQuestHandler = async (sender, message) => {
       questId: quest.questId,
       questName: currentQuestInfo.questName,
       questDescription: currentQuestInfo.questDescription,
-      questStatus: quest.status,
+      questStatus: 'IN_PROGRESS',
       objectives,
     };
 
@@ -56,7 +63,7 @@ const acceptQuestHandler = async (sender, message) => {
 
     const chatResponse = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] 퀘스트 수락: ${QuestInfo.questName}`,
+      chatMsg: `[System] 퀘스트 수락: ${QuestInfo.questDescription}`,
     });
 
     user.socket.write(response);
@@ -109,46 +116,75 @@ const getQuestsHandler = async (sender) => {
   }
 };
 
-// 퀘스트 진행 상황 확인 핸들러
+// 퀘스트 진행 상황 확인 및 업데이트 핸들러
 const questProgressHandler = async (sender, message) => {
   try {
+    const socket = sender.socket;
     const user = sender;
+
     if (!isInteger(message)) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] 퀘스트 ID(숫자)을(를) 입력하세요.`,
+        chatMsg: '[System] 퀘스트 ID(숫자)을(를) 입력하세요.',
       });
-      user.socket.write(response);
+      socket.write(response);
       return;
     }
+
     const questId = Number(message);
 
-    // 업데이트된 퀘스트 정보 가져오기
+    const userQuests = await getUserQuests(user.characterId);
+    const userQuest = userQuests.find((q) => q.questId === questId);
+
+    if (!userQuest) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: '[System] 해당 퀘스트를 찾을 수 없습니다.',
+      });
+      socket.write(response);
+      return;
+    }
+
     const quest = await getquestById(questId);
 
-    // 퀘스트 진행 상황 업데이트
-    await updateQuestProgress(user.characterId, questId, killCount, status);
+    if (!quest) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: '[System] 존재하지 않는 퀘스트입니다.',
+      });
+      socket.write(response);
+      return;
+    }
 
-    // 현재 진행 상황 계산
-    const currentProgress = quest.progress; // 현재 잡은 몬스터 수
-    const totalProgress = quest.monsterCount; // 목표 몬스터 수
+    // 퀘스트 상태 업데이트 로직 추가 (몬스터 처치 등)
+    if (userQuest.status !== '완료') {
+      userQuest.killCount += 1; // 여기에 progressIncrement 값을 사용하려면 추가적인 로직 필요
+      if (userQuest.killCount >= quest.monsterTarget) {
+        // 목표 몬스터 수 달성 시
+        userQuest.status = '완료';
+      }
+      await updateQuestProgress(user.characterId, questId, userQuest.killCount, userQuest.status);
+    }
 
-    const message = `퀘스트 진행 상황: ${currentProgress}/${totalProgress} 몬스터 처치 완료.`;
+    const currentProgress = userQuest.killCount;
+    const totalProgress = quest.monsterTarget;
+
+    const progressMessage = `[System] 퀘스트 진행 상황: ${currentProgress}/${totalProgress} 몬스터 처치 완료.`;
 
     // 응답 생성
     const response = createResponse('response', 'S_UpdateQuest', {
       success: true,
-      message,
+      message: progressMessage,
     });
 
-    user.socket.write(response);
+    socket.write(response);
 
     const chatResponse = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: message,
+      chatMsg: progressMessage,
     });
 
-    user.socket.write(chatResponse);
+    socket.write(chatResponse);
   } catch (err) {
     handleError(sender.socket, err);
   }
@@ -187,49 +223,28 @@ const completeQuestHandler = async (sender, message) => {
     });
 
     user.socket.write(chatResponse);
+
+    // 완료된 퀘스트를 목록에서 삭제
+    await removeUserQuest(user.characterId, questId);
   } catch (err) {
     handleError(sender.socket, err);
   }
 };
 
-const removeQuestHandler = (questId) => {
-  return 0;
-};
-
-const checkAndStartQuestHandler = (user) => {
-  // user.quests가 undefined인 경우 빈 배열로 처리
-  const userQuests = user.quests || [];
-
-  if (!user.playerInfo || !user.playerInfo.statInfo) {
-    console.error('user.playerInfo 또는 user.playerInfo.statInfo가 정의되지 않았습니다.');
-    return null;
-  }
-
+// 퀘스트 시작 알림 핸들러
+const checkAndStartQuestHandler = async (user) => {
   const userLevel = user.playerInfo.statInfo.level;
 
-  const completedAllPreviousQuests = quests.slice(0, -1).every((quest) => {
-    const userQuest = userQuests.find((q) => q.questId === quest.questId);
-    return userQuest && userQuest.status === '완료';
-  });
+  const availableQuests = await getQuestsByLevel(userLevel);
 
-  let questToStart;
-  if (completedAllPreviousQuests) {
-    questToStart = quests.find((quest) => quest.questId === 5);
-  } else {
-    questToStart = quests.find((quest) => quest.level === userLevel);
+  for (const quest of availableQuests) {
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: user.playerId,
+      chatMsg: `[System] ${quest.questDescription} 퀘스트가 도착했습니다.`,
+    });
+
+    user.socket.write(chatResponse);
   }
-
-  if (questToStart) {
-    console.log(`시작할 퀘스트: ${JSON.stringify(questToStart)}`);
-    const success = addUserQuest(user.playerId, questToStart.questId);
-    if (success) {
-      return questToStart;
-    }
-  } else {
-    console.error('시작할 수 있는 퀘스트가 없습니다.');
-  }
-
-  return null;
 };
 
 export {
@@ -238,5 +253,4 @@ export {
   completeQuestHandler,
   questProgressHandler,
   checkAndStartQuestHandler,
-  removeQuestHandler,
 };

@@ -5,7 +5,6 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 import { getLevelById } from '../../assets/level.assets.js';
 import { getquestById } from '../../assets/quests.assets.js';
-import { removeQuestHandler } from './quest.handler.js';
 
 const questRewardHandler = async ({ socket, payload }) => {
   try {
@@ -14,7 +13,14 @@ const questRewardHandler = async ({ socket, payload }) => {
 
     const quest = getquestById(questId);
 
-    if (!quest || quest.status !== '완료') {
+    if (!quest) {
+      throw new Error('퀘스트가 존재하지 않습니다.');
+    }
+
+    const userQuests = await getUserQuests(user.characterId);
+    const userQuest = userQuests.find((q) => q.questId === questId);
+
+    if (!userQuest || userQuest.status !== '완료') {
       throw new Error('퀘스트가 완료되지 않았거나 존재하지 않습니다.');
     }
 
@@ -62,11 +68,7 @@ const questRewardHandler = async ({ socket, payload }) => {
     // 경험치 업데이트
     user.playerInfo.statInfo.exp = playerExp;
 
-    // 퀘스트 세션에서 제거
-    removeQuestHandler(questId);
-
-    // DB에 퀘스트 상태 업데이트
-    await updateQuestProgress(user.characterId, questId, 100, '보상 완료');
+    await updateQuestProgress(user.characterId, questId, userQuest.killCount, '보상 완료');
 
     const rewardMessage = `퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`;
     const rewardResponse = createResponse('response', 'S_Chat', {
