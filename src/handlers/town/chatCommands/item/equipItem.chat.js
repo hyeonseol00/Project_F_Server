@@ -3,7 +3,7 @@ import isInteger from '../../../../utils/isInteger.js';
 import updateEquip from '../../../../utils/equip.js';
 import { getItemById } from '../../../../assets/item.assets.js';
 
-export const equipItem = (user, message) => {
+export const equipItem = async (user, message) => {
   const { weapon, armor, gloves, shoes, accessory } = user.equipment;
   const { level } = user.playerInfo.statInfo;
 
@@ -25,7 +25,7 @@ export const equipItem = (user, message) => {
     return;
   }
 
-  const isItemByTable = getItemById(Number(message));
+  const isItemByTable = await getItemById(Number(message));
   if (!isItemByTable) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -34,7 +34,7 @@ export const equipItem = (user, message) => {
     user.socket.write(response);
 
     return;
-  } 
+  }
 
   const findItem = user.getItem(Number(message));
   if (!findItem) {
@@ -47,7 +47,7 @@ export const equipItem = (user, message) => {
     return;
   }
 
-  const findItemInfo = getItemById(findItem.itemId);
+  const findItemInfo = await getItemById(findItem.itemId);
   const { itemId, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {

@@ -2,9 +2,9 @@ import { getItemById } from '../../../../assets/item.assets.js';
 import { config } from '../../../../config/config.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 
-export default function switchToGameOverWin(dungeon, socket) {
+export default async function switchToGameOverWin(dungeon, socket) {
   const item = dungeon.selectItem;
-  const itemInfo = getItemById(item.itemId);
+  const itemInfo = await getItemById(item.itemId);
   const player = dungeon.player;
 
   const itemIdx = player.getItemIdx(item.itemId);

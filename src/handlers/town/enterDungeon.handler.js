@@ -19,7 +19,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     const dungeon = addDungeon(nickname, player, dungeonCode);
     gameSession.removeUser(user.playerId);
 
-    const monsters = getMonsterByDungeonId(dungeonCode + 5000);
+    const monsters = await getMonsterByDungeonId(dungeonCode + 5000);
 
     const worldLevels = config.worldLevels;
 
@@ -44,7 +44,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
         monsterGold,
         monsterCritical,
         monsterCriticalAttack,
-      } = getMonsterById(monsterDB);
+      } = await getMonsterById(monsterDB);
 
       const monster = {
         monsterIdx: i,
