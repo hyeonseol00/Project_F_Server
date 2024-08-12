@@ -4,7 +4,7 @@ import { getItemById } from '../assets/item.assets.js';
 
 let statInfo;
 const quantity = 1;
-function updateEquip(equippedItem, findItemInfo, user) {
+async function updateEquip(equippedItem, findItemInfo, user) {
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
     user.playerInfo.statInfo;
 
@@ -23,7 +23,7 @@ function updateEquip(equippedItem, findItemInfo, user) {
   } = findItemInfo;
 
   if (equippedItem !== 0) {
-    const equippedItemInfo = getItemById(equippedItem);
+    const equippedItemInfo = await getItemById(equippedItem);
     user.setItemId(itemType, itemId);
 
     const updateCritical = critRate + itemCritical - equippedItemInfo.itemCritical;

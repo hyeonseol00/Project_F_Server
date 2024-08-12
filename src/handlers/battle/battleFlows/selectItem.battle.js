@@ -3,7 +3,7 @@ import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
 
-export default function selectItemScene(responseCode, dungeon, socket) {
+export default async function selectItemScene(responseCode, dungeon, socket) {
   const usedItemIdx = responseCode - 1;
   const player = dungeon.player;
   const playerStatInfo = player.playerInfo.statInfo;
@@ -14,7 +14,7 @@ export default function selectItemScene(responseCode, dungeon, socket) {
     switchToActionScene(dungeon, socket);
     return;
   }
-  const usedItemInfo = getItemById(usedItem.itemId);
+  const usedItemInfo = await getItemById(usedItem.itemId);
 
   let msg = `${usedItemInfo.itemName}을 사용하여\n`;
   player.decItem(usedItem.itemId, 1);

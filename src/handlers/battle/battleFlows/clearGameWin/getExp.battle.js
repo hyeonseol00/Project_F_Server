@@ -13,9 +13,9 @@ export default async function getExpScene(responseCode, dungeon, socket) {
 
     let levelTable;
     if (playerLevel < config.battleScene.maxLevel) {
-      levelTable = getLevelById(playerLevel + 1);
+      levelTable = await getLevelById(playerLevel + 1);
     } else {
-      levelTable = getLevelById(1);
+      levelTable = await getLevelById(1);
     }
     const {
       requiredExp,
