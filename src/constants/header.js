@@ -38,6 +38,17 @@ export const PACKET_TYPE = {
   S_UnequipWeapon: 109,
   // ********** 100번대 패킷 끝 ********** //
 
+  // ********** 150번대 패킷 ********** //
+  C_GetQuests: 150, // 유저의 퀘스트 목록 요청
+  S_GetQuests: 151, // 유저의 퀘스트 목록 응답
+  C_AcceptQuest: 152, // 퀘스트 수락 요청
+  S_AcceptQuest: 153, // 퀘스트 수락 응답
+  C_UpdateQuest: 154, // 퀘스트 진행 업데이트 요청
+  S_UpdateQuest: 155, // 퀘스트 진행 업데이트 응답
+  C_CompleteQuest: 156, // 퀘스트 완료 요청
+  S_CompleteQuest: 157, // 퀘스트 완료 응답
+  // ********** 150번대 패킷 끝 ********** //
+
   // ********** 200번대 패킷 ********** //
   C_Register: 201,
   S_Register: 202,

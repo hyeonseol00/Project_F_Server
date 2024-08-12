@@ -6,6 +6,7 @@ import { loadLevelTable } from '../assets/level.assets.js';
 import { loadDungeonItem, loadItemTable } from '../assets/item.assets.js';
 import { loadMonsterTable } from '../assets/monster.assets.js';
 import { loadDungeonMonster } from '../assets/monster.assets.js';
+import { loadQuestTable } from '../assets/quests.assets.js';
 const initServer = async () => {
   try {
     await loadProtos();
@@ -16,6 +17,7 @@ const initServer = async () => {
     await loadMonsterTable();
     await loadDungeonMonster();
     await loadDungeonItem();
+    await loadQuestTable();
   } catch (err) {
     console.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료

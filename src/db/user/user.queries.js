@@ -13,3 +13,20 @@ export const SQL_QUERIES = {
   UPDATE_CHARACTER_STATUS:
     'UPDATE characters SET character_level = ?, experience = ?, cur_hp = ?, max_hp = ?, cur_mp = ?, max_mp = ?, attack = ?, defense = ?, magic = ?, speed = ?, critical = ?, critical_attack = ?, avoid_ability = ?, gold = ?, world_level = ?, skill_point=?, weapon = ?, armor = ?, gloves = ?, shoes = ?, accessory = ?, updated_at = CURRENT_TIMESTAMP WHERE character_name = ? AND job_id = ?',
 };
+
+export const SQL_QUEST_QUERIES = {
+  ADD_QUEST: `
+    INSERT INTO quests (quest_name, quest_description, quest_level, monster_count, reward_exp, reward_gold)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `,
+  UPDATE_QUEST_PROGRESS: `
+    UPDATE user_quests
+    SET kill_count = ?, status = ?
+    WHERE character_id = ? AND quest_id = ?
+  `,
+  GET_USER_QUESTS: 'SELECT * FROM user_quests WHERE character_id = ?',
+  ADD_USER_QUEST: `
+    INSERT INTO user_quests (character_id, quest_id, kill_count, status)
+    VALUES (?, ?, ?, ?)
+  `,
+};

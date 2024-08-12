@@ -1,7 +1,6 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import { getRegistCount } from './GaApplication.session.js';
-import { checkAndStartQuest } from './quest.session.js';
 
 export const addUser = (socket, nickname, characterClass, effect, items, character) => {
   const user = new User(
@@ -14,22 +13,8 @@ export const addUser = (socket, nickname, characterClass, effect, items, charact
     character,
   );
 
-  if (!user.playerId) {
-    console.error('User ID is not correctly initialized.');
-    return null;
-  }
-
   userSessions.push(user);
 
-  const quest = checkAndStartQuest(user);
-  if (quest) {
-    user.socket.write(
-      JSON.stringify({
-        type: 'newQuest',
-        data: { questId: quest.questId, questName: quest.questName },
-      }),
-    );
-  }
   return user;
 };
 
