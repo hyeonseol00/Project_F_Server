@@ -53,6 +53,10 @@ import {
   DB2_PASSWORD,
   DB2_HOST,
   DB2_PORT,
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_USERNAME,
+  REDIS_PASSWORD,
 } from '../constants/env.js';
 import {
   BOSS_ATTACK_RANGE,
@@ -107,6 +111,12 @@ export const config = {
       host: DB2_HOST,
       port: DB2_PORT,
     },
+  },
+  redis: {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    username: REDIS_USERNAME,
+    password: REDIS_PASSWORD,
   },
   sceneStatus: {
     message: SCENE_MESSAGE_WINDOW,
