@@ -101,8 +101,8 @@ export const updateCharacterStatus = async (user) => {
   const { level, hp, maxHp, mp, maxMp, atk, speed, critRate, critDmg, avoidRate, exp, def, magic } =
     statInfo;
 
-  const { nickname, characterClass, gold, worldLevel, skillPoint } = user;
-  const { weapon, armor, gloves, shoes, accessory } = playerInfo;
+  const { nickname, gold, worldLevel, skillPoint } = playerInfo;
+  const { weapon, armor, gloves, shoes, accessory } = playerInfo.equipment;
 
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
     level,
@@ -127,6 +127,6 @@ export const updateCharacterStatus = async (user) => {
     shoes,
     accessory,
     nickname,
-    characterClass,
+    playerInfo.class,
   ]);
 };

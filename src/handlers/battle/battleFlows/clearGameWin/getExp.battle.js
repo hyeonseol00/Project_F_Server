@@ -4,7 +4,6 @@ import { getLevelById } from '../../../../assets/level.assets.js';
 import {
   getPlayerInfo,
   setGold,
-  setLevel,
   setStatInfo,
   setWorldLevel,
   skillPointUpdate,
@@ -63,7 +62,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         critDmg: playerInfo.statInfo.critDmg + criticalAttack,
         avoidRate: playerInfo.statInfo.avoidRate + avoidAbility,
       };
-      await setLevel(socket, statInfo);
+      await setStatInfo(socket, statInfo);
       await setGold(socket, playerInfo.gold + gold);
       await skillPointUpdate(socket, playerInfo.skillPoint + skillPoint);
 
