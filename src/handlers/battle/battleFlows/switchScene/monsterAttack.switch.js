@@ -1,10 +1,11 @@
 import { config } from '../../../../config/config.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
-
-export default function switchToMonsterAttackScene(dungeon, socket) {
+import { getStatInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+export default async function switchToMonsterAttackScene(dungeon, socket) {
   const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
+  // const playerStatInfo = player.playerInfo.statInfo;
+  const playerStatInfo = await getStatInfo(socket.remotePort);
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];

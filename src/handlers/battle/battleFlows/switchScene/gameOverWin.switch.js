@@ -1,13 +1,14 @@
 import { getItemById } from '../../../../assets/item.assets.js';
 import { config } from '../../../../config/config.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
-
+import { getItemIdx } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 export default async function switchToGameOverWin(dungeon, socket) {
   const item = dungeon.selectItem;
   const itemInfo = await getItemById(item.itemId);
   const player = dungeon.player;
 
-  const itemIdx = player.getItemIdx(item.itemId);
+  // const itemIdx = player.getItemIdx(item.itemId);
+  const itemIdx = await getItemIdx(item.itemId);
   if (itemIdx === -1) {
     // 아이템이 없으면 추가
     player.items.push(item);

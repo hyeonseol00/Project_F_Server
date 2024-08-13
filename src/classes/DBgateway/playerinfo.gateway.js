@@ -78,6 +78,10 @@ export const setStatInfo = (statInfo) => {
   this.playerInfo.statInfo = statInfo;
 };
 
+export const getStatInfo = () => {
+  return this.playerInfo.statInfo;
+};
+
 export const getItemQuantity = (itemId) => {
   const findItem = this.items.find((item) => item.itemId === itemId);
   if (findItem) {
