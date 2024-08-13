@@ -6,6 +6,11 @@ class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
+    this.transforms = {};
+    /* this.transforms = {
+      nickname: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+      nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+    }; */
     this.intervalManager = new IntervalManager();
   }
 

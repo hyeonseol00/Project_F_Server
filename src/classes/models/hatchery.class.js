@@ -3,7 +3,6 @@ import { findMonsterById } from '../../db/game/game.db.js';
 import { getUserByNickname } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import toEulerAngles from '../../utils/toEulerAngle.js';
-import { getPlayerTransform } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 
@@ -17,6 +16,11 @@ class Hatchery {
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
     this.lastAttackTime = Date.now();
+    this.transforms = {};
+    /* this.transforms = {
+      nickname: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+      nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+    }; */
 
     this.initMonster({ ...config.hatchery.bossInitTransform });
   }
@@ -90,13 +94,13 @@ class Hatchery {
     }
 
     const bossTr = this.boss.transform;
-    const firstTr = await getPlayerTransform(players[0].socket);
+    const firstTr = players[0].transform;
     let targetPlayerTr = firstTr;
     let minDistance = 2e9;
 
     // 플레이어들과 몬스터 간의 거리 계산
     for (const player of players) {
-      const playerTr = player.playerInfo.transform;
+      const playerTr = this.transforms[player.nickname];
       const distance = this.boss.getDistanceFromPlayer(playerTr);
       if (minDistance > distance) {
         minDistance = distance;
