@@ -1,7 +1,12 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundTeam, alreadyHaveTeam, notFoundUser, alreadyInvited } from '../exceptions.js';
-import { getPlayerInfo, getTeam } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getInvitedTeams,
+  getPlayerInfo,
+  getTeam,
+  setInvitedTeams,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const inviteToTeam = async (sender, message) => {
   const senderInfo = await getPlayerInfo(sender.socket);
@@ -19,12 +24,13 @@ export const inviteToTeam = async (sender, message) => {
   }
 
   // 초대 목록이 없는 경우 초기화합니다.
-  if (!targetUser.invitedTeams) {
-    targetUser.invitedTeams = [];
+  if (!(await getInvitedTeams(targetUser.socket))) {
+    await setInvitedTeams(targetUser.socket, []);
   }
-
+  const invitedTeams = [];
   const { teamId: senderTeamId } = await getTeam(sender.socket);
-  targetUser.invitedTeams.push(senderTeamId);
+  invitedTeams.push(senderTeamId);
+  await setInvitedTeams(targetUser.socket, invitedTeams);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,

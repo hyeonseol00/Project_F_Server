@@ -1,6 +1,10 @@
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { getAllMembersInTeam } from '../../../session/user.session.js';
-import { getPlayerInfo, getTeam } from '../../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getInvitedTeams,
+  getPlayerInfo,
+  getTeam,
+} from '../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const notFoundTeam = async (sender, targetUser = undefined) => {
   const targetUserInfo = await getPlayerInfo(targetUser.socket);
@@ -83,7 +87,7 @@ export const notFoundUserInTeam = async (sender, targetUser = undefined) => {
 
 export const alreadyInvited = async (sender, targetUser = undefined) => {
   const { teamId: senderTeamId } = await getTeam(sender.socket);
-  if (targetUser.invitedTeams?.includes(senderTeamId)) {
+  if ((await getInvitedTeams(targetUser.socket))?.includes(senderTeamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: `[System] 해당 유저는 이미 초대되었습니다.`,
@@ -96,7 +100,7 @@ export const alreadyInvited = async (sender, targetUser = undefined) => {
 
 export const notFoundInvitation = async (sender, targetUser = undefined) => {
   const { teamId: targetUserTeamId } = await getTeam(targetUser.socket);
-  if (!targetUser || !sender.invitedTeams.includes(targetUserTeamId)) {
+  if (!targetUser || !(await getInvitedTeams(sender.socket)).includes(targetUserTeamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 당신은 팀에 초대되지 않았습니다.',

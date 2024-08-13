@@ -2,8 +2,10 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam, getUserByNickname } from '../../../../session/user.session.js';
 import { alreadyHaveTeam, notFoundInvitation, notFoundTeam } from '../exceptions.js';
 import {
+  getInvitedTeams,
   getPlayerInfo,
   getTeam,
+  setInvitedTeams,
   setTeam,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
@@ -31,7 +33,9 @@ export const acceptTeam = async (sender, message) => {
   sender.socket.write(response);
 
   // 초대 목록에서 팀 ID 제거
-  sender.invitedTeams = sender.invitedTeams.filter((id) => id !== targetUserTeamId);
+  const senderInvitedTeams = await getInvitedTeams(sender.socket);
+  const invitedTeams = senderInvitedTeams.filter((id) => id !== targetUserTeamId);
+  await setInvitedTeams(sender.socket, invitedTeams);
 
   // 팀 멤버들에게 본인이 들어왔다는 메시지를 전송합니다.
   const teamMembers = await getAllMembersInTeam(targetUserTeamId).filter(

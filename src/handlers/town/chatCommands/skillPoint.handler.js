@@ -4,8 +4,7 @@ import { getPlayerInfo, skillPointUpdate } from '../../../classes/DBgateway/play
 
 export const skillPointHandler = async (user, message) => {
   const userInfo = await getPlayerInfo(user.socket);
-  const { skillPoint } = user;
-  let { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = userInfo.statInfo;
+  let { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, skillPoint } = userInfo.statInfo;
   const [upAbility, quantity] = message.split(' ');
   const validAbilities = ['hp', 'mp', 'atk', 'def', 'magic', 'speed'];
   if (!validAbilities.includes(upAbility)) {
