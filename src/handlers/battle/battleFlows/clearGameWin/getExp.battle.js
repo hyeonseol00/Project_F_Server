@@ -1,16 +1,22 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
-import { getStatInfo, setLevel } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getPlayerInfo,
+  setGold,
+  setLevel,
+  setStatInfo,
+  setWorldLevel,
+  skillPointUpdate,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
+
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
     const btns = [{ msg: '다음', enable: true }];
     let battleLog = {};
 
-    const player = dungeon.player; // user 클래스
-    const playerStatus = await getStatInfo(socket);
-    // const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
-    const playerLevel = playerStatus.level; // 유저의 현재 레벨
+    const playerInfo = await getPlayerInfo(socket);
+    const playerLevel = playerInfo.statInfo.level; // 유저의 현재 레벨
 
     let levelTable;
     if (playerLevel < config.battleScene.maxLevel) {
@@ -39,26 +45,30 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       monsterExp += monster.exp;
       gold += monster.gold;
     }
-    const playerExp = monsterExp + playerStatus.exp;
+    const playerExp = monsterExp + playerInfo.statInfo.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
-      setLevel(socket.remotePort, playerLevel + 1, playerExp - requiredExp);
-      playerStatus.maxHp += hp;
-      playerStatus.maxMp += mp;
-      playerStatus.hp = playerStatus.maxHp;
-      playerStatus.mp = playerStatus.maxMp;
-      playerStatus.atk += attack;
-      playerStatus.def += defense;
-      playerStatus.magic += magic;
-      playerStatus.speed += speed;
-      playerStatus.critRate += critical;
-      playerStatus.critDmg += criticalAttack;
-      playerStatus.avoidRate += avoidAbility;
-      player.gold += gold;
-      player.skillPoint += skillPoint;
+      const statInfo = {
+        level: playerLevel + 1,
+        exp: playerExp - requiredExp,
+        maxHp: playerInfo.statInfo.maxHp + hp,
+        maxMp: playerInfo.statInfo.maxMp + mp,
+        hp: playerInfo.statInfo.maxHp,
+        mp: playerInfo.statInfo.maxMp,
+        atk: playerInfo.statInfo.atk + attack,
+        def: playerInfo.statInfo.def + defense,
+        magic: playerInfo.statInfo.magic + magic,
+        speed: playerInfo.statInfo.speed + speed,
+        critRate: playerInfo.statInfo.critRate + critical,
+        critDmg: playerInfo.statInfo.critDmg + criticalAttack,
+        avoidRate: playerInfo.statInfo.avoidRate + avoidAbility,
+      };
+      await setLevel(socket, statInfo, playerInfo.gold, playerInfo.skillPoint);
+      await setGold(socket, playerInfo.gold + gold);
+      await skillPointUpdate(socket, playerInfo.skillPoint + skillPoint);
 
       if ((playerLevel + 1) % 5 === 0) {
-        player.worldLevel++;
+        await setWorldLevel(socket, playerInfo.worldLevel + 1);
       }
 
       const message = `경험치 ${monsterExp}, 골드 ${gold}, 스킬포인트 ${skillPoint}를 획득했습니다!\n
@@ -72,8 +82,24 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         btns,
       };
     } else {
-      playerStatus.exp += monsterExp;
-      player.gold += gold;
+      const statInfo = {
+        level: playerLevel,
+        exp: playerExp + monsterExp,
+        maxHp: playerInfo.statInfo.maxHp,
+        maxMp: playerInfo.statInfo.maxMp,
+        hp: playerInfo.statInfo.Hp,
+        mp: playerInfo.statInfo.Mp,
+        atk: playerInfo.statInfo.atk,
+        def: playerInfo.statInfo.def,
+        magic: playerInfo.statInfo.magic,
+        speed: playerInfo.statInfo.speed,
+        critRate: playerInfo.statInfo.critRate,
+        critDmg: playerInfo.statInfo.critDmg,
+        avoidRate: playerInfo.statInfo.avoidRate,
+      };
+
+      await setStatInfo(socket, statInfo);
+      await setGold(socket, playerInfo.gold + gold);
 
       battleLog = {
         msg: `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!`,
