@@ -17,7 +17,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const gameSession = getGameSession(config.session.townId);
     const dungeon = addDungeon(userPlayerInfo.nickname, dungeonCode);
-    gameSession.removeUser(user.playerId);
+    gameSession.removeUser(user.nickname);
 
     const monsters = await getMonsterByDungeonId(dungeonCode + 5000);
 
