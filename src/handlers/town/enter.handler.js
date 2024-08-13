@@ -48,28 +48,24 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // ---------- enter 끝 -----------------
 
-    const players = [];
+    const playerInfos = [];
 
     // 게임 세션에 저장된 모든 playerInfo를 가져옴
     for (const nickname of gameSession.playerNicknames) {
-      const player = await getUserByNickname(nickname);
-      players.push(player);
+      const player = getUserByNickname(nickname);
+      const playerInfo = await getPlayerInfo(player.socket);
+      playerInfos.push(playerInfo);
     }
 
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
     for (const nickname of gameSession.playerNicknames) {
-      const filterdPlayers = players.filter((player) => player.nickname !== nickname);
-      for (const index of filterdPlayers) {
-        const playerInfo = await getPlayerInfo(filterdPlayers[index].socket);
-        playerInfo.transform = gameSession.transforms[nickname];
-        filterdPlayers[index].playerInfo = playerInfo;
-      }
+      const filterdPlayers = playerInfos.filter((playerInfo) => playerInfo.nickname !== nickname);
+
       const user = await getUserByNickname(nickname);
-      const playerInfo = await getPlayerInfo(user.socket);
 
       // 해당 유저에게 다른 유저들을 스폰(해당 유저 제외)
       const spawnTownResponse = createResponse('response', 'S_Spawn', {
-        players: playerInfo,
+        players: filterdPlayers,
       });
 
       user.socket.write(spawnTownResponse);

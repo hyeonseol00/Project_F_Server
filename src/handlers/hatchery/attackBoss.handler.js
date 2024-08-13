@@ -1,6 +1,6 @@
 import { getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
@@ -23,9 +23,9 @@ const attackBossHatcheryHandler = async ({ socket, payload }) => {
       bossCurHp,
     });
 
-    const players = hatcherySession.playerNicknames;
-    for (const player of players) {
-      player.socket.write(attackBossResponse);
+    for (const nickname of hatcherySession.playerNicknames) {
+      const user = getUserByNickname(nickname);
+      user.socket.write(attackBossResponse);
     }
   } catch (err) {
     handleError(socket, err);
