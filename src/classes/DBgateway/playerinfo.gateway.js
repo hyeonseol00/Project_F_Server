@@ -82,17 +82,20 @@ export const getLevel = async (socket) => {
   return statInfo.level;
 };
 
-export const setLevel = async (socket, level, experience) => {
-  const statInfo = await getStatInfo(socket);
-  statInfo.level = level;
-  statInfo.exp = experience;
-  await setStatInfo(statInfo);
+export const setLevel = async (socket, statInfo, gold, skillPoint) => {
+  await setStatInfo(socket, statInfo);
+  await setGold(socket, gold);
 };
 
 // How...?
-export const skillPointUpdate = async (socket, statInfo) => {
-  await setStatInfo(socket, statInfo);
+export const skillPointUpdate = async (socket, skillPoint) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'skillPoint', skillPoint);
+  // await setStatInfo(socket, statInfo);
   // this.skillPoint = statInfo.skillPoint;
+};
+
+export const setWorldLevel = async (socket, worldLevel) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'worldLevel', worldLevel);
 };
 
 // =======getter, setter 메소드 끝=========
