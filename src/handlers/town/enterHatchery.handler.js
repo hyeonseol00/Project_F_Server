@@ -4,6 +4,7 @@ import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { setTransformInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 const enterHatcheryHandler = async ({ socket, payload }) => {
   try {
@@ -24,7 +25,7 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
       posZ: Math.random() * 16 - 8, // -8 ~ 8
       rot: 180,
     };
-    user.setTransformInfo(transformInfo);
+    await setTransformInfo(socket.remotePort, transformInfo);
     const bossTransformInfo = { posX, posY, posZ, rot };
     const enterHatcheryResponse = createResponse('response', 'S_EnterHatchery', {
       player: user.getPlayerInfo(),
