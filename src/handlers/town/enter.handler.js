@@ -139,18 +139,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     posZ: Math.random() * 16 - 8, // -8 ~ 8
     rot: Math.random() * 360, // 0 ~ 360
   };
-  // 임시용(패킷 구조 맞추기 용)=====
-  // console.log("userItems", userItems);
-  const filteredItems = [];
-
-  for (const userItem of userItems) {
-    const item = {
-      id: userItem.itemId,
-      quantity: userItem.quantity,
-    };
-    filteredItems.push(item);
-  }
-  // =================================
 
   const playerInfo = {
     playerId: curUser.playerId,
@@ -164,7 +152,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   };
 
   curUser.playerInfo = playerInfo;
-
   return curUser;
 };
 

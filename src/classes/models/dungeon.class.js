@@ -72,17 +72,17 @@ class InstanceDungeon {
 
     const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      const itemInfo = await getItemById(item.id);
+      const itemInfo = await getItemById(item.itemId);
       if (itemInfo.itemType === 'potion') {
         // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
-        const potion = new Item(item.id, dungeonCode);
+        const potion = new Item(item.itemId, dungeonCode);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.potions.push(this.items.length); // items에 저장될 idx
         }
         this.items.push(potion);
       } else {
-        const mountingItem = new Item(item.id);
+        const mountingItem = new Item(item.itemId);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.mountingItems.push(this.items.length); // items에 저장될 idx
@@ -94,7 +94,7 @@ class InstanceDungeon {
 
   getRandomItem() {
     const potionOrItem = Math.floor(Math.random() * 10); // 0 ~ 9
-    if (potionOrItem < 7) {
+    if (potionOrItem < 1) {
       // 70% 확률로 포션중 하나
       return this.items[this.potions[Math.floor(Math.random() * this.potions.length)]];
     } else {

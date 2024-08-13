@@ -104,7 +104,7 @@ export const setWorldLevel = async (socket, worldLevel) => {
 // ==============item=============
 
 export const getPotionsAccount = async (socket) => {
-  const { items } = await getInven(socket);
+  const items = await getInven(socket);
   let count = 0;
   for (const item of items) {
     if (item.isPotion === false) continue;
@@ -175,7 +175,7 @@ export const getItemQuantity = async (socket, id) => {
 };
 
 export const getPotionItems = async (socket) => {
-  const { items } = await getInven(socket);
+  const items = await getInven(socket);
   const potions = [];
   for (const item of items) {
     if (item.isPotion) {
