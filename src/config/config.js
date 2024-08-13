@@ -85,6 +85,7 @@ import {
   LEVEL_TABLE_KEY,
   MONSTER_TABLE_KEY,
   DUNGEON_TABLE_KEY,
+  DUNGEON_MONSTER_TABLE_KEY,
 } from '../constants/redisKey.js';
 
 export const config = {
@@ -129,6 +130,7 @@ export const config = {
     monsterTable: MONSTER_TABLE_KEY,
     levelTable: LEVEL_TABLE_KEY,
     dungeonTable: DUNGEON_TABLE_KEY,
+    dungeonMonsterTable: DUNGEON_MONSTER_TABLE_KEY,
   },
   sceneStatus: {
     message: SCENE_MESSAGE_WINDOW,

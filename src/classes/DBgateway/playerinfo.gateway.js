@@ -7,18 +7,21 @@ const playerInfoKey = 'playerInfo:';
 // playerInfo
 export const getPlayerInfo = async (socket) => {
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
+
+  for (const key in playerInfo) {
+    playerInfo[key] = JSON.parse(playerInfo[key]);
+  }
+
   return playerInfo;
 };
 
 export const setPlayerInfo = async (socket, playerInfo) => {
   for (const field in playerInfo) {
-    if (playerInfo.hasOwnProperty(field)) {
-      await redisCli.hSet(
-        `${playerInfoKey}${socket.remotePort}`,
-        field,
-        JSON.stringify(playerInfo[field]),
-      );
-    }
+    await redisCli.hSet(
+      `${playerInfoKey}${socket.remotePort}`,
+      field,
+      JSON.stringify(playerInfo[field]),
+    );
   }
 };
 
@@ -100,7 +103,7 @@ export const skillPointUpdate = async (socket, statInfo) => {
 // ==============item=============
 
 export const getPotionsAccount = async (socket) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   let count = 0;
   for (const item of items) {
     if (item.isPotion === false) continue;
@@ -120,20 +123,20 @@ export const getItemIdx = async (socket, itemId) => {
 };
 
 export const getItem = async (socket, itemId) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const findItem = items.find((item) => item.itemId === itemId);
 
   return findItem;
 };
 
 export const pushItem = async (socket, item) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   items.push(item);
   await setInven(items);
 };
 
 export const deleteItem = async (socket, itemId) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   if (findIdx !== -1) {
     items.splice(findIdx, 1);
@@ -142,14 +145,14 @@ export const deleteItem = async (socket, itemId) => {
 };
 
 export const decItem = async (socket, itemId, quantity) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   items[findIdx].quantity -= quantity;
   await setInven(items);
 };
 
 export const addItem = async (socket, itemId, quantity) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   items[findIdx].quantity += quantity;
   await setInven(items);
@@ -162,7 +165,7 @@ export const setItemId = async (socket, itemType, itemId) => {
 };
 
 export const getItemQuantity = async (socket, itemId) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const findItem = items.find((item) => item.itemId === itemId);
   if (findItem) {
     return findItem.quantity;
@@ -171,7 +174,7 @@ export const getItemQuantity = async (socket, itemId) => {
 };
 
 export const getPotionItems = async (socket) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const potions = [];
   for (const item of items) {
     if (item.isPotion) {

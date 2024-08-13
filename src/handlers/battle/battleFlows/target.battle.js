@@ -1,11 +1,13 @@
 import { getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
+import { getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
 export default async function targetMonsterScene(responseCode, dungeon, socket) {
   const btns = [{ msg: '다음', enable: true }];
 
-  const playerEffectCode = await getPlayerEffectCode(socket);
+  const user = await getUserBySocket(socket);
+  const playerEffectCode = user.effectCode;
   const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
   const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
@@ -15,7 +17,11 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
-  const effectCode = [playerEffectCode.normal, playerEffectCode.single, playerEffectCode.wide];
+  const effectCode = [
+    playerEffectCode.baseEffect,
+    playerEffectCode.singleEffect,
+    playerEffectCode.wideEffect,
+  ];
   let decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
   const decreaseMp = [0, 25, 50];
 

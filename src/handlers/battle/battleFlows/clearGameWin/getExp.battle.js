@@ -8,7 +8,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     let battleLog = {};
 
     const player = dungeon.player; // user 클래스
-    const playerStatus = await getStatInfo(socket.remotePort);
+    const playerStatus = await getStatInfo(socket);
     // const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
     const playerLevel = playerStatus.level; // 유저의 현재 레벨
 
