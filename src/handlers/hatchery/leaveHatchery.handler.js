@@ -1,5 +1,6 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const leaveHatcheryHandler = ({ socket, payload }) => {
@@ -10,8 +11,9 @@ const leaveHatcheryHandler = ({ socket, payload }) => {
     const playerDespawnResponse = createResponse('response', 'S_DespawnHatchery', {
       playerId: user.playerId,
     });
-    hatcherySession.players.forEach((player) => {
-      player.socket.write(playerDespawnResponse);
+    hatcherySession.playerNicknames.forEach((nickname) => {
+      const user = getUserByNickname(nickname);
+      user.socket.write(playerDespawnResponse);
     });
 
     const leaveHatcheryResponse = createResponse('response', 'S_LeaveDungeon', {});
