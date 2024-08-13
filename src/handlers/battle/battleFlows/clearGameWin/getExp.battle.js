@@ -9,7 +9,7 @@ import {
   setWorldLevel,
   skillPointUpdate,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
-import { size } from 'lodash';
+
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
     const btns = [{ msg: '다음', enable: true }];
