@@ -19,7 +19,7 @@ async function updateUnEquip(uneqipItem, user) {
     userInfo.statInfo;
 
   const uneqipItemInfo = await getItemById(uneqipItem);
-  setItemId(user.socket, uneqipItemInfo.itemType, itemId);
+  await setItemId(user.socket, uneqipItemInfo.itemType, itemId);
 
   const updateCritical = critRate - uneqipItemInfo.itemCritical;
   const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
@@ -40,14 +40,14 @@ async function updateUnEquip(uneqipItem, user) {
     exp,
   };
 
-  setStatInfo(user.socket, statInfo);
+  await setStatInfo(user.socket, statInfo);
 
   const isInven = await getItem(user.socket, uneqipItemInfo.itemId);
   if (!isInven) {
     const item = new Item(uneqipItem, quantity);
-    pushItem(user.socket, item);
+    await pushItem(user.socket, item);
   } else {
-    addItem(user.socket, uneqipItemInfo.itemId, quantity);
+    await addItem(user.socket, uneqipItemInfo.itemId, quantity);
   }
 
   const response = createResponse('response', 'S_Chat', {

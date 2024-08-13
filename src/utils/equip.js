@@ -36,7 +36,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
 
   if (equippedItem !== 0) {
     const equippedItemInfo = await getItemById(equippedItem);
-    setItemId(user.socket, itemType, itemId);
+    await setItemId(user.socket, itemType, itemId);
 
     const updateCritical = critRate + itemCritical - equippedItemInfo.itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance - equippedItemInfo.itemAvoidance;
@@ -63,23 +63,23 @@ async function updateEquip(equippedItem, findItemInfo, user) {
       exp,
     };
 
-    setStatInfo(user.socket, statInfo);
+    await setStatInfo(user.socket, statInfo);
 
     const isInven = await getItem(user.socket, equippedItem);
     if (!isInven) {
       const item = new Item(equippedItem, quantity);
-      pushItem(user.socket, item);
+      await pushItem(user.socket, item);
       if ((await getItemQuantity(user.socket, itemId)) === 1) {
-        deleteItem(user.socket, itemId);
+        await deleteItem(user.socket, itemId);
       } else {
-        decItem(user.socket, itemId, quantity);
+        await decItem(user.socket, itemId, quantity);
       }
     } else {
-      addItem(user.socket, isInven.itemId, quantity);
+      await addItem(user.socket, isInven.itemId, quantity);
       if ((await getItemQuantity(user.socket, itemId)) === 1) {
-        deleteItem(user.socket, itemId);
+        await deleteItem(user.socket, itemId);
       } else {
-        decItem(user.socket, itemId, quantity);
+        await decItem(user.socket, itemId, quantity);
       }
     }
 
@@ -89,7 +89,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     });
     user.socket.write(response);
   } else {
-    setItemId(user.socket, itemType, itemId);
+    await setItemId(user.socket, itemType, itemId);
     const updateCritical = critRate + itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance;
 
@@ -109,12 +109,12 @@ async function updateEquip(equippedItem, findItemInfo, user) {
       exp,
     };
 
-    setStatInfo(user.socket, statInfo);
+    await setStatInfo(user.socket, statInfo);
 
     if ((await getItemQuantity(user.socket, itemId)) === 1) {
-      deleteItem(user.socket, itemId);
+      await deleteItem(user.socket, itemId);
     } else {
-      decItem(user.socket, itemId, quantity);
+      await decItem(user.socket, itemId, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {

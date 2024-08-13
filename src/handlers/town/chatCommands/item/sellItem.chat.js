@@ -86,11 +86,11 @@ export const sellItem = async (user, message) => {
       }
 
       const addGold = itemCost * Number(quantity) * 0.7;
-      setGold(user.socket, userInfo.gold + Math.floor(addGold));
-      decItem(user.socket, sellItem.itemId, Number(quantity));
+      await setGold(user.socket, userInfo.gold + Math.floor(addGold));
+      await decItem(user.socket, sellItem.itemId, Number(quantity));
 
       if ((await getItemQuantity(user.socket, sellItem.itemId)) === 0) {
-        deleteItem(user.socket, sellItem.itemId);
+        await deleteItem(user.socket, sellItem.itemId);
       }
 
       const response = createResponse('response', 'S_Chat', {
@@ -122,11 +122,11 @@ export const sellItem = async (user, message) => {
       }
 
       const addGold = itemCost * Number(quantity) * 0.7;
-      setGold(user.socket, userInfo.gold + Math.floor(addGold));
-      decItem(user.socket, sellItem.itemId, Number(quantity));
+      await setGold(user.socket, userInfo.gold + Math.floor(addGold));
+      await decItem(user.socket, sellItem.itemId, Number(quantity));
 
       if ((await getItemQuantity(user.socket, sellItem.itemId)) === 0) {
-        deleteItem(user.socket, sellItem.itemId);
+        await deleteItem(user.socket, sellItem.itemId);
       }
 
       const response = createResponse('response', 'S_Chat', {

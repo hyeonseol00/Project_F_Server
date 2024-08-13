@@ -72,12 +72,12 @@ export const buyItem = async (user, message) => {
       const potionIdx = getItemIdx(buyItem.itemId);
       if (potionIdx === -1) {
         potion = new Item(Number(id), Number(quantity));
-        pushItem(user.socket, potion);
+        await pushItem(user.socket, potion);
       } else {
-        addItem(user.socket, buyItem.itemId, Number(quantity));
+        await addItem(user.socket, buyItem.itemId, Number(quantity));
       }
 
-      setGold(user.socket, userInfo.gold - itemCost);
+      await setGold(user.socket, userInfo.gold - itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
       potion = await getItem(user.socket, buyItem.itemId);
@@ -109,12 +109,12 @@ export const buyItem = async (user, message) => {
       const itemIdx = await getItemIdx(user.socket, buyItem.itemId);
       if (itemIdx === -1) {
         item = new Item(Number(id), Number(quantity));
-        pushItem(user.socket, item);
+        await pushItem(user.socket, item);
       } else {
-        addItem(user.socket, buyItem.itemId, Number(quantity));
+        await addItem(user.socket, buyItem.itemId, Number(quantity));
         item = await getItem(user.socket, buyItem.itemId);
       }
-      setGold(user.socket, userInfo.gold - itemCost);
+      await setGold(user.socket, userInfo.gold - itemCost);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,

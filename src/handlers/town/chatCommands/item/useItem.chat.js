@@ -84,15 +84,15 @@ export const useItem = async (user, message) => {
   const invenItem = await getItem(user.socket, itemId);
   if (invenItem) {
     if (invenItem.quantity <= 1) {
-      deleteItem(user.socket, itemId);
+      await deleteItem(user.socket, itemId);
     } else {
-      decItem(user.socket, itemId, 1);
+      await decItem(user.socket, itemId, 1);
     }
   }
 
   const updatedQuantity = await getItemQuantity(user.socket, itemId);
   if (updatedQuantity === 0) {
-    deleteItem(user.socket, itemId);
+    await deleteItem(user.socket, itemId);
   }
 
   // S_UseItem 패킷 전송
