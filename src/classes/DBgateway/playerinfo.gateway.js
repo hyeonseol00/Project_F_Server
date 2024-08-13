@@ -85,9 +85,8 @@ export const getLevel = async (socket) => {
   return statInfo.level;
 };
 
-export const setLevel = async (socket, statInfo, gold, skillPoint) => {
+export const setLevel = async (socket, statInfo) => {
   await setStatInfo(socket, statInfo);
-  await setGold(socket, gold);
 };
 
 // How...?
