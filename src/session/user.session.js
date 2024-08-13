@@ -25,10 +25,10 @@ export const addUser = async (socket, effectCode, character) => {
     //   inven,
     //   equipment,
     // },
-    // skillPoint : character.skillPoint,
-    // worldLevel : character.worldLevel,
 
     effectCode,
+    worldLevel: character.worldLevel,
+    skillPoint: character.skillPoint,
   };
   userSessions.push(user);
   return user;

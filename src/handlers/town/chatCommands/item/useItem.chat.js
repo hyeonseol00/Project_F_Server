@@ -22,12 +22,12 @@ export const useItem = async (user, message) => {
     return;
   }
 
-  const itemId = Number(message);
-  const findItem = await getItem(user.socket, itemId);
-  const findItemInfo = await getItemById(itemId);
+  const id = Number(message);
+  const findItem = await getItem(user.socket, id);
+  const findItemInfo = await getItemById(id);
 
   if (!findItem) {
-    console.log(`아이템을 찾을 수 없습니다. itemId: ${itemId}`);
+    console.log(`아이템을 찾을 수 없습니다. id: ${id}`);
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 사용 가능한 아이템이 아닙니다.`,
@@ -81,24 +81,24 @@ export const useItem = async (user, message) => {
   userInfo.statInfo.mp = newMp;
 
   // 인벤토리 업데이트
-  const invenItem = await getItem(user.socket, itemId);
+  const invenItem = await getItem(user.socket, id);
   if (invenItem) {
     if (invenItem.quantity <= 1) {
-      await deleteItem(user.socket, itemId);
+      await deleteItem(user.socket, id);
     } else {
-      await decItem(user.socket, itemId, 1);
+      await decItem(user.socket, id, 1);
     }
   }
 
-  const updatedQuantity = await getItemQuantity(user.socket, itemId);
+  const updatedQuantity = await getItemQuantity(user.socket, id);
   if (updatedQuantity === 0) {
-    await deleteItem(user.socket, itemId);
+    await deleteItem(user.socket, id);
   }
 
   // S_UseItem 패킷 전송
   const useItemResponse = createResponse('response', 'S_UseItem', {
     item: {
-      id: itemId,
+      id,
       quantity: updatedQuantity,
     },
   });

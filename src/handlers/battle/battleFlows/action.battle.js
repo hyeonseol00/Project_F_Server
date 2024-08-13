@@ -69,7 +69,7 @@ export default async function chooseActionScene(responseCode, dungeon, socket) {
     case config.actionButton.item:
       const items = await getPotionItems(socket);
       for (const item of items) {
-        const itemInfo = await getItemById(item.itemId);
+        const itemInfo = await getItemById(item.id);
         if (item.quantity < 1) btns.push({ msg: itemInfo.itemName + ` x0`, enable: false });
         else if (itemInfo.requireLevel > playerStatInfo.level) {
           btns.push({ msg: itemInfo.itemName + ` x${itemInfo.quantity}`, enable: false });

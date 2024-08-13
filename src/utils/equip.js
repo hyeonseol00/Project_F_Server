@@ -21,7 +21,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     userInfo.statInfo;
 
   const {
-    itemId,
+    itemId: id,
     itemType,
     itemName,
     itemHp,
@@ -36,7 +36,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
 
   if (equippedItem !== 0) {
     const equippedItemInfo = await getItemById(equippedItem);
-    await setItemId(user.socket, itemType, itemId);
+    await setItemId(user.socket, itemType, id);
 
     const updateCritical = critRate + itemCritical - equippedItemInfo.itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance - equippedItemInfo.itemAvoidance;
@@ -69,17 +69,17 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     if (!isInven) {
       const item = new Item(equippedItem, quantity);
       await pushItem(user.socket, item);
-      if ((await getItemQuantity(user.socket, itemId)) === 1) {
-        await deleteItem(user.socket, itemId);
+      if ((await getItemQuantity(user.socket, id)) === 1) {
+        await deleteItem(user.socket, id);
       } else {
-        await decItem(user.socket, itemId, quantity);
+        await decItem(user.socket, id, quantity);
       }
     } else {
-      await addItem(user.socket, isInven.itemId, quantity);
-      if ((await getItemQuantity(user.socket, itemId)) === 1) {
-        await deleteItem(user.socket, itemId);
+      await addItem(user.socket, isInven.id, quantity);
+      if ((await getItemQuantity(user.socket, id)) === 1) {
+        await deleteItem(user.socket, id);
       } else {
-        await decItem(user.socket, itemId, quantity);
+        await decItem(user.socket, id, quantity);
       }
     }
 
@@ -89,7 +89,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     });
     user.socket.write(response);
   } else {
-    await setItemId(user.socket, itemType, itemId);
+    await setItemId(user.socket, itemType, id);
     const updateCritical = critRate + itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance;
 
@@ -111,10 +111,10 @@ async function updateEquip(equippedItem, findItemInfo, user) {
 
     await setStatInfo(user.socket, statInfo);
 
-    if ((await getItemQuantity(user.socket, itemId)) === 1) {
-      await deleteItem(user.socket, itemId);
+    if ((await getItemQuantity(user.socket, id)) === 1) {
+      await deleteItem(user.socket, id);
     } else {
-      await decItem(user.socket, itemId, quantity);
+      await decItem(user.socket, id, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {

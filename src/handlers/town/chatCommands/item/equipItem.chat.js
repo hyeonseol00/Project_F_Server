@@ -49,8 +49,8 @@ export const equipItem = async (user, message) => {
     return;
   }
 
-  const findItemInfo = await getItemById(findItem.itemId);
-  const { itemId, itemType, itemName, requireLevel } = findItemInfo;
+  const findItemInfo = await getItemById(findItem.id);
+  const { itemId: id, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -82,7 +82,7 @@ export const equipItem = async (user, message) => {
   }
   // S_EquipWeapon 패킷 전송
   const equipResponse = createResponse('response', 'S_EquipWeapon', {
-    itemId: itemId,
+    itemId: id,
   });
   user.socket.write(equipResponse);
 };

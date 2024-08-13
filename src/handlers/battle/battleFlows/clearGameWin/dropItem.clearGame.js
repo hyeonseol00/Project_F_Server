@@ -12,7 +12,7 @@ export default async function dropItemScene(responseCode, dungeon, socket) {
 
   const btns = [];
   for (let i = 0; i < config.dropItem.quantity; i++) {
-    const itemInfo = await getItemById(items[i].itemId);
+    const itemInfo = await getItemById(items[i].id);
     btns.push({ msg: `${itemInfo.itemName} x${items[i].quantity}`, enable: false });
   }
   btns[selectNumber].enable = true;
