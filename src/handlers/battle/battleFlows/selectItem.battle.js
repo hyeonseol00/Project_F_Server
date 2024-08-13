@@ -1,5 +1,10 @@
 import { getItemById } from '../../../assets/item.assets.js';
-import { getPotionItems, getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  decItem,
+  getPotionItems,
+  getStatInfo,
+  setStatInfo,
+} from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
@@ -18,7 +23,7 @@ export default async function selectItemScene(responseCode, dungeon, socket) {
   const usedItemInfo = await getItemById(usedItem.id);
 
   let msg = `${usedItemInfo.itemName}을 사용하여\n`;
-  player.decItem(usedItem.id, 1);
+  await decItem(socket, usedItem.id, 1);
 
   // S_SetPlayerHp 패킷
   if (usedItemInfo.itemHp && playerStatInfo.hp !== playerStatInfo.maxHp) {
@@ -45,6 +50,8 @@ export default async function selectItemScene(responseCode, dungeon, socket) {
     player.addItem(usedItem.id, 1);
     if (usedItemInfo.itemHp) msg = `이미 hp가 가득 찬 상태입니다.\n`;
     else if (usedItemInfo.itemMp) msg = `이미 mp가 가득 찬 상태입니다.\n`;
+  } else {
+    await setStatInfo(socket, playerStatInfo);
   }
 
   const btns = [{ msg: '다음', enable: true }];
