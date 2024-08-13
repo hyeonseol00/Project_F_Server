@@ -74,7 +74,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: user.characterClass,
+      playerClass: userPlayerInfo.class,
       playerLevel: userPlayerInfo.statInfo.level,
       playerName: userPlayerInfo.nickname,
       playerFullHp: userPlayerInfo.statInfo.maxHp,

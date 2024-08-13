@@ -2,7 +2,7 @@ import { config } from '../../../../config/config.js';
 import { getUserBySocket } from '../../../../session/user.session.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
-import { getStatInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import { getStatInfo, setStatInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export default async function switchToMonsterAttackScene(dungeon, socket) {
   const player = getUserBySocket(socket);
@@ -108,6 +108,8 @@ export default async function switchToMonsterAttackScene(dungeon, socket) {
       hp: playerStatInfo.hp,
     });
     socket.write(playerHp);
+
+    await setStatInfo(socket, playerStatInfo);
 
     dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
     dungeon.accTargetIdx();

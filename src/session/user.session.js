@@ -5,7 +5,7 @@ import { getPlayerInfo } from '../classes/DBgateway/playerinfo.gateway.js';
 import { userSessions } from './sessions.js';
 
 const sessionManager = `userSession:`;
-export const addUser = async (socket, effect, character) => {
+export const addUser = async (socket, effectCode, character) => {
   const user = {
     // session management field
     playerId: getRegistCount(),
@@ -27,6 +27,8 @@ export const addUser = async (socket, effect, character) => {
     // },
     // skillPoint : character.skillPoint,
     // worldLevel : character.worldLevel,
+
+    effectCode,
   };
   userSessions.push(user);
   return user;

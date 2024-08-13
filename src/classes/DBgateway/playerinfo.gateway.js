@@ -7,21 +7,21 @@ const playerInfoKey = 'playerInfo:';
 // playerInfo
 export const getPlayerInfo = async (socket) => {
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
-  for (const field in playerInfo) {
-    playerInfo[field] = JSON.parse(playerInfo[field]);
+
+  for (const key in playerInfo) {
+    playerInfo[key] = JSON.parse(playerInfo[key]);
   }
+
   return playerInfo;
 };
 
 export const setPlayerInfo = async (socket, playerInfo) => {
   for (const field in playerInfo) {
-    if (playerInfo.hasOwnProperty(field)) {
-      await redisCli.hSet(
-        `${playerInfoKey}${socket.remotePort}`,
-        field,
-        JSON.stringify(playerInfo[field]),
-      );
-    }
+    await redisCli.hSet(
+      `${playerInfoKey}${socket.remotePort}`,
+      field,
+      JSON.stringify(playerInfo[field]),
+    );
   }
 };
 
@@ -83,17 +83,20 @@ export const getLevel = async (socket) => {
   return statInfo.level;
 };
 
-export const setLevel = async (socket, level, experience) => {
-  const statInfo = await getStatInfo(socket);
-  statInfo.level = level;
-  statInfo.exp = experience;
+export const setLevel = async (socket, statInfo, gold, skillPoint) => {
   await setStatInfo(socket, statInfo);
+  await setGold(socket, gold);
 };
 
 // How...?
-export const skillPointUpdate = async (socket, statInfo) => {
-  await setStatInfo(socket, statInfo);
+export const skillPointUpdate = async (socket, skillPoint) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'skillPoint', skillPoint);
+  // await setStatInfo(socket, statInfo);
   // this.skillPoint = statInfo.skillPoint;
+};
+
+export const setWorldLevel = async (socket, worldLevel) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'worldLevel', worldLevel);
 };
 
 // =======getter, setter 메소드 끝=========
@@ -101,7 +104,7 @@ export const skillPointUpdate = async (socket, statInfo) => {
 // ==============item=============
 
 export const getPotionsAccount = async (socket) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   let count = 0;
   for (const item of items) {
     if (item.isPotion === false) continue;
@@ -172,7 +175,7 @@ export const getItemQuantity = async (socket, id) => {
 };
 
 export const getPotionItems = async (socket) => {
-  const items = await getInven(socket);
+  const { items } = await getInven(socket);
   const potions = [];
   for (const item of items) {
     if (item.isPotion) {

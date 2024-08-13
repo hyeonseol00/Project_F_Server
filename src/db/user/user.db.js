@@ -96,7 +96,8 @@ export const getCharacterWideEffectCode = async (jobId) => {
 };
 
 export const updateCharacterStatus = async (user) => {
-  const statInfo = user.playerInfo.statInfo;
+  const playerInfo = await getPlayerInfo(user.socket);
+  const statInfo = playerInfo.statInfo;
   const { level, hp, maxHp, mp, maxMp, atk, speed, critRate, critDmg, avoidRate, exp, def, magic } =
     statInfo;
 

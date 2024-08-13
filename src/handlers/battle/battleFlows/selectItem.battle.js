@@ -1,4 +1,5 @@
 import { getItemById } from '../../../assets/item.assets.js';
+import { getPotionItems, getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
@@ -6,8 +7,8 @@ import switchToActionScene from './switchScene/action.switch.js';
 export default async function selectItemScene(responseCode, dungeon, socket) {
   const usedItemIdx = responseCode - 1;
   const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
-  const potions = player.getPotionItems();
+  const playerStatInfo = await getStatInfo(socket);
+  const potions = await getPotionItems(socket);
   const usedItem = potions[usedItemIdx];
   // 취소 버튼이면 action 선택씬으로 복귀
   if (responseCode === potions.length + 1) {

@@ -92,7 +92,9 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
   }
 
-  const effect = await getJobInfo(character.jobId);
+  const jobInfo = await getJobInfo(character.jobId);
+  const { baseEffect, singleEffect, wideEffect } = jobInfo;
+  const effectCode = { baseEffect, singleEffect, wideEffect };
 
   const userItemInDB = await getUserItemsByCharacterId(character.characterId);
   const userItems = [];
@@ -105,7 +107,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-  const curUser = await addUser(socket, effect, character);
+  const curUser = await addUser(socket, effectCode, character);
 
   const statInfo = {
     level: character.characterLevel,
@@ -137,6 +139,18 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     posZ: Math.random() * 16 - 8, // -8 ~ 8
     rot: Math.random() * 360, // 0 ~ 360
   };
+  // 임시용(패킷 구조 맞추기 용)=====
+  // console.log("userItems", userItems);
+  const filteredItems = [];
+
+  for (const userItem of userItems) {
+    const item = {
+      id: userItem.itemId,
+      quantity: userItem.quantity,
+    };
+    filteredItems.push(item);
+  }
+  // =================================
 
   const playerInfo = {
     playerId: curUser.playerId,
