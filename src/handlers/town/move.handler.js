@@ -3,7 +3,6 @@ import { getGameSession } from '../../session/game.session.js';
 import { getAllUsers, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { setPosition } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 const moveTownHandler = async ({ socket, payload }) => {
   try {
@@ -12,7 +11,7 @@ const moveTownHandler = async ({ socket, payload }) => {
     const { transform } = payload;
     const curUser = await getUserBySocket(socket);
 
-    await setPosition(socket.remotePort);
+    gameSession.transforms[curUser.nickname] = transform;
 
     const moveTownResponse = createResponse('response', 'S_Move', {
       playerId: curUser.playerId,

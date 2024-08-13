@@ -6,7 +6,11 @@ const tryAttackHatcheryHandler = async ({ socket, payload }) => {
   try {
     const user = await getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
-    const players = hatcherySession.players;
+    const nicknames = hatcherySession.playerNicknames;
+    const players = [];
+    for (let i = 0; i < nicknames.length; i++) {
+      players.push(await getUserByNickname(nicknames[i]));
+    }
 
     const tryAttackResponse = createResponse('response', 'S_TryAttack', {
       playerId: user.playerId,

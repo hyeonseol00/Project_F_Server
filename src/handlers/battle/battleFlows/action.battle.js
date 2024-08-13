@@ -1,11 +1,11 @@
 import { getItemById } from '../../../assets/item.assets.js';
+import { getPotionItems, getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
 export default async function chooseActionScene(responseCode, dungeon, socket) {
   const btns = [];
-  const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
+  const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
 
   switch (responseCode) {
@@ -67,7 +67,7 @@ export default async function chooseActionScene(responseCode, dungeon, socket) {
       dungeon.battleSceneStatus = config.sceneStatus.confirm;
       break;
     case config.actionButton.item:
-      const items = player.getPotionItems();
+      const items = await getPotionItems(socket);
       for (const item of items) {
         const itemInfo = await getItemById(item.itemId);
         if (item.quantity < 1) btns.push({ msg: itemInfo.itemName + ` x0`, enable: false });

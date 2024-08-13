@@ -1,3 +1,4 @@
+import { getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -5,7 +6,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const playerHitHatcheryHandler = async ({ socket, payload }) => {
   try {
     const player = await getUserBySocket(socket);
-    const playerStatInfo = player.playerInfo.statInfo;
+    const playerStatInfo = await getStatInfo();
     const hatcherySession = getHatcherySession();
     const boss = hatcherySession.boss;
 

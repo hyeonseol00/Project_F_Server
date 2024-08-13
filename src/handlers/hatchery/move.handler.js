@@ -1,5 +1,5 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -7,10 +7,14 @@ const moveHatcheryHandler = async ({ socket, payload }) => {
   try {
     const user = await getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
-    const players = hatcherySession.players;
+    const players = [];
+    const nicknames = hatcherySession.playerNicknames;
+    for (let i = 0; i < nicknames.length; i++) {
+      players.push(await getUserByNickname(nicknames[i]));
+    }
     const { transform } = payload;
 
-    user.setPosition(transform);
+    hatcherySession.transforms[user.nickname] = transform;
 
     const moveHatcheryResponse = createResponse('response', 'S_MoveAtHatchery', {
       playerId: user.playerId,
