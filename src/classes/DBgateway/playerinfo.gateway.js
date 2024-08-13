@@ -30,9 +30,11 @@ export const setGold = async (socket, updatedGold) => {
 
 // statinfo
 export const getStatInfo = async (socket) => {
-  const statInfo = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'statInfo'));
+  const statInfo = JSON.parse(
+    await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'statInfo'),
+  );
   return statInfo;
-}; 
+};
 
 export const setStatInfo = async (socket, statInfo) => {
   await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'statInfo', statInfo);
@@ -40,7 +42,9 @@ export const setStatInfo = async (socket, statInfo) => {
 
 // inven
 export const getInven = async (socket) => {
-  const inventory = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'inven'));
+  const inventory = JSON.parse(
+    await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'inven'),
+  );
   return inventory;
 };
 
@@ -50,7 +54,9 @@ export const setInven = async (socket, updatedInven) => {
 
 // equipment
 export const getEquipment = async (socket) => {
-  const inventory = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'equipment'));
+  const inventory = JSON.parse(
+    await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'equipment'),
+  );
   return inventory;
 };
 
@@ -161,7 +167,7 @@ export const getPotionItems = async (socket) => {
 // ==============item=============
 
 // ==========team==========
-export const getTeam = async (socket, teamId, isOwner = null) => {
+export const getTeam = async (socket) => {
   const teamId = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'teamId');
   const isOwner = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'isOwner');
 

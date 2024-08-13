@@ -1,9 +1,11 @@
 import { createResponse } from '../../../utils/response/createResponse.js';
 import isInteger from '../../../utils/isInteger.js';
+import { getPlayerInfo, skillPointUpdate } from '../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const skillPointHandler = async (user, message) => {
+  const userInfo = await getPlayerInfo(user.socket);
   const { skillPoint } = user;
-  let { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = user.playerInfo.statInfo;
+  let { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = userInfo.statInfo;
   const [upAbility, quantity] = message.split(' ');
   const validAbilities = ['hp', 'mp', 'atk', 'def', 'magic', 'speed'];
   if (!validAbilities.includes(upAbility)) {
@@ -134,7 +136,7 @@ export const skillPointHandler = async (user, message) => {
       break;
   }
 
-  await user.skillPointUpdate(statInfo);
+  await skillPointUpdate(user.socket, statInfo);
   const response = createResponse('response', 'S_Chat', {
     playerId: user.playerId,
     chatMsg: `[System] 스킬포인트 ${quantity}를 소모하여 ${quantity * upAbilityValue} 능력치를 올렸습니다.`,

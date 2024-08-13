@@ -1,8 +1,10 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundTeam, alreadyHaveTeam, notFoundUser, alreadyInvited } from '../exceptions.js';
+import { getPlayerInfo, getTeam } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const inviteToTeam = async (sender, message) => {
+  const senderInfo = await getPlayerInfo(sender.socket);
   const invitedNickname = message;
   const targetUser = await getUserByNickname(invitedNickname);
 
@@ -20,11 +22,13 @@ export const inviteToTeam = async (sender, message) => {
   if (!targetUser.invitedTeams) {
     targetUser.invitedTeams = [];
   }
-  targetUser.invitedTeams.push(sender.teamId);
+
+  const { teamId: senderTeamId } = await getTeam(sender.socket);
+  targetUser.invitedTeams.push(senderTeamId);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,
-    chatMsg: `[System] ${sender.nickname} 이(가) 당신을 팀에 초대하였습니다.`,
+    chatMsg: `[System] ${senderInfo.nickname} 이(가) 당신을 팀에 초대하였습니다.`,
   });
   targetUser.socket.write(response);
 };
