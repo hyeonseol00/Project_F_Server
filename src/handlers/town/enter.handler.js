@@ -154,12 +154,14 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 const getUserInfoFromSession = async (socket, userExist) => {
   const playerInfo = await getPlayerInfo(socket);
   // user 세션의 items중 quantity 0인 item 삭제
-  for (let i = playerInfo.inven.length - 1; i >= 0; i--) {
-    const item = playerInfo.inven[i];
+  for (let i = playerInfo.inven.items.length - 1; i >= 0; i--) {
+    const item = playerInfo.inven.items[i];
     if (item.quantity === 0) {
-      playerInfo.inven.splice(i, 1);
+      playerInfo.inven.items.splice(i, 1);
     }
   }
+
+  console.log(playerInfo.inven);
 
   userExist.playerInfo = playerInfo;
 

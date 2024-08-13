@@ -1,5 +1,6 @@
 import { getItemById } from '../../../assets/item.assets.js';
 import {
+  addItem,
   decItem,
   getPotionItems,
   getStatInfo,
@@ -47,7 +48,7 @@ export default async function selectItemScene(responseCode, dungeon, socket) {
 
   if (msg === `${usedItemInfo.itemName}을 사용하여\n`) {
     // 회복할 스탯이 없다면
-    player.addItem(usedItem.id, 1);
+    await addItem(socket, usedItem.id, 1);
     if (usedItemInfo.itemHp) msg = `이미 hp가 가득 찬 상태입니다.\n`;
     else if (usedItemInfo.itemMp) msg = `이미 mp가 가득 찬 상태입니다.\n`;
   } else {

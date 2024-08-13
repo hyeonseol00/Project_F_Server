@@ -7,6 +7,7 @@ import {
   getItem,
   getItemQuantity,
   getPlayerInfo,
+  setStatInfo,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const useItem = async (user, message) => {
@@ -109,5 +110,6 @@ export const useItem = async (user, message) => {
     chatMsg: `[System] ${itemName}을(를) 사용했습니다. HP: ${newHp}, MP: ${newMp}`,
   });
   user.socket.write(response);
+  await setStatInfo(user.socket, userInfo.statInfo);
   console.log(`아이템 사용 완료: ${itemName}, 남은 수량: ${updatedQuantity}`);
 };

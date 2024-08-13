@@ -34,7 +34,7 @@ export const updateCharacterItems = async (characterId, sessionItems) => {
 
   // 3. 세션 인벤토리를 데이터베이스에 업데이트합니다.
   for (const sessionItem of sessionItems) {
-    const dbItem = dbItems.find((item) => item.id === sessionItem.id);
+    const dbItem = dbItems.find((item) => item.itemId === sessionItem.id);
     if (dbItem) {
       // 데이터베이스에 이미 있는 경우 업데이트
       if (sessionItem.quantity > 0) {
