@@ -1,6 +1,7 @@
 import pools from '../database.js';
 import { SQL_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
+import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 export const findUserByUsername = async (username) => {
   const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_USER_BY_USERNAME, [username]);
@@ -100,7 +101,8 @@ export const updateCharacterStatus = async (user) => {
     statInfo;
 
   const { nickname, characterClass, gold, worldLevel, skillPoint } = user;
-  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
+  const userInfo = getPlayerInfo(user.socket);
+  const { weapon, armor, gloves, shoes, accessory } = userInfo.equipment;
 
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
     level,

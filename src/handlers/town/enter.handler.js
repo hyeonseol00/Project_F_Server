@@ -100,6 +100,8 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     const item = new Item(userItem.itemId, userItem.quantity);
     userItems.push(item);
   }
+  const inven = {};
+  inven.items = userItems;
 
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
@@ -143,7 +145,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     gold: character.gold,
     transform: transformInfo,
     statInfo,
-    inven: userItems,
+    inven,
     equipment,
   };
 

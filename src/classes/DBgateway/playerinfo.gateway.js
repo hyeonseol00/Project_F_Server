@@ -7,6 +7,9 @@ const playerInfoKey = 'playerInfo:';
 // playerInfo
 export const getPlayerInfo = async (socket) => {
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
+  for (const field in playerInfo) {
+    playerInfo[field] = JSON.parse(playerInfo[field]);
+  }
   return playerInfo;
 };
 
@@ -46,18 +49,16 @@ export const setStatInfo = async (socket, statInfo) => {
 
 // inven
 export const getInven = async (socket) => {
-  const inventory = JSON.parse(
+  const { items } = JSON.parse(
     await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'inven'),
   );
-  return inventory;
+  return items;
 };
 
 export const setInven = async (socket, updatedInven) => {
-  await redisCli.hSet(
-    `${playerInfoKey}${socket.remotePort}`,
-    'inven',
-    JSON.stringify(updatedInven),
-  );
+  const inven = {};
+  inven.items = [...updatedInven];
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', JSON.stringify(inven));
 };
 
 // equipment
@@ -86,7 +87,7 @@ export const setLevel = async (socket, level, experience) => {
   const statInfo = await getStatInfo(socket);
   statInfo.level = level;
   statInfo.exp = experience;
-  await setStatInfo(statInfo);
+  await setStatInfo(socket, statInfo);
 };
 
 // How...?
@@ -109,19 +110,19 @@ export const getPotionsAccount = async (socket) => {
   return count;
 };
 
-export const getItemIdx = async (socket, itemId) => {
+export const getItemIdx = async (socket, id) => {
   const inventory = await getInven(socket);
   for (const itemIdx in inventory) {
-    if (inventory[itemIdx].itemId === itemId) {
+    if (inventory[itemIdx].id === id) {
       return itemIdx;
     }
   }
   return -1;
 };
 
-export const getItem = async (socket, itemId) => {
+export const getItem = async (socket, id) => {
   const items = await getInven(socket);
-  const findItem = items.find((item) => item.itemId === itemId);
+  const findItem = items.find((item) => item.id === id);
 
   return findItem;
 };
@@ -129,41 +130,41 @@ export const getItem = async (socket, itemId) => {
 export const pushItem = async (socket, item) => {
   const items = await getInven(socket);
   items.push(item);
-  await setInven(items);
+  await setInven(socket, items);
 };
 
-export const deleteItem = async (socket, itemId) => {
+export const deleteItem = async (socket, id) => {
   const items = await getInven(socket);
-  const findIdx = items.findIndex((item) => item.itemId === itemId);
+  const findIdx = items.findIndex((item) => item.id === id);
   if (findIdx !== -1) {
     items.splice(findIdx, 1);
-    await setInven(items);
+    await setInven(socket, items);
   }
 };
 
-export const decItem = async (socket, itemId, quantity) => {
+export const decItem = async (socket, id, quantity) => {
   const items = await getInven(socket);
-  const findIdx = items.findIndex((item) => item.itemId === itemId);
+  const findIdx = items.findIndex((item) => item.id === id);
   items[findIdx].quantity -= quantity;
-  await setInven(items);
+  await setInven(socket, items);
 };
 
-export const addItem = async (socket, itemId, quantity) => {
+export const addItem = async (socket, id, quantity) => {
   const items = await getInven(socket);
-  const findIdx = items.findIndex((item) => item.itemId === itemId);
+  const findIdx = items.findIndex((item) => item.id === id);
   items[findIdx].quantity += quantity;
-  await setInven(items);
+  await setInven(socket, items);
 };
 
-export const setItemId = async (socket, itemType, itemId) => {
+export const setItemId = async (socket, itemType, id) => {
   const equipment = await getEquipment(socket);
-  equipment[itemType] = itemId;
-  await setEquipment(equipment);
+  equipment[itemType] = id;
+  await setEquipment(socket, equipment);
 };
 
-export const getItemQuantity = async (socket, itemId) => {
+export const getItemQuantity = async (socket, id) => {
   const items = await getInven(socket);
-  const findItem = items.find((item) => item.itemId === itemId);
+  const findItem = items.find((item) => item.id === id);
   if (findItem) {
     return findItem.quantity;
   }
@@ -178,7 +179,7 @@ export const getPotionItems = async (socket) => {
       potions.push(item);
     }
   }
-  potions.sort((a, b) => a.itemId - b.itemId);
+  potions.sort((a, b) => a.id - b.id);
   return potions;
 };
 // ==============item=============

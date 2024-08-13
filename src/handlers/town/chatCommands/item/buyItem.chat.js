@@ -69,22 +69,22 @@ export const buyItem = async (user, message) => {
 
     if (buyItem.itemType === 'potion') {
       // 소비 아이템
-      const potionIdx = getItemIdx(buyItem.itemId);
+      const potionIdx = await getItemIdx(buyItem.id);
       if (potionIdx === -1) {
         potion = new Item(Number(id), Number(quantity));
         await pushItem(user.socket, potion);
       } else {
-        await addItem(user.socket, buyItem.itemId, Number(quantity));
+        await addItem(user.socket, buyItem.id, Number(quantity));
       }
 
       await setGold(user.socket, userInfo.gold - itemCost);
 
       // 포션 아이템을 다시 가져오기 (업데이트 후)
-      potion = await getItem(user.socket, buyItem.itemId);
+      potion = await getItem(user.socket, buyItem.id);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] ${buyItem.itemName} 을(를) ${Number(quantity)}개 구매가 완료되었습니다. 골드가 ${user.gold} 남았습니다.`,
+        chatMsg: `[System] ${buyItem.itemName} 을(를) ${Number(quantity)}개 구매가 완료되었습니다. 골드가 ${userInfo.gold} 남았습니다.`,
       });
       user.socket.write(response);
 
@@ -100,25 +100,25 @@ export const buyItem = async (user, message) => {
         user.socket.write(buyItemResponse);
         console.log(`포션 구매 완료: ${id}, 수량: ${potion.quantity}`);
       } else {
-        console.log(`포션 객체를 찾을 수 없습니다. itemId: ${id}`);
+        console.log(`포션 객체를 찾을 수 없습니다. id: ${id}`);
       }
       return;
     } else {
       // 장비 아이템
       let item = null;
-      const itemIdx = await getItemIdx(user.socket, buyItem.itemId);
+      const itemIdx = await getItemIdx(user.socket, buyItem.id);
       if (itemIdx === -1) {
         item = new Item(Number(id), Number(quantity));
         await pushItem(user.socket, item);
       } else {
-        await addItem(user.socket, buyItem.itemId, Number(quantity));
-        item = await getItem(user.socket, buyItem.itemId);
+        await addItem(user.socket, buyItem.id, Number(quantity));
+        item = await getItem(user.socket, buyItem.id);
       }
       await setGold(user.socket, userInfo.gold - itemCost);
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] ${buyItem.itemName} 아이템을 ${Number(quantity)}개 구매하였습니다. 남은 돈은 ${user.gold} 입니다. `,
+        chatMsg: `[System] ${buyItem.itemName} 아이템을 ${Number(quantity)}개 구매하였습니다. 남은 돈은 ${userInfo.gold} 입니다. `,
       });
       user.socket.write(response);
 
@@ -134,7 +134,7 @@ export const buyItem = async (user, message) => {
         user.socket.write(buyItemResponse);
         console.log(`장비 아이템 구매 완료: ${id}, 수량: ${item.quantity}`);
       } else {
-        console.log(`장비 아이템 객체를 찾을 수 없습니다. itemId: ${id}`);
+        console.log(`장비 아이템 객체를 찾을 수 없습니다. id: ${id}`);
       }
       return;
     }

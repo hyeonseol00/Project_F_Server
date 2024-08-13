@@ -12,14 +12,14 @@ import {
 
 let statInfo;
 const quantity = 1;
-const itemId = 0;
+const id = 0;
 async function updateUnEquip(uneqipItem, user) {
   const userInfo = await getPlayerInfo(user.socket);
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
     userInfo.statInfo;
 
   const uneqipItemInfo = await getItemById(uneqipItem);
-  await setItemId(user.socket, uneqipItemInfo.itemType, itemId);
+  await setItemId(user.socket, uneqipItemInfo.itemType, id);
 
   const updateCritical = critRate - uneqipItemInfo.itemCritical;
   const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
@@ -42,12 +42,12 @@ async function updateUnEquip(uneqipItem, user) {
 
   await setStatInfo(user.socket, statInfo);
 
-  const isInven = await getItem(user.socket, uneqipItemInfo.itemId);
+  const isInven = await getItem(user.socket, uneqipItemInfo.id);
   if (!isInven) {
     const item = new Item(uneqipItem, quantity);
     await pushItem(user.socket, item);
   } else {
-    await addItem(user.socket, uneqipItemInfo.itemId, quantity);
+    await addItem(user.socket, uneqipItemInfo.id, quantity);
   }
 
   const response = createResponse('response', 'S_Chat', {

@@ -1,19 +1,19 @@
 class Item {
-  constructor(itemId, quantity = 1) {
+  constructor(id, quantity = 1) {
     try {
-      if (!itemId) {
+      if (!id) {
         return;
       }
-      this.itemId = itemId;
+      this.id = id;
       this.quantity = quantity;
-      this.isPotion = this.potionCheck(itemId);
+      this.isPotion = this.potionCheck(id);
     } catch (err) {
       throw new Error(err);
     }
   }
 
-  potionCheck(itemId) {
-    if (46 <= itemId && itemId <= 50) return true;
+  potionCheck(id) {
+    if (46 <= id && id <= 50) return true;
     return false;
   }
 }
