@@ -1,3 +1,4 @@
+import { getPlayerInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 
 const MAX_PLAYERS = 10;
@@ -29,8 +30,13 @@ class Game {
     return this.users.find((user) => user.playerId === userId);
   }
 
-  getAllUserIds() {
-    const userIds = this.users.map((user) => user.nickname);
+  async getAllUserIds() {
+    const userIds = await Promise.all(
+      this.users.map(async (user) => {
+        const userInfo = await getPlayerInfo(user.socket);
+        return userInfo.nickname;
+      }),
+    );
 
     return userIds;
   }
