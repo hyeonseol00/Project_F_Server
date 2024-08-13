@@ -10,7 +10,7 @@ import {
   insertUserByUsername,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
-import { addUser, getUserBySocket } from '../../session/user.session.js';
+import { addUser, getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -36,7 +36,7 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 플레이어 정보를 user에 추가한다.
     await setPlayerInfo(socket, playerInfo);
-    gameSession.addUser(curUser);
+    gameSession.addUser(nickname);
 
     console.log('현재 접속 중인 유저: ', await gameSession.getAllUserIds());
 
@@ -51,19 +51,25 @@ const enterTownHandler = async ({ socket, payload }) => {
     const players = [];
 
     // 게임 세션에 저장된 모든 playerInfo를 가져옴
-    for (const user of gameSession.users) {
-      players.push(await getPlayerInfo(user.socket));
+    for (const nickname of gameSession.playerNicknames) {
+      const player = await getUserByNickname(nickname);
+      players.push(player);
     }
 
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
-    for (const user of gameSession.users) {
-      const filterdPlayers = players.filter((player) => player.playerId !== user.playerId);
-
-      // console.log('filterdPlayers', filterdPlayers);
+    for (const nickname of gameSession.playerNicknames) {
+      const filterdPlayers = players.filter((player) => player.nickname !== nickname);
+      for (const index of filterdPlayers) {
+        const playerInfo = await getPlayerInfo(filterdPlayers[index].socket);
+        playerInfo.transform = gameSession.transforms[nickname];
+        filterdPlayers[index].playerInfo = playerInfo;
+      }
+      const user = await getUserByNickname(nickname);
+      const playerInfo = await getPlayerInfo(user.socket);
 
       // 해당 유저에게 다른 유저들을 스폰(해당 유저 제외)
       const spawnTownResponse = createResponse('response', 'S_Spawn', {
-        players: filterdPlayers,
+        players: playerInfo,
       });
 
       user.socket.write(spawnTownResponse);
