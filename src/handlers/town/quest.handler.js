@@ -1,11 +1,6 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import {
-  updateQuestProgress,
-  addUserQuest,
-  getUserQuests,
-  removeUserQuest,
-} from '../../db/user/user.db.js';
+import { updateQuestProgress, addUserQuest, getUserQuests } from '../../db/user/user.db.js';
 import { getQuestsByLevel } from '../../db/game/game.db.js';
 import { getquestById } from '../../assets/quests.assets.js';
 import isInteger from '../../utils/isInteger.js';
@@ -224,28 +219,59 @@ const completeQuestHandler = async (sender, message) => {
     }
     const questId = Number(message);
 
-    await updateQuestProgress(user.characterId, questId, 100, 'COMPLETED');
+    const userQuests = await getUserQuests(user.characterId);
+    const userQuest = userQuests.find((q) => q.questId === questId);
+
+    if (!userQuest) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] 해당 퀘스트를 찾을 수 없습니다.`,
+      });
+      user.socket.write(response);
+      return;
+    }
 
     const quest = await getquestById(questId);
 
-    const response = createResponse('response', 'S_CompleteQuest', {
+    if (!quest) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] 존재하지 않는 퀘스트입니다.`,
+      });
+      user.socket.write(response);
+      return;
+    }
+
+    // 퀘스트 완료 조건 검사
+    if (userQuest.killCount < quest.monsterTarget) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] 퀘스트 완료 조건을 충족하지 못했습니다. 남은 몬스터: ${
+          quest.monsterTarget - userQuest.killCount
+        }마리`,
+      });
+      user.socket.write(response);
+      return;
+    }
+
+    // 퀘스트 상태를 'COMPLETED'로 업데이트
+    await updateQuestProgress(user.characterId, questId, quest.monsterTarget, 'COMPLETED');
+
+    const completeResponse = createResponse('response', 'S_CompleteQuest', {
       questId,
       success: true,
       message: '퀘스트를 성공적으로 완료했습니다.',
       quest,
     });
 
-    user.socket.write(response);
+    user.socket.write(completeResponse);
 
     const chatResponse = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `퀘스트 완료: ${quest.questName}`,
+      chatMsg: `[System] 퀘스트 완료: ${quest.questName}`,
     });
 
     user.socket.write(chatResponse);
-
-    // 완료된 퀘스트를 목록에서 삭제
-    await removeUserQuest(user.characterId, questId);
   } catch (err) {
     handleError(sender.socket, err);
   }
@@ -256,6 +282,11 @@ const checkAndStartQuestHandler = async (sender) => {
   try {
     const user = sender;
     const userLevel = user.playerInfo.statInfo.level;
+
+    // 유저가 이미 수락한 퀘스트 목록 가져오기
+    const existingQuests = await getUserQuests(user.characterId);
+    const acceptedQuestIds = existingQuests.map((quest) => quest.questId);
+
     const availableQuests = await getQuestsByLevel(userLevel);
 
     console.log(`Available quests for level ${userLevel}:`, availableQuests);
@@ -269,24 +300,30 @@ const checkAndStartQuestHandler = async (sender) => {
       return;
     }
 
-    // 각 퀘스트 알림을 개별적으로 전송
+    // 수락하지 않은 퀘스트만 알림
     for (const quest of availableQuests) {
-      const chatResponse = createResponse('response', 'S_Chat', {
-        playerId: user.playerId,
-        chatMsg: `[System] ${quest.quest_name} 퀘스트가 도착했습니다!`,
-      });
+      if (!acceptedQuestIds.includes(quest.quest_id)) {
+        const chatResponse = createResponse('response', 'S_Chat', {
+          playerId: user.playerId,
+          chatMsg: `[System] ${quest.quest_name}가 도착했습니다!`,
+        });
 
-      console.log(
-        `Sending quest notification for ${quest.quest_name} to playerId ${user.playerId}`,
-      );
-      user.socket.write(chatResponse);
+        console.log(
+          `Sending quest notification for ${quest.quest_name} to playerId ${user.playerId}`,
+        );
+        user.socket.write(chatResponse);
 
-      // 짧은 지연 시간 추가 (50ms)
-      await new Promise((resolve) => setTimeout(resolve, 50));
+        // 짧은 지연 시간 추가 (50ms)
+        await new Promise((resolve) => setTimeout(resolve, 50));
 
-      // 추가로 소켓 버퍼 상태 확인
-      if (!user.socket.writable) {
-        console.error('Socket is not writable');
+        // 추가로 소켓 버퍼 상태 확인
+        if (!user.socket.writable) {
+          console.error('Socket is not writable');
+        }
+      } else {
+        console.log(
+          `Quest ${quest.quest_name} has already been accepted by playerId ${user.playerId}`,
+        );
       }
     }
   } catch (err) {
