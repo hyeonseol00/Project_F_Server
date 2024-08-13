@@ -12,8 +12,8 @@ import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
-    const user = await getUserBySocket(socket.remotePort);
-    const userPlayerInfo = await getPlayerInfo(socket.remotePort);
+    const user = await getUserBySocket(socket);
+    const userPlayerInfo = await getPlayerInfo(socket);
 
     const gameSession = getGameSession(config.session.townId);
     const dungeon = addDungeon(userPlayerInfo.nickname, dungeonCode);

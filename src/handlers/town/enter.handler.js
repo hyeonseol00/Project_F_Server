@@ -137,7 +137,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
   await addUser(socket, effect, character);
-  const playerInfo = await getPlayerInfo(socket.remotePort);
+  const playerInfo = await getPlayerInfo(socket);
 
   const statInfo = {
     level: character.characterLevel,
@@ -159,7 +159,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 };
 
 const getUserInfoFromSession = async (socket, userExist) => {
-  const playerInfo = await getPlayerInfo(socket.remotePort);
+  const playerInfo = await getPlayerInfo(socket);
   // user 세션의 items중 quantity 0인 item 삭제
   for (let i = playerInfo.inven.length - 1; i >= 0; i--) {
     const item = playerInfo.inven[i];
