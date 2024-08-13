@@ -5,77 +5,75 @@ const playerInfoKey = 'playerInfo:';
 // =======getter, setter 메소드 시작=========
 
 // playerInfo
-export const getPlayerInfo = (socket) => {
-  const playerInfo = JSON.parse(redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`));
+export const getPlayerInfo = async (socket) => {
+  const playerInfo = JSON.parse(await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`));
   return playerInfo;
 };
 
-export const setPlayerInfo = (socket, playerInfo) => {
+export const setPlayerInfo = async (socket, playerInfo) => {
   for (const field in playerInfo) {
     if (playerInfo.hasOwnProperty(field)) {
-      redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, field, playerInfo[field]);
+      await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, field, playerInfo[field]);
     }
   }
-
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, playerInfo);
 };
 
 // gold
-export const getGold = (socket) => {
-  const userGold = redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'gold');
+export const getGold = async (socket) => {
+  const userGold = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'gold');
   return userGold;
 };
 
-export const setGold = (socket, updatedGold) => {
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'gold', updatedGold);
+export const setGold = async (socket, updatedGold) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'gold', updatedGold);
 };
 
 // statinfo
-export const getStatInfo = (socket) => {
-  const statInfo = JSON.parse(redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'statInfo'));
+export const getStatInfo = async (socket) => {
+  const statInfo = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'statInfo'));
   return statInfo;
-};
+}; 
 
-export const setStatInfo = (socket, statInfo) => {
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'statInfo', statInfo);
+export const setStatInfo = async (socket, statInfo) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'statInfo', statInfo);
 };
 
 // inven
-export const getInven = (socket) => {
-  const inventory = JSON.parse(redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'inven'));
+export const getInven = async (socket) => {
+  const inventory = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'inven'));
   return inventory;
 };
 
-export const setInven = (socket, updatedInven) => {
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', updatedInven);
+export const setInven = async (socket, updatedInven) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', updatedInven);
 };
 
 // equipment
-export const getEquipment = (socket) => {
-  const inventory = JSON.parse(redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'equipment'));
+export const getEquipment = async (socket) => {
+  const inventory = JSON.parse(await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'equipment'));
   return inventory;
 };
 
-export const setEquipment = (socket, updatedEquipment) => {
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'equipment', updatedEquipment);
+export const setEquipment = async (socket, updatedEquipment) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'equipment', updatedEquipment);
 };
 
 // level
-export const getLevel = (socket) => {
-  const statInfo = getStatInfo(socket);
+export const getLevel = async (socket) => {
+  const statInfo = await getStatInfo(socket);
   return statInfo.level;
 };
 
-export const setLevel = (socket, level, experience) => {
-  const statInfo = getStatInfo(socket);
+export const setLevel = async (socket, level, experience) => {
+  const statInfo = await getStatInfo(socket);
   statInfo.level = level;
   statInfo.exp = experience;
-  setStatInfo(statInfo);
+  await setStatInfo(statInfo);
 };
 
 // How...?
-export const skillPointUpdate = (socket, statInfo) => {
-  setStatInfo(socket, statInfo);
+export const skillPointUpdate = async (socket, statInfo) => {
+  await setStatInfo(socket, statInfo);
   // this.skillPoint = statInfo.skillPoint;
 };
 
@@ -83,8 +81,8 @@ export const skillPointUpdate = (socket, statInfo) => {
 
 // ==============item=============
 
-export const getPotionsAccount = (socket) => {
-  const items = getInven(socket);
+export const getPotionsAccount = async (socket) => {
+  const items = await getInven(socket);
   let count = 0;
   for (const item of items) {
     if (item.isPotion === false) continue;
@@ -93,8 +91,8 @@ export const getPotionsAccount = (socket) => {
   return count;
 };
 
-export const getItemIdx = (socket, itemId) => {
-  const inventory = getInven(socket);
+export const getItemIdx = async (socket, itemId) => {
+  const inventory = await getInven(socket);
   for (const itemIdx in inventory) {
     if (this.items[itemIdx].itemId === itemId) {
       return itemIdx;
@@ -103,45 +101,45 @@ export const getItemIdx = (socket, itemId) => {
   return -1;
 };
 
-export const getItem = (socket, itemId) => {
-  const items = getInven(socket);
+export const getItem = async (socket, itemId) => {
+  const items = await getInven(socket);
   const findItem = items.find((item) => item.itemId === itemId);
 
   return findItem;
 };
 
-export const pushItem = (socket, item) => {
-  const items = getInven(socket);
+export const pushItem = async (socket, item) => {
+  const items = await getInven(socket);
   items.push(item);
 };
 
-export const deleteItem = (socket, itemId) => {
-  const items = getInven(socket);
+export const deleteItem = async (socket, itemId) => {
+  const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   if (findIdx !== -1) {
     this.items.splice(findIdx, 1);
   }
 };
 
-export const decItem = (socket, itemId, quantity) => {
-  const items = getInven(socket);
+export const decItem = async (socket, itemId, quantity) => {
+  const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   this.items[findIdx].quantity -= quantity;
 };
 
-export const addItem = (socket, itemId, quantity) => {
-  const items = getInven(socket);
+export const addItem = async (socket, itemId, quantity) => {
+  const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   this.items[findIdx].quantity += quantity;
 };
 
-export const setItemId = (socket, itemType, itemId) => {
-  const equipment = getEquipment(socket);
+export const setItemId = async (socket, itemType, itemId) => {
+  const equipment = await getEquipment(socket);
   equipment[itemType] = itemId;
 };
 
-export const getItemQuantity = (socket, itemId) => {
-  const items = getInven(socket);
+export const getItemQuantity = async (socket, itemId) => {
+  const items = await getInven(socket);
   const findItem = items.find((item) => item.itemId === itemId);
   if (findItem) {
     return findItem.quantity;
@@ -149,8 +147,8 @@ export const getItemQuantity = (socket, itemId) => {
   return 0;
 };
 
-export const getPotionItems = (socket) => {
-  const items = getInven(socket);
+export const getPotionItems = async (socket) => {
+  const items = await getInven(socket);
   const potions = [];
   for (const item of items) {
     if (item.isPotion) {
@@ -163,16 +161,16 @@ export const getPotionItems = (socket) => {
 // ==============item=============
 
 // ==========team==========
-export const getTeam = (socket, teamId, isOwner = null) => {
-  const teamId = redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'teamId');
-  const isOwner = redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'isOwner');
+export const getTeam = async (socket, teamId, isOwner = null) => {
+  const teamId = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'teamId');
+  const isOwner = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'isOwner');
 
   return { teamId, isOwner };
 };
 
-export const setTeam = (socket, teamId, isOwner = null) => {
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'teamId', teamId);
-  redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', isOwner);
+export const setTeam = async (socket, teamId, isOwner = null) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'teamId', teamId);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', isOwner);
 };
 
 // 쓰레기 통
