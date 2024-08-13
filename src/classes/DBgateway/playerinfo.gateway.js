@@ -133,9 +133,12 @@ export const getItem = async (socket, itemId) => {
 };
 
 export const pushItem = async (socket, item) => {
-  const { items } = await getInven(socket);
-  items.push(item);
-  await setInven(items);
+  const inventory = await getInven(socket);
+  if (!Array.isArray(inventory.items)) {
+    inventory.items = [];
+  }
+  inventory.items.push(item);
+  await setInven(socket, inventory);
 };
 
 export const deleteItem = async (socket, itemId) => {
