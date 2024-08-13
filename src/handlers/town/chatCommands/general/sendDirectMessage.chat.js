@@ -7,11 +7,13 @@ export const sendDirectMessage = async (sender, message) => {
   const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
   const params = [recipientNickname, msg];
   const recipient = await getUserByNickname(recipientNickname);
+  const recipientInfo = await getPlayerInfo(recipient.socket);
+  const senderInfo = await getPlayerInfo(sender.socket);
 
   // 예외처리
   if (
     includeInvalidParams(sender, params) ||
-    targetToSelf(sender, recipient) ||
+    targetToSelf(sender, recipientInfo) ||
     notFoundUser(sender, recipient)
   ) {
     return;
@@ -19,12 +21,12 @@ export const sendDirectMessage = async (sender, message) => {
 
   const senderChatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: `[DM] To_${recipient.nickname}: ${msg}`,
+    chatMsg: `[DM] To_${recipientInfo.nickname}: ${msg}`,
   });
 
   const recipientChatResponse = createResponse('response', 'S_Chat', {
     playerId: recipient.playerId,
-    chatMsg: `[DM] ${sender.nickname}: ${msg}`,
+    chatMsg: `[DM] ${senderInfo.nickname}: ${msg}`,
   });
 
   try {

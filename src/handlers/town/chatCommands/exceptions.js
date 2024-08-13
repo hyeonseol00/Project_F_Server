@@ -1,5 +1,6 @@
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { getAllMembersInTeam } from '../../../session/user.session.js';
+import { getPlayerInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const notFoundTeam = (sender, targetUser = undefined) => {
   let chatMsg = targetUser
@@ -101,8 +102,9 @@ export const notFoundInvitation = (sender, targetUser = undefined) => {
   return false;
 };
 
-export const targetToSelf = (sender, targetUser = undefined) => {
-  if (sender.nickname == targetUser.nickname) {
+export const targetToSelf = (sender, targetUserInfo = undefined) => {
+  const senderInfo = getPlayerInfo(sender.socket);
+  if (senderInfo.nickname == targetUserInfo.nickname) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 본인이 대상이 될 수 없습니다.',

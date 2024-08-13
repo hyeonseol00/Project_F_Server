@@ -1,16 +1,25 @@
 import { getItemById } from '../assets/item.assets.js';
 import { createResponse } from './response/createResponse.js';
 import Item from '../classes/models/item.class.js';
+import {
+  addItem,
+  getItem,
+  getPlayerInfo,
+  pushItem,
+  setItemId,
+  setStatInfo,
+} from '../classes/DBgateway/playerinfo.gateway.js';
 
 let statInfo;
 const quantity = 1;
 const itemId = 0;
 async function updateUnEquip(uneqipItem, user) {
+  const userInfo = await getPlayerInfo(user.socket);
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
-    user.playerInfo.statInfo;
+    userInfo.statInfo;
 
   const uneqipItemInfo = await getItemById(uneqipItem);
-  user.setItemId(uneqipItemInfo.itemType, itemId);
+  setItemId(user.socket, uneqipItemInfo.itemType, itemId);
 
   const updateCritical = critRate - uneqipItemInfo.itemCritical;
   const updateAvoidAbility = avoidRate - uneqipItemInfo.itemAvoidance;
@@ -31,14 +40,14 @@ async function updateUnEquip(uneqipItem, user) {
     exp,
   };
 
-  user.setStatInfo(statInfo);
+  setStatInfo(user.socket, statInfo);
 
-  const isInven = user.getItem(uneqipItemInfo.itemId);
+  const isInven = await getItem(user.socket, uneqipItemInfo.itemId);
   if (!isInven) {
     const item = new Item(uneqipItem, quantity);
-    user.pushItem(item);
+    pushItem(user.socket, item);
   } else {
-    user.addItem(uneqipItemInfo.itemId, quantity);
+    addItem(user.socket, uneqipItemInfo.itemId, quantity);
   }
 
   const response = createResponse('response', 'S_Chat', {

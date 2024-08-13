@@ -1,9 +1,17 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import isInteger from '../../../../utils/isInteger.js';
 import { getItemById } from '../../../../assets/item.assets.js';
+import {
+  decItem,
+  deleteItem,
+  getItem,
+  getItemQuantity,
+  getPlayerInfo,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const useItem = async (user, message) => {
-  const { hp, maxHp, mp, maxMp, level } = user.playerInfo.statInfo;
+  const userInfo = await getPlayerInfo(user.socket);
+  const { hp, maxHp, mp, maxMp, level } = userInfo.statInfo;
 
   if (!isInteger(message)) {
     const response = createResponse('response', 'S_Chat', {
@@ -15,7 +23,7 @@ export const useItem = async (user, message) => {
   }
 
   const itemId = Number(message);
-  const findItem = user.getItem(itemId);
+  const findItem = await getItem(user.socket, itemId);
   const findItemInfo = await getItemById(itemId);
 
   if (!findItem) {
@@ -69,22 +77,22 @@ export const useItem = async (user, message) => {
   const newMp = Math.min(mp + itemMp, maxMp);
 
   // 상태 업데이트
-  user.playerInfo.statInfo.hp = newHp;
-  user.playerInfo.statInfo.mp = newMp;
+  userInfo.statInfo.hp = newHp;
+  userInfo.statInfo.mp = newMp;
 
   // 인벤토리 업데이트
-  const invenItem = user.getItem(itemId);
+  const invenItem = await getItem(user.socket, itemId);
   if (invenItem) {
     if (invenItem.quantity <= 1) {
-      user.deleteItem(itemId);
+      deleteItem(user.socket, itemId);
     } else {
-      user.decItem(itemId, 1);
+      decItem(user.socket, itemId, 1);
     }
   }
 
-  const updatedQuantity = user.getItemQuantity(itemId);
+  const updatedQuantity = await getItemQuantity(user.socket, itemId);
   if (updatedQuantity === 0) {
-    user.deleteItem(itemId);
+    deleteItem(user.socket, itemId);
   }
 
   // S_UseItem 패킷 전송
