@@ -69,7 +69,7 @@ export const buyItem = async (user, message) => {
 
     if (buyItem.itemType === 'potion') {
       // 소비 아이템
-      const potionIdx = await getItemIdx(buyItem.id);
+      const potionIdx = await getItemIdx(user.socket, buyItem.id);
       if (potionIdx === -1) {
         potion = new Item(Number(id), Number(quantity));
         await pushItem(user.socket, potion);

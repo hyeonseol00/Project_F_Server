@@ -9,7 +9,7 @@ export default async function switchToGameOverWin(dungeon, socket) {
   const player = dungeon.player;
 
   // const itemIdx = player.getItemIdx(item.id);
-  const itemIdx = await getItemIdx(item.id);
+  const itemIdx = await getItemIdx(socket, item.id);
   if (itemIdx === -1) {
     // 아이템이 없으면 추가
     // player.items.push(item);
@@ -17,7 +17,7 @@ export default async function switchToGameOverWin(dungeon, socket) {
   } else {
     // 있으면 quantity 증가
     // player.items[itemIdx].quantity += item.quantity;
-    await addItem(socket, item.itemId, item.quantity);
+    await addItem(socket, item.id, item.quantity);
   }
 
   const msg = `${itemInfo.itemName}을 획득했습니다.\n마을로 귀환하겠습니다!`;
