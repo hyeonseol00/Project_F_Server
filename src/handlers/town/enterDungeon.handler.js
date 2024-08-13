@@ -7,16 +7,16 @@ import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
+import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
-    const user = await getUserBySocket(socket);
-    const { nickname } = user;
+    const user = await getUserBySocket(socket.remotePort);
+    const userPlayerInfo = await getPlayerInfo(socket.remotePort);
 
     const gameSession = getGameSession(config.session.townId);
-    const player = gameSession.getUser(user.playerId);
-    const dungeon = addDungeon(nickname, player, dungeonCode);
+    const dungeon = addDungeon(userPlayerInfo.nickname, dungeonCode);
     gameSession.removeUser(user.playerId);
 
     const monsters = await getMonsterByDungeonId(dungeonCode + 5000);
@@ -74,13 +74,13 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: player.characterClass,
-      playerLevel: player.playerInfo.statInfo.level,
-      playerName: player.nickname,
-      playerFullHp: player.playerInfo.statInfo.maxHp,
-      playerFullMp: player.playerInfo.statInfo.maxMp,
-      playerCurHp: player.playerInfo.statInfo.hp,
-      playerCurMp: player.playerInfo.statInfo.mp,
+      playerClass: user.characterClass,
+      playerLevel: userPlayerInfo.statInfo.level,
+      playerName: userPlayerInfo.nickname,
+      playerFullHp: userPlayerInfo.statInfo.maxHp,
+      playerFullMp: userPlayerInfo.statInfo.maxMp,
+      playerCurHp: userPlayerInfo.statInfo.hp,
+      playerCurMp: userPlayerInfo.statInfo.mp,
     };
 
     const screenTextAlignment = {
@@ -100,7 +100,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: config.screenColor.b,
     };
 
-    const message = `${nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
+    const message = `${userPlayerInfo.nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
 
     const screenText = {
       msg: message,

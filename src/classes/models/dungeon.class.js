@@ -4,9 +4,8 @@ import Item from './item.class.js';
 import Monster from './monster.class.js';
 
 class InstanceDungeon {
-  constructor(userId, player, dungeonCode) {
+  constructor(userId, dungeonCode) {
     this.id = userId;
-    this.player = player;
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
     this.targetMonsterIdx = 0;
