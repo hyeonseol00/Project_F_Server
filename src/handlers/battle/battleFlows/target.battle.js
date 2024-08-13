@@ -1,4 +1,4 @@
-import { getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
+import { getStatInfo, setStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
@@ -6,7 +6,7 @@ import { createResponse } from '../../../utils/response/createResponse.js';
 export default async function targetMonsterScene(responseCode, dungeon, socket) {
   const btns = [{ msg: '다음', enable: true }];
 
-  const user = await getUserBySocket(socket);
+  const user = getUserBySocket(socket);
   const playerEffectCode = user.effectCode;
   const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
@@ -109,5 +109,7 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
     dungeon.setTargetIdx(responseCode - 1);
     dungeon.currentAttackType = config.attackType.normal;
   }
+
+  await setStatInfo(socket, playerStatInfo);
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
 }

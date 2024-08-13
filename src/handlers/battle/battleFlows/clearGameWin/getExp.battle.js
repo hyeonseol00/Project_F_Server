@@ -63,7 +63,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         critDmg: playerInfo.statInfo.critDmg + criticalAttack,
         avoidRate: playerInfo.statInfo.avoidRate + avoidAbility,
       };
-      await setLevel(socket, statInfo, playerInfo.gold, playerInfo.skillPoint);
+      await setLevel(socket, statInfo);
       await setGold(socket, playerInfo.gold + gold);
       await skillPointUpdate(socket, playerInfo.skillPoint + skillPoint);
 
