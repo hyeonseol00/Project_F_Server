@@ -11,6 +11,7 @@ import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { checkAndStartQuestHandler } from './quest.handler.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -106,6 +107,8 @@ const enterTownHandler = async ({ socket, payload }) => {
     }
 
     // ---------- spawn 끝 -----------------
+    // 사용자가 마을에 입장할 때 퀘스트 알림 제공
+    await checkAndStartQuestHandler(curUser); // curUser
   } catch (err) {
     handleError(socket, err);
   }

@@ -162,11 +162,6 @@ export const updateQuestProgress = async (characterId, questId, killCount, statu
   ]);
 };
 
-export const getQuestsByLevel = async (level) => {
-  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.GET_QUESTS_BY_LEVEL, [level]);
-  return rows;
-};
-
 export const removeUserQuest = async (characterId, questId) => {
   await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.REMOVE_USER_QUEST, [characterId, questId]);
 };

@@ -1,7 +1,6 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
-import { questProgressHandler } from '../../../town/quest.handler.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {

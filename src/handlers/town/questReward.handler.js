@@ -1,32 +1,42 @@
 import { getUserBySocket } from '../../session/user.session.js';
-import { updateQuestProgress } from '../../db/user/user.db.js';
+import { updateQuestProgress, getUserQuests } from '../../db/user/user.db.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 import { getLevelById } from '../../assets/level.assets.js';
 import { getquestById } from '../../assets/quests.assets.js';
+import isInteger from '../../utils/isInteger.js';
 
-const questRewardHandler = async ({ socket, payload }) => {
+const questRewardHandler = async (sender, message) => {
   try {
-    const { questId } = payload;
-    const user = getUserBySocket(socket);
+    const user = sender;
 
-    const quest = getquestById(questId);
-
-    if (!quest) {
-      throw new Error('퀘스트가 존재하지 않습니다.');
+    if (!isInteger(message)) {
+      const response = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: `[System] 퀘스트 ID(숫자)을(를) 입력하세요.`,
+      });
+      user.socket.write(response);
+      return;
     }
+
+    const questId = Number(message);
 
     const userQuests = await getUserQuests(user.characterId);
     const userQuest = userQuests.find((q) => q.questId === questId);
 
-    if (!userQuest || userQuest.status !== '완료') {
+    if (!userQuest || userQuest.status !== 'COMPLETED') {
       throw new Error('퀘스트가 완료되지 않았거나 존재하지 않습니다.');
     }
 
+    const quest = getquestById(questId);
+
+    if (!quest) {
+      throw new Error('존재하지 않는 퀘스트입니다.');
+    }
     // 보상 지급 (경험치, 골드 등)
     let playerExp = user.playerInfo.statInfo.exp + quest.rewardExp;
-    user.playerInfo.gold += quest.rewardGold;
+    let playerGold = user.playerInfo.gold + quest.rewardGold;
 
     // 레벨업 로직
     const playerLevel = user.playerInfo.statInfo.level;
@@ -34,9 +44,9 @@ const questRewardHandler = async ({ socket, payload }) => {
     let levelUpMessage = '';
 
     if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
-      // 레벨업 처리
       playerExp -= nextLevelData.requiredExp;
-      user.playerInfo.statInfo.level += 1;
+      user.setLevel(playerLevel + 1, playerExp);
+
       user.playerInfo.statInfo.maxHp += nextLevelData.hp;
       user.playerInfo.statInfo.maxMp += nextLevelData.mp;
       user.playerInfo.statInfo.hp = user.playerInfo.statInfo.maxHp;
@@ -50,35 +60,43 @@ const questRewardHandler = async ({ socket, payload }) => {
       user.playerInfo.statInfo.avoidRate += nextLevelData.avoidAbility;
       user.playerInfo.skillPoint += nextLevelData.skillPoint;
 
-      // 레벨업 메시지
-      levelUpMessage = `레벨업! ${playerLevel + 1} 레벨이 되었습니다!\n
+      if ((playerLevel + 1) % 5 === 0) {
+        user.worldLevel++;
+      }
+
+      levelUpMessage = `[System] 레벨업! ${playerLevel + 1} 레벨이 되었습니다!\n
         최대 체력: +${nextLevelData.hp}, 최대 마나: +${nextLevelData.mp}\n
         공격력: +${nextLevelData.attack}, 방어력: +${nextLevelData.defense}, 마법력: +${nextLevelData.magic}\n
         속도: +${nextLevelData.speed}, 크리티컬 확률: +${nextLevelData.critical}\n
         회피 확률: +${nextLevelData.avoidAbility}, 스킬 포인트: +${nextLevelData.skillPoint}`;
 
       const chatMessageResponse = createResponse('response', 'S_Chat', {
-        playerId: user.characterId,
+        playerId: user.playerId,
         chatMsg: levelUpMessage,
       });
 
-      socket.write(chatMessageResponse);
+      user.socket.write(chatMessageResponse);
+    } else {
+      user.playerInfo.statInfo.exp = playerExp;
     }
 
-    // 경험치 업데이트
-    user.playerInfo.statInfo.exp = playerExp;
+    // 골드 업데이트
+    user.playerInfo.gold = playerGold;
 
-    await updateQuestProgress(user.characterId, questId, userQuest.killCount, '보상 완료');
+    // DB에 퀘스트 상태 업데이트
+    await updateQuestProgress(user.characterId, questId, userQuest.killCount, 'REWARD_CLAIMED');
 
-    const rewardMessage = `퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`;
+    const rewardMessage = `[System] 퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`;
     const rewardResponse = createResponse('response', 'S_Chat', {
-      playerId: user.characterId,
+      playerId: user.playerId,
       chatMsg: rewardMessage,
     });
 
-    socket.write(rewardResponse);
+    console.log(`Sending reward message to playerId ${user.playerId}: ${rewardMessage}`);
+
+    user.socket.write(rewardResponse);
   } catch (err) {
-    handleError(socket, err);
+    handleError(sender.socket, err);
   }
 };
 

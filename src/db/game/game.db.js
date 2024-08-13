@@ -58,3 +58,8 @@ export const getQuests = async () => {
   const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_ALL_QUESTS, []);
   return toCamelCase(rows);
 };
+
+export const getQuestsByLevel = async (level) => {
+  const [rows] = await pools.TOWN_GAME.query(SQL_GAME_QUERIES.GET_QUESTS_BY_LEVEL, [level]);
+  return rows;
+};

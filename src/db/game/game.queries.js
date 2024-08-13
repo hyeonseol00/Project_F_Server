@@ -9,4 +9,8 @@ export const SQL_GAME_QUERIES = {
   GET_MONSTER: 'SELECT * FROM monsters',
   GET_DUNGEON_MONSTER: 'SELECT * FROM dungeon_monsters',
   GET_ALL_QUESTS: 'SELECT * FROM quests',
+  GET_QUESTS_BY_LEVEL: `
+  SELECT * FROM quests
+  WHERE level_required <= ?
+`,
 };
