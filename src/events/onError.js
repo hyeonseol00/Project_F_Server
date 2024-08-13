@@ -19,9 +19,9 @@ export const onError = (socket) => async (err) => {
     if (user) {
       gameSession.removeUser(user.playerId);
       hatcherySession.removePlayer(user.nickname);
-
+      const inventory = await getInven(socket);
       updateCharacterStatus(user);
-      updateCharacterItems(user.characterId, user.items);
+      updateCharacterItems(user.characterId, inventory);
     }
     removeDungeon(user.nickname);
 

@@ -4,7 +4,6 @@ import { getLevelById } from '../../../../assets/level.assets.js';
 import {
   getPlayerInfo,
   setGold,
-  setLevel,
   setStatInfo,
   setWorldLevel,
   skillPointUpdate,
@@ -63,7 +62,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         critDmg: playerInfo.statInfo.critDmg + criticalAttack,
         avoidRate: playerInfo.statInfo.avoidRate + avoidAbility,
       };
-      await setLevel(socket, statInfo);
+      await setStatInfo(socket, statInfo);
       await setGold(socket, playerInfo.gold + gold);
       await skillPointUpdate(socket, playerInfo.skillPoint + skillPoint);
 
@@ -84,11 +83,10 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     } else {
       const statInfo = {
         level: playerLevel,
-        exp: playerExp + monsterExp,
         maxHp: playerInfo.statInfo.maxHp,
         maxMp: playerInfo.statInfo.maxMp,
-        hp: playerInfo.statInfo.Hp,
-        mp: playerInfo.statInfo.Mp,
+        hp: playerInfo.statInfo.hp,
+        mp: playerInfo.statInfo.mp,
         atk: playerInfo.statInfo.atk,
         def: playerInfo.statInfo.def,
         magic: playerInfo.statInfo.magic,
@@ -96,6 +94,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         critRate: playerInfo.statInfo.critRate,
         critDmg: playerInfo.statInfo.critDmg,
         avoidRate: playerInfo.statInfo.avoidRate,
+        exp: playerExp + monsterExp,
       };
 
       await setStatInfo(socket, statInfo);

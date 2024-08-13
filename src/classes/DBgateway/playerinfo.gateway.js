@@ -32,7 +32,7 @@ export const getGold = async (socket) => {
 };
 
 export const setGold = async (socket, updatedGold) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'gold', updatedGold);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'gold', JSON.stringify(updatedGold));
 };
 
 // statinfo
@@ -83,20 +83,23 @@ export const getLevel = async (socket) => {
   return statInfo.level;
 };
 
-export const setLevel = async (socket, statInfo, gold, skillPoint) => {
-  await setStatInfo(socket, statInfo);
-  await setGold(socket, gold);
-};
-
 // How...?
 export const skillPointUpdate = async (socket, skillPoint) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'skillPoint', skillPoint);
+  await redisCli.hSet(
+    `${playerInfoKey}${socket.remotePort}`,
+    'skillPoint',
+    JSON.stringify(skillPoint),
+  );
   // await setStatInfo(socket, statInfo);
   // this.skillPoint = statInfo.skillPoint;
 };
 
 export const setWorldLevel = async (socket, worldLevel) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'worldLevel', worldLevel);
+  await redisCli.hSet(
+    `${playerInfoKey}${socket.remotePort}`,
+    'worldLevel',
+    JSON.stringify(worldLevel),
+  );
 };
 
 // =======getter, setter 메소드 끝=========

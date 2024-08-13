@@ -7,6 +7,7 @@ import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
 import { getHatcherySession } from '../session/hatchery.session.js';
 import { handleError } from '../utils/error/errorHandler.js';
+import { getInven } from '../classes/DBgateway/playerinfo.gateway.js';
 
 export const onEnd = (socket) => async () => {
   try {
@@ -17,9 +18,9 @@ export const onEnd = (socket) => async () => {
     if (user) {
       gameSession.removeUser(user.playerId);
       hatcherySession.removePlayer(user.nickname);
-
+      const inventory = await getInven(socket);
       updateCharacterStatus(user);
-      updateCharacterItems(user.characterId, user.items);
+      updateCharacterItems(user.characterId, inventory);
     }
     removeDungeon(user.nickname);
 
