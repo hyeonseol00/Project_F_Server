@@ -85,10 +85,6 @@ export const getLevel = async (socket) => {
   return statInfo.level;
 };
 
-export const setLevel = async (socket, statInfo) => {
-  await setStatInfo(socket, statInfo);
-};
-
 // How...?
 export const skillPointUpdate = async (socket, skillPoint) => {
   await redisCli.hSet(
