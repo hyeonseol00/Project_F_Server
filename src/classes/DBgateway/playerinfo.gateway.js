@@ -13,7 +13,7 @@ export const getPlayerInfo = async (socket) => {
 export const setPlayerInfo = async (socket, playerInfo) => {
   for (const field in playerInfo) {
     if (playerInfo.hasOwnProperty(field)) {
-      await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, field, playerInfo[field]);
+      await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, field, JSON.stringify(playerInfo[field]));
     }
   }
 };
@@ -35,7 +35,7 @@ export const getStatInfo = async (socket) => {
 }; 
 
 export const setStatInfo = async (socket, statInfo) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'statInfo', statInfo);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'statInfo', JSON.stringify(statInfo));
 };
 
 // inven
@@ -45,7 +45,7 @@ export const getInven = async (socket) => {
 };
 
 export const setInven = async (socket, updatedInven) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', updatedInven);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', JSON.stringify(updatedInven));
 };
 
 // equipment
@@ -55,7 +55,7 @@ export const getEquipment = async (socket) => {
 };
 
 export const setEquipment = async (socket, updatedEquipment) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'equipment', updatedEquipment);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'equipment', JSON.stringify(updatedEquipment));
 };
 
 // level
@@ -94,7 +94,7 @@ export const getPotionsAccount = async (socket) => {
 export const getItemIdx = async (socket, itemId) => {
   const inventory = await getInven(socket);
   for (const itemIdx in inventory) {
-    if (this.items[itemIdx].itemId === itemId) {
+    if (inventory[itemIdx].itemId === itemId) {
       return itemIdx;
     }
   }
@@ -111,31 +111,36 @@ export const getItem = async (socket, itemId) => {
 export const pushItem = async (socket, item) => {
   const items = await getInven(socket);
   items.push(item);
+  await setInven(items);
 };
 
 export const deleteItem = async (socket, itemId) => {
   const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
   if (findIdx !== -1) {
-    this.items.splice(findIdx, 1);
+    items.splice(findIdx, 1);
+    await setInven(items);
   }
 };
 
 export const decItem = async (socket, itemId, quantity) => {
   const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
-  this.items[findIdx].quantity -= quantity;
+  items[findIdx].quantity -= quantity;
+  await setInven(items);
 };
 
 export const addItem = async (socket, itemId, quantity) => {
   const items = await getInven(socket);
   const findIdx = items.findIndex((item) => item.itemId === itemId);
-  this.items[findIdx].quantity += quantity;
+  items[findIdx].quantity += quantity;
+  await setInven(items);
 };
 
 export const setItemId = async (socket, itemType, itemId) => {
   const equipment = await getEquipment(socket);
   equipment[itemType] = itemId;
+  await setEquipment(equipment);
 };
 
 export const getItemQuantity = async (socket, itemId) => {
@@ -161,7 +166,7 @@ export const getPotionItems = async (socket) => {
 // ==============item=============
 
 // ==========team==========
-export const getTeam = async (socket, teamId, isOwner = null) => {
+export const getTeam = async (socket) => {
   const teamId = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'teamId');
   const isOwner = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'isOwner');
 
@@ -173,6 +178,14 @@ export const setTeam = async (socket, teamId, isOwner = null) => {
   await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', isOwner);
 };
 
+export const getInvitedTeams = async (socket) => {
+  const invitedTeams = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'invitedTeams');
+  return invitedTeams;
+};
+
+export const setInvitedTeams = async (socket, updatedInvitedTeams) => {
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'invitedTeams', JSON.stringify(updatedInvitedTeams));
+};
 // 쓰레기 통
 
 // DB에서 관리 안 함
