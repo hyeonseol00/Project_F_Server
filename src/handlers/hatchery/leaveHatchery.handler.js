@@ -2,9 +2,9 @@ import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const leaveHatcheryHandler = async ({ socket, payload }) => {
+const leaveHatcheryHandler = ({ socket, payload }) => {
   try {
-    const user = await getUserBySocket(socket);
+    const user = getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
     hatcherySession.removePlayer(user.nickname);
 

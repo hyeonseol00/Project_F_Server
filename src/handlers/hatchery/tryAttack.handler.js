@@ -1,5 +1,5 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const tryAttackHatcheryHandler = async ({ socket, payload }) => {
@@ -9,7 +9,7 @@ const tryAttackHatcheryHandler = async ({ socket, payload }) => {
     const nicknames = hatcherySession.playerNicknames;
     const players = [];
     for (let i = 0; i < nicknames.length; i++) {
-      players.push(await getUserByNickname(nicknames[i]));
+      players.push(getUserByNickname(nicknames[i]));
     }
 
     const tryAttackResponse = createResponse('response', 'S_TryAttack', {

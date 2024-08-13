@@ -10,7 +10,7 @@ const moveHatcheryHandler = async ({ socket, payload }) => {
     const players = [];
     const nicknames = hatcherySession.playerNicknames;
     for (let i = 0; i < nicknames.length; i++) {
-      players.push(await getUserByNickname(nicknames[i]));
+      players.push(getUserByNickname(nicknames[i]));
     }
     const { transform } = payload;
 
