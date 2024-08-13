@@ -7,6 +7,7 @@ import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
+import { getQuestIdForDungeon } from './quest.handler.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
@@ -82,6 +83,15 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       playerCurHp: player.playerInfo.statInfo.hp,
       playerCurMp: player.playerInfo.statInfo.mp,
     };
+
+    // 던전 ID를 기반으로 퀘스트 ID 매핑
+    const questId = getQuestIdForDungeon(dungeonCode + 5000);
+    if (questId) {
+      user.currentQuestId = questId; // 사용자의 currentQuestId에 퀘스트 ID 저장
+      console.log(`Quest ID ${questId} assigned for Dungeon ID ${dungeonCode + 5000}`);
+    } else {
+      console.log(`No Quest ID assigned for Dungeon ID ${dungeonCode + 5000}`);
+    }
 
     const screenTextAlignment = {
       x: config.screenTextAlignment.x,

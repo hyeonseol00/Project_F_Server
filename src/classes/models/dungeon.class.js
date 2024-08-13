@@ -71,9 +71,9 @@ class InstanceDungeon {
     this.mountingItems = []; // random mounting item list
     this.potions = []; // random potion list
 
-    const dungeonItems = getDungeonItemsByDungeonCode(dungeonCode + 5000);
+    const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      const itemInfo = getItemById(item.itemId);
+      const itemInfo = await getItemById(item.itemId);
       if (itemInfo.itemType === 'potion') {
         // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
         const potion = new Item(item.itemId, dungeonCode);

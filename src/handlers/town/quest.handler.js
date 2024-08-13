@@ -10,6 +10,18 @@ import { getQuestsByLevel } from '../../db/game/game.db.js';
 import { getquestById } from '../../assets/quests.assets.js';
 import isInteger from '../../utils/isInteger.js';
 
+// 던전 ID와 퀘스트 ID 매핑 함수
+const getQuestIdForDungeon = (dungeonId) => {
+  const dungeonQuestMapping = {
+    5001: 1, // 1성 던전 (ID: 5001) -> 퀘스트 ID 1
+    5002: 2, // 2성 던전 (ID: 5002) -> 퀘스트 ID 2
+    5003: 3, // 3성 던전 (ID: 5002) -> 퀘스트 ID 3
+    5004: 4, // 4성 던전 (ID: 5002) -> 퀘스트 ID 4
+    // 최종던전 추가 필요
+  };
+
+  return dungeonQuestMapping[dungeonId] || null;
+};
 // 퀘스트 수락 핸들러
 const acceptQuestHandler = async (sender, message) => {
   try {
@@ -132,7 +144,7 @@ const getQuestsHandler = async (sender) => {
   }
 };
 
-// 퀘스트 진행 상황 확인 및 업데이트 핸들러
+// 퀘스트 진행 상황 확인 핸들러
 const questProgressHandler = async (sender, message) => {
   try {
     const socket = sender.socket;
@@ -169,15 +181,35 @@ const questProgressHandler = async (sender, message) => {
     socket.write(
       createResponse('response', 'S_Chat', { playerId: user.playerId, chatMsg: progressMessage }),
     );
-
-    // 퀘스트가 완료되지 않았을 경우, 진행 상황을 업데이트
-    if (userQuest.status !== 'COMPLETED') {
-      await updateQuestProgress(user.characterId, questId, currentProgress, userQuest.status);
-    }
   } catch (err) {
     handleError(sender.socket, err);
   }
 };
+// 전투 후 퀘스트 진행 상황 업데이트 핸들러
+const updateQuestProgressAfterBattle = async (user, questId, progressIncrement = 1) => {
+  try {
+    const userQuests = await getUserQuests(user.characterId);
+    const userQuest = userQuests.find((q) => q.questId === questId);
+
+    if (!userQuest) {
+      console.error(`퀘스트 ID ${questId}에 해당하는 사용자의 퀘스트를 찾을 수 없습니다.`);
+      return;
+    }
+
+    // 퀘스트가 완료되지 않았을 경우, 진행 상황을 업데이트
+    if (userQuest.status !== 'COMPLETED') {
+      userQuest.killCount += progressIncrement;
+
+      console.log(`Updated Kill Count for Quest ID ${questId}: ${userQuest.killCount}`);
+
+      // DB에 업데이트
+      await updateQuestProgress(user.characterId, questId, userQuest.killCount, userQuest.status);
+    }
+  } catch (err) {
+    console.error('Error in updateQuestProgressAfterBattle:', err);
+  }
+};
+
 // 퀘스트 완료 핸들러
 const completeQuestHandler = async (sender, message) => {
   try {
@@ -269,4 +301,6 @@ export {
   completeQuestHandler,
   questProgressHandler,
   checkAndStartQuestHandler,
+  getQuestIdForDungeon,
+  updateQuestProgressAfterBattle,
 };
