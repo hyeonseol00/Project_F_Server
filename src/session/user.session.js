@@ -3,14 +3,13 @@ import { getRegistCount } from './GaApplication.session.js';
 import { redisCli } from '../init/redis/redis.js';
 
 const sessionManager = `userSession:`;
-export const addUser = async (socket, nickname, characterClass, effect, items, character) => {
-
+export const addUser = async (socket, effect, character) => {
   const user = {
     // session management field
-    playerId : getRegistCount(),
-    characterId : character.characterId,
-    socket : socket,
-    lastUpdateTime : Date.now(),
+    playerId: getRegistCount(),
+    characterId: character.characterId,
+    socket: socket,
+    lastUpdateTime: Date.now(),
 
     // // players's game data
     // playerInfo : {
@@ -24,32 +23,29 @@ export const addUser = async (socket, nickname, characterClass, effect, items, c
     //   equipment,
     // },
     // skillPoint : character.skillPoint,
-    // worldLevel : character.worldLevel, 
-  }
+    // worldLevel : character.worldLevel,
+  };
   await redisCli.set(`${sessionManager}${socket.remotePort}`, JSON.stringify(user));
   return user;
 };
 
 export const removeUser = async (socket) => {
-  const user= await redisCli.get(`${sessionManager}${socket.remotePort}`);
+  const user = await redisCli.get(`${sessionManager}${socket.remotePort}`);
 
   if (user) {
     await redisCli.del(`${sessionManager}${socket.remotePort}`);
     return user;
-  }
-  else{
-    console.log("user is not found...")
+  } else {
+    console.log('user is not found...');
   }
 };
 
 export const getUserBySocket = async (socket) => {
-
-  const user= await redisCli.get(`${sessionManager}${socket.remotePort}`);
+  const user = await redisCli.get(`${sessionManager}${socket.remotePort}`);
   if (user) {
     return user;
-  }
-  else{
-    console.log("user is not found...")
+  } else {
+    console.log('user is not found...');
   }
 
   return null;

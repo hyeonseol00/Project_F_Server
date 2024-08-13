@@ -6,14 +6,18 @@ const playerInfoKey = 'playerInfo:';
 
 // playerInfo
 export const getPlayerInfo = async (socket) => {
-  const playerInfo = JSON.parse(await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`));
+  const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
   return playerInfo;
 };
 
 export const setPlayerInfo = async (socket, playerInfo) => {
   for (const field in playerInfo) {
     if (playerInfo.hasOwnProperty(field)) {
-      await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, field, JSON.stringify(playerInfo[field]));
+      await redisCli.hSet(
+        `${playerInfoKey}${socket.remotePort}`,
+        field,
+        JSON.stringify(playerInfo[field]),
+      );
     }
   }
 };
@@ -49,7 +53,11 @@ export const getInven = async (socket) => {
 };
 
 export const setInven = async (socket, updatedInven) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'inven', JSON.stringify(updatedInven));
+  await redisCli.hSet(
+    `${playerInfoKey}${socket.remotePort}`,
+    'inven',
+    JSON.stringify(updatedInven),
+  );
 };
 
 // equipment
@@ -61,7 +69,11 @@ export const getEquipment = async (socket) => {
 };
 
 export const setEquipment = async (socket, updatedEquipment) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'equipment', JSON.stringify(updatedEquipment));
+  await redisCli.hSet(
+    `${playerInfoKey}${socket.remotePort}`,
+    'equipment',
+    JSON.stringify(updatedEquipment),
+  );
 };
 
 // level
@@ -190,7 +202,11 @@ export const getInvitedTeams = async (socket) => {
 };
 
 export const setInvitedTeams = async (socket, updatedInvitedTeams) => {
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'invitedTeams', JSON.stringify(updatedInvitedTeams));
+  await redisCli.hSet(
+    `${playerInfoKey}${socket.remotePort}`,
+    'invitedTeams',
+    JSON.stringify(updatedInvitedTeams),
+  );
 };
 // 쓰레기 통
 

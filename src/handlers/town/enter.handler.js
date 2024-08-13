@@ -10,7 +10,7 @@ import {
   insertUserByUsername,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
-import { addUser, getUserBySocket } from '../../session/user.session.js';
+import { addUser, getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -90,15 +90,14 @@ const enterTownHandler = async ({ socket, payload }) => {
     const players = [];
 
     // 게임 세션에 저장된 모든 playerInfo를 가져옴
-    for (const user of gameSession.users) {
-      players.push(user.playerInfo);
+    for (const nickname of gameSession.playerNicknames) {
+      const player = getUserByNickname(nickname);
+      players.push(await getPlayerInfo(player.socket));
     }
 
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
-    for (const user of gameSession.users) {
-      const filterdPlayers = players.filter((player) => player.playerId !== user.playerId);
-
-      // console.log('filterdPlayers', filterdPlayers);
+    for (const nickname of gameSession.playerNicknames) {
+      const filterdPlayers = players.filter((player) => player.nickname !== nickname);
 
       // 해당 유저에게 다른 유저들을 스폰(해당 유저 제외)
       const spawnTownResponse = createResponse('response', 'S_Spawn', {
