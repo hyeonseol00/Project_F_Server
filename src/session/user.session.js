@@ -27,8 +27,8 @@ export const addUser = async (socket, effectCode, character) => {
     // },
 
     effectCode,
-    // worldLevel: character.worldLevel,
-    // skillPoint: character.skillPoint,
+    worldLevel: character.worldLevel,
+    skillPoint: character.skillPoint,
   };
   userSessions.push(user);
   return user;
