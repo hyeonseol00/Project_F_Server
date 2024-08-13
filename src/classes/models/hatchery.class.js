@@ -102,10 +102,15 @@ class Hatchery {
     for (const player of players) {
       const playerTr = this.transforms[player.nickname];
       const distance = this.boss.getDistanceFromPlayer(playerTr);
-      if (minDistance > distance) {
+      const hp = player.playerInfo.statInfo.hp;
+      if (minDistance > distance && hp > 0) {
         minDistance = distance;
         targetPlayerTr = playerTr;
       }
+    }
+
+    if (minDistance === 2e9) {
+      return;
     }
 
     // 여기 부분에 현재 위치 계산
