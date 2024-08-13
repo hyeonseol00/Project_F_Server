@@ -1,14 +1,15 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
-
+import { getStatInfo, setLevel } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
     const btns = [{ msg: '다음', enable: true }];
     let battleLog = {};
 
     const player = dungeon.player; // user 클래스
-    const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
+    const playerStatus = await getStatInfo(socket.remotePort);
+    // const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
     const playerLevel = playerStatus.level; // 유저의 현재 레벨
 
     let levelTable;
@@ -41,7 +42,7 @@ export default async function getExpScene(responseCode, dungeon, socket) {
     const playerExp = monsterExp + playerStatus.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
-      player.setLevel(playerLevel + 1, playerExp - requiredExp);
+      setLevel(socket.remotePort, playerLevel + 1, playerExp - requiredExp);
       playerStatus.maxHp += hp;
       playerStatus.maxMp += mp;
       playerStatus.hp = playerStatus.maxHp;
