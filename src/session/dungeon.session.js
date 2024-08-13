@@ -1,8 +1,8 @@
 import { instanceDungeonSessions } from './sessions.js';
 import InstanceDungeon from '../classes/models/dungeon.class.js';
 
-export const addDungeon = (playerId, player, dungeonCode) => {
-  const dungeon = new InstanceDungeon(playerId, player, dungeonCode);
+export const addDungeon = (playerId, dungeonCode) => {
+  const dungeon = new InstanceDungeon(playerId, dungeonCode);
   instanceDungeonSessions.push(dungeon);
 
   return dungeon;

@@ -1,14 +1,11 @@
 import { getItemById } from '../../../assets/item.assets.js';
-import {
-  getPlayerStatInfo,
-  getPotionItems,
-} from '../../../classes/DBgateway/playerinfo.gateway.js';
+import { getPotionItems, getStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
 export default async function chooseActionScene(responseCode, dungeon, socket) {
   const btns = [];
-  const playerStatInfo = await getPlayerStatInfo(socket);
+  const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
 
   switch (responseCode) {

@@ -1,11 +1,11 @@
-import { getPlayerStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import { getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
   try {
-    const playerStatInfo = await getPlayerStatInfo(socket);
+    const playerStatInfo = await getStatInfo(socket);
     const hatcherySession = getHatcherySession();
 
     let decreaseHp = playerStatInfo.atk;
