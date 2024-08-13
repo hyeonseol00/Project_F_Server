@@ -1,74 +1,60 @@
-import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import { getRegistCount } from './GaApplication.session.js';
 import { redisCli } from '../init/redis/redis.js';
 
 const sessionManager = `userSession:`;
 export const addUser = async (socket, nickname, characterClass, effect, items, character) => {
-  const user = new User(
-    getRegistCount(),
-    nickname,
-    characterClass,
-    socket,
-    effect,
-    items,
-    character,
-  );
 
-  await redisCli.set(`${sessionManager}${user.playerId}`, JSON.stringify(user));
+  const user = {
+    // session management field
+    playerId : getRegistCount(),
+    characterId : character.characterId,
+    socket : socket,
+    lastUpdateTime : Date.now(),
+
+    // // players's game data
+    // playerInfo : {
+    //   playerId: curUser.playerId, // not neccessary
+    //   nickname,
+    //   class: characterClass,
+    //   gold: curUser.gold,
+    //   transform: transformInfo,  // not neccessary
+    //   statInfo,
+    //   inven,
+    //   equipment,
+    // },
+    // skillPoint : character.skillPoint,
+    // worldLevel : character.worldLevel, 
+  }
+  await redisCli.set(`${sessionManager}${socket.remotePort}`, JSON.stringify(user));
   return user;
 };
 
 export const removeUser = async (socket) => {
-  const allUser = await redisCli.get(`${sessionManager}*`);
-  if (allUser === null) {
-    return false;
-  }
-  const user = JSON.parse(allUser).find((user) => user.socket === socket);
+  const user= await redisCli.get(`${sessionManager}${socket.remotePort}`);
+
   if (user) {
-    await redisCli.del(`${user.playerId}:${socket}:${user.nickname}`);
+    await redisCli.del(`${sessionManager}${socket.remotePort}`);
     return user;
   }
-  // const index = userSessions.findIndex((user) => user.socket === socket);
-  // if (index !== -1) return userSessions.splice(index, 1)[0];
+  else{
+    console.log("user is not found...")
+  }
 };
-
-// export const getUserById = (id) => {
-//   return redisCli.get(`${id}:${user.socket}`);
-//   // return userSessions.find((user) => user.playerId === id);
-// };
 
 export const getUserBySocket = async (socket) => {
-  const keys = await redisCli.keys(`${sessionManager}*`);
-  if (!keys || keys.length === 0) {
-    return false;
+
+  const user= await redisCli.get(`${sessionManager}${socket.remotePort}`);
+  if (user) {
+    return user;
+  }
+  else{
+    console.log("user is not found...")
   }
 
-  for (const key of keys) {
-    const userData = await redisCli.get(key);
-    if (userData) {
-      const userObject = JSON.parse(userData);
-      const user = User.fromJSON(userObject); // JSON을 User 인스턴스로 변환
-      if (user.socket === socket) {
-        return user; // User 인스턴스를 반환
-        // await redisCli.del(user);
-      }
-    }
-  }
+  return null;
 };
-// for (const user of allUser) {
-// return redisCli.del(user);
-// }
 
-// export const getUserBySocket = async (socket) => {
-//   const allUser = await redisCli.keys(${sessionManager}*);
-//   if (allUser === null) {
-//     return false;
-//   }
-
-//   const user = JSON.parse(allUser).find((user) => user.socket === socket);
-//   return user;
-// };
 export const getUserByNickname = async (nickname) => {
   const allUser = await redisCli.get(`${sessionManager}*`);
   if (allUser === null) {
