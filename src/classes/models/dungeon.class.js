@@ -94,7 +94,7 @@ class InstanceDungeon {
 
   getRandomItem() {
     const potionOrItem = Math.floor(Math.random() * 10); // 0 ~ 9
-    if (potionOrItem < 1) {
+    if (potionOrItem < 7) {
       // 70% 확률로 포션중 하나
       return this.items[this.potions[Math.floor(Math.random() * this.potions.length)]];
     } else {
