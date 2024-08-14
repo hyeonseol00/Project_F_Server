@@ -1,6 +1,6 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import isInteger from '../../../../utils/isInteger.js';
-import updateEquip from '../../../../utils/equip.js';
+import updateEquip from './equip.js';
 import { getItemById } from '../../../../assets/item.assets.js';
 import { getItem, getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 

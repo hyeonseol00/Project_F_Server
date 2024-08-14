@@ -9,9 +9,10 @@ import { kickMember } from './team/kickMember.chat.js';
 import { sendTeamList } from './team/sendTeamList.chat.js';
 import { buyItem } from './item/buyItem.chat.js';
 import { sellItem } from './item/sellItem.chat.js';
-import { equipItem } from './item/equipItem.chat.js';
-import { unequipItem } from './item/unequipItem.chat.js';
+import { equipItem } from './equip/equipItem.chat.js';
+import { unequipItem } from './equip/unequipItem.chat.js';
 import { useItem } from './item/useItem.chat.js';
+import { skillPointHandler } from './ability/skillPoint.handler.js';
 
 const chatCommandMappings = new Map([
   // -------general cmd begin--------
@@ -36,7 +37,8 @@ const chatCommandMappings = new Map([
   ['/ueq', unequipItem],
   ['/useItem', useItem],
   ['/use', useItem],
-  //['upAbility', skillPointHandler],
+  ['/upAbility', skillPointHandler],
+  ['/ua', skillPointHandler],
 ]);
 
 export default chatCommandMappings;

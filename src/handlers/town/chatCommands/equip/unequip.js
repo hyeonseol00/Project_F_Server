@@ -1,6 +1,6 @@
-import { getItemById } from '../assets/item.assets.js';
-import { createResponse } from './response/createResponse.js';
-import Item from '../classes/models/item.class.js';
+import { getItemById } from '../../../../assets/item.assets.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import Item from '../../../../classes/models/item.class.js';
 import {
   addItem,
   getItem,
@@ -8,7 +8,7 @@ import {
   pushItem,
   setItemId,
   setStatInfo,
-} from '../classes/DBgateway/playerinfo.gateway.js';
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 let statInfo;
 const quantity = 1;
