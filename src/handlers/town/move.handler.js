@@ -1,7 +1,7 @@
 import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
-import { getAllUsers, getUserByNickname, getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 

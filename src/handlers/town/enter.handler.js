@@ -161,8 +161,6 @@ const getUserInfoFromSession = async (socket, userExist) => {
     }
   }
 
-  console.log(playerInfo.inven);
-
   userExist.playerInfo = playerInfo;
 
   return userExist;

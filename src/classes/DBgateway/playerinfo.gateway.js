@@ -208,14 +208,3 @@ export const setInvitedTeams = async (socket, updatedInvitedTeams) => {
     JSON.stringify(updatedInvitedTeams),
   );
 };
-// 쓰레기 통
-
-// DB에서 관리 안 함
-// export const setTransformInfo = (transform) => {
-//   this.playerInfo.transform = transform;
-// };
-
-// export const setPosition = (transform) => {
-//   this.playerInfo.transform = transform;
-//   this.lastUpdateTime = Date.now();
-// };

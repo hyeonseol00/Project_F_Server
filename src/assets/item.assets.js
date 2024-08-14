@@ -35,12 +35,3 @@ export const getDungeonItemsByDungeonCode = async (dungeonCode) => {
 
   return dungeonItems;
 };
-
-// export const getItemCostbyId = async (id) => {
-//   const item = await getItemById(id);
-//   if (item) {
-//     return item.itemCost;
-//   } else {
-//     return 0;
-//   }
-// };

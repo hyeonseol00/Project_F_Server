@@ -98,9 +98,6 @@ export const buyItem = async (user, message) => {
           gold: userInfo.gold,
         });
         user.socket.write(buyItemResponse);
-        console.log(`포션 구매 완료: ${id}, 수량: ${potion.quantity}`);
-      } else {
-        console.log(`포션 객체를 찾을 수 없습니다. id: ${id}`);
       }
       return;
     } else {
@@ -132,9 +129,6 @@ export const buyItem = async (user, message) => {
           gold: userInfo.gold,
         });
         user.socket.write(buyItemResponse);
-        console.log(`장비 아이템 구매 완료: ${id}, 수량: ${item.quantity}`);
-      } else {
-        console.log(`장비 아이템 객체를 찾을 수 없습니다. id: ${id}`);
       }
       return;
     }
