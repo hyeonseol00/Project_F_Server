@@ -131,7 +131,6 @@ export const targetToSelf = async (sender, targetUserInfo = undefined) => {
 };
 
 export const includeInvalidParams = (sender, params) => {
-  // console.log(params);
   const expectedParamsN = params.length;
   const filterdParams = params.filter((param) => param !== ' ' && param !== '');
 

@@ -28,7 +28,6 @@ export const useItem = async (user, message) => {
   const findItemInfo = await getItemById(id);
 
   if (!findItem) {
-    console.log(`아이템을 찾을 수 없습니다. id: ${id}`);
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 사용 가능한 아이템이 아닙니다.`,
@@ -38,7 +37,6 @@ export const useItem = async (user, message) => {
   }
 
   if (findItemInfo.itemType !== 'potion') {
-    console.log(`아이템 유형이 포션이 아닙니다. itemType: ${findItemInfo.itemType}`);
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 사용 가능한 아이템이 아닙니다.`,
@@ -49,10 +47,6 @@ export const useItem = async (user, message) => {
 
   const { itemHp, itemMp, requireLevel, itemName } = findItemInfo;
   const { quantity } = findItem;
-
-  console.log(
-    `사용하려는 아이템: ${itemName}, HP 증가량: ${itemHp}, MP 증가량: ${itemMp}, 현재 수량: ${quantity}`,
-  );
 
   if (quantity <= 0) {
     const response = createResponse('response', 'S_Chat', {
@@ -111,5 +105,4 @@ export const useItem = async (user, message) => {
   });
   user.socket.write(response);
   await setStatInfo(user.socket, userInfo.statInfo);
-  console.log(`아이템 사용 완료: ${itemName}, 남은 수량: ${updatedQuantity}`);
 };

@@ -7,6 +7,7 @@ import CustomError from '../utils/error/customError.js';
 import { handleError } from '../utils/error/errorHandler.js';
 import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
+import leaveTownHandler from '../handlers/town/leave.handler.js';
 
 export const onError = (socket) => async (err) => {
   try {
@@ -27,6 +28,8 @@ export const onError = (socket) => async (err) => {
 
     console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
+
+    leaveTownHandler(socket, user);
 
     await removeUser(socket);
   } catch (err) {
