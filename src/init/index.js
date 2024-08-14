@@ -7,8 +7,11 @@ import { loadDungeonItem, loadItemTable } from '../assets/item.assets.js';
 import { loadMonsterTable } from '../assets/monster.assets.js';
 import { loadDungeonMonster } from '../assets/monster.assets.js';
 import { loadQuestTable } from '../assets/quests.assets.js';
+import { redisClient } from './redis/redis.js';
+
 const initServer = async () => {
   try {
+    redisClient;
     await loadProtos();
     await testAllConnections();
     addGameSession(config.session.townId);

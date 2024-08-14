@@ -9,14 +9,15 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
     const hatcherySession = getHatcherySession();
     const boss = hatcherySession.boss;
 
-    let decreaseHp = playerStatInfo.atk;
+    let decreaseHp = boss.power;
     const isCritical = Math.floor(Math.random() * 101);
     if (isCritical <= boss.critical) {
       const criticalRate = boss.criticalAttack / 100;
       decreaseHp = boss.power * criticalRate;
     }
+    const finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
 
-    playerStatInfo.hp -= decreaseHp;
+    playerStatInfo.hp -= finalDamage;
     if (playerStatInfo.hp <= 0) {
       playerStatInfo.hp = 0;
     }

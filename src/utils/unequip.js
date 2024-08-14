@@ -5,11 +5,11 @@ import Item from '../classes/models/item.class.js';
 let statInfo;
 const quantity = 1;
 const itemId = 0;
-function updateUnEquip(uneqipItem, user) {
+async function updateUnEquip(uneqipItem, user) {
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
     user.playerInfo.statInfo;
 
-  const uneqipItemInfo = getItemById(uneqipItem);
+  const uneqipItemInfo = await getItemById(uneqipItem);
   user.setItemId(uneqipItemInfo.itemType, itemId);
 
   const updateCritical = critRate - uneqipItemInfo.itemCritical;

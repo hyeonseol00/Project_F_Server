@@ -6,12 +6,12 @@ import Item from '../../../../classes/models/item.class.js';
 export const buyItem = async (user, message) => {
   // 유저가 사고 싶은 아이템 ID 가져오기
   const [id, quantity] = message.split(' ');
-  const buyItem = getItemById(Number(id));
+  const buyItem = await getItemById(Number(id));
 
   if (!isInteger(id)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] 아이템 ID(숫자)을(를) 입력하세요.`,
+      chatMsg: `[System] 아이템 ID(숫자)를(를) 입력하세요.`,
     });
     user.socket.write(response);
     return;

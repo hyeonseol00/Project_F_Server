@@ -2,7 +2,7 @@ import { getItemById } from '../../../assets/item.assets.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function chooseActionScene(responseCode, dungeon, socket) {
+export default async function chooseActionScene(responseCode, dungeon, socket) {
   const btns = [];
   const player = dungeon.player;
   const playerStatInfo = player.playerInfo.statInfo;
@@ -69,7 +69,7 @@ export default function chooseActionScene(responseCode, dungeon, socket) {
     case config.actionButton.item:
       const items = player.getPotionItems();
       for (const item of items) {
-        const itemInfo = getItemById(item.itemId);
+        const itemInfo = await getItemById(item.itemId);
         if (item.quantity < 1) btns.push({ msg: itemInfo.itemName + ` x0`, enable: false });
         else if (itemInfo.requireLevel > playerStatInfo.level) {
           btns.push({ msg: itemInfo.itemName + ` x${itemInfo.quantity}`, enable: false });

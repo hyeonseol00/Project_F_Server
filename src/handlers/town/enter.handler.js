@@ -168,7 +168,7 @@ const getUserInfoFromSession = async (userExist) => {
   for (let i = curUser.items.length - 1; i >= 0; i--) {
     const item = curUser.items[i];
     if (item.quantity === 0) {
-      curUser.item.splice(i, 1);
+      curUser.items.splice(i, 1);
     }
   }
 
