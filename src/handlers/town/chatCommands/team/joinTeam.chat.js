@@ -15,9 +15,9 @@ export const joinTeam = async (sender, message) => {
 
   // 예외처리: 1. 팀에 이미 들어간 경우, 2. 해당 유저가 없는경우, 3. 해당 유저가 팀이 없는 경우
   if (
-    alreadyHaveTeam(sender) ||
+    (await alreadyHaveTeam(sender)) ||
     notFoundUser(sender, targetUser) ||
-    notFoundTeam(sender, targetUser)
+    (await notFoundTeam(sender, targetUser))
   ) {
     return;
   }
@@ -26,7 +26,7 @@ export const joinTeam = async (sender, message) => {
   const teamMembers = await getAllMembersInTeam(targetUserTeamId); // 팀 멤버들을 불러옵니다.
 
   // 본인을 팀에 넣고, 메세지 전송
-  await setTeam(user.socket, targetUserTeamId, false);
+  await setTeam(sender.socket, targetUserTeamId, false);
   const response = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
     chatMsg: `[System] ${targetUserInfo.nickname} 의 팀에 가입했습니다!`,

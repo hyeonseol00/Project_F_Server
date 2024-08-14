@@ -7,13 +7,13 @@ import {
 } from '../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const notFoundTeam = async (sender, targetUser = undefined) => {
-  const targetUserSocket = targetUser ? targetUser.socket : null;
+  let targetUserSocket = targetUser ? targetUser.socket : null;
   const targetUserInfo = await getPlayerInfo(targetUserSocket);
   let chatMsg = targetUser
     ? `[System] ${targetUserInfo.nickname} 은(는) 팀이 없습니다.`
     : `[System] 팀이 없습니다.`;
-
-  const user = targetUser || sender;
+  targetUser = targetUser || sender;
+  targetUserSocket = targetUser ? targetUser.socket : null;
 
   // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
   const { teamId: targetUserTeamId } = await getTeam(user.socket);
