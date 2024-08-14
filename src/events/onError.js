@@ -8,6 +8,7 @@ import { handleError } from '../utils/error/errorHandler.js';
 import { updateCharacterStatus } from '../db/user/user.db.js';
 import { updateCharacterItems } from '../db/user/items/items.db.js';
 import leaveTownHandler from '../handlers/town/leave.handler.js';
+import { getInven } from '../classes/DBgateway/playerinfo.gateway.js';
 
 export const onError = (socket) => async (err) => {
   try {
