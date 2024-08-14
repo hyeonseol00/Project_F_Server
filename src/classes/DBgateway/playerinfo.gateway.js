@@ -285,7 +285,7 @@ export const getInvitedTeams = async (socket) => {
     return null;
   }
   const invitedTeams = await redisCli.hGet(`${playerInfoKey}${socket.remotePort}`, 'invitedTeams');
-  return invitedTeams;
+  return JSON.parse(invitedTeams);
 };
 
 export const setInvitedTeams = async (socket, updatedInvitedTeams) => {

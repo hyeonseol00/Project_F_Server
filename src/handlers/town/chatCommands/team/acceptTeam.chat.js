@@ -17,9 +17,9 @@ export const acceptTeam = async (sender, message) => {
   // 예외처리: 1. 해당 유저가 없는 경우, 2. 이미 팀에 속해 있는 경우, 3. 초대받지 않은 경우 4. 팀을 찾지 못한 경우
   if (
     notFoundUser(sender, targetUser) ||
-    alreadyHaveTeam(sender) ||
-    notFoundInvitation(sender, targetUser) ||
-    notFoundTeam(sender, targetUser)
+    (await alreadyHaveTeam(sender)) ||
+    (await notFoundInvitation(sender, targetUser)) ||
+    (await notFoundTeam(sender, targetUser))
   ) {
     return;
   }
