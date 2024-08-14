@@ -29,9 +29,9 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
   if (isCritical <= playerStatInfo.critRate) {
     const criticalRate = playerStatInfo.critDmg / 100;
     decreaseHp = [
-      playerStatInfo.atk * criticalRate,
-      playerStatInfo.magic * criticalRate,
-      playerStatInfo.magic * criticalRate,
+      Math.floor(playerStatInfo.atk * criticalRate),
+      Math.floor(playerStatInfo.magic * criticalRate),
+      Math.floor(playerStatInfo.magic * criticalRate),
     ];
     msg = [
       `크리티컬으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
