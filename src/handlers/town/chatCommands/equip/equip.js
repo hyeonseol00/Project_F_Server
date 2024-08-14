@@ -21,7 +21,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     userInfo.statInfo;
 
   const {
-    itemId: id,
+    id,
     itemType,
     itemName,
     itemHp,

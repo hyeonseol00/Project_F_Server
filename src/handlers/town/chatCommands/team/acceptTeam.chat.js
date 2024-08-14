@@ -39,15 +39,14 @@ export const acceptTeam = async (sender, message) => {
   await setInvitedTeams(sender.socket, invitedTeams);
 
   // 팀 멤버들에게 본인이 들어왔다는 메시지를 전송합니다.
-  const teamMembers = await getAllMembersInTeam(targetUserTeamId).filter(
-    (member) => member.playerId !== sender.playerId,
-  );
+  const teamMembers = await getAllMembersInTeam(targetUserTeamId);
   const senderInfo = await getPlayerInfo(sender.socket);
-  teamMembers.forEach((member) => {
-    const joinResponse = createResponse('response', 'S_Chat', {
+  for (const member of teamMembers) {
+    if (member.playerId === sender.playerId) continue;
+    let joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
       chatMsg: `[System] ${senderInfo.nickname} 이(가) 팀에 가입했습니다!`,
     });
     member.socket.write(joinResponse);
-  });
+  }
 };
