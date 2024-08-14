@@ -1,0 +1,39 @@
+{
+  "config": {
+    "target": "hyeonseol.iptime.org:27015",
+    "phases": [
+      {
+        "duration": 60,
+        "arrivalRate": 1
+      }
+    ],
+    "processor": "./tcp-processor.js"
+  },
+  "scenarios": [
+    {
+      "flow": [
+        {
+          "function": "connect"
+        },
+        {
+          "function": "sendRegisterRequest"
+        },
+        {
+          "function": "receiveRegisterResponse"
+        },
+        {
+          "function": "sendLoginRequest"
+        },
+        {
+          "function": "receiveLoginResponse"
+        },
+        {
+          "function": "sendEnterRequest"
+        },
+        {
+          "function": "receiveEnterResponse"
+        }
+      ]
+    }
+  ]
+}
