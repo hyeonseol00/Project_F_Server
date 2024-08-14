@@ -16,7 +16,7 @@ export const notFoundTeam = async (sender, targetUser = undefined) => {
   targetUserSocket = targetUser ? targetUser.socket : null;
 
   // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
-  const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
+  const { teamId: targetUserTeamId } = await getTeam(targetUser.socket);
   if (!targetUserTeamId) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
@@ -36,10 +36,10 @@ export const alreadyHaveTeam = async (sender, targetUser = undefined) => {
   let chatMsg = targetUser
     ? `[System] ${targetUserInfo.nickname} 은(는) 이미 팀이 있습니다.`
     : `[System] 이미 팀이 있습니다.`;
-  targetUser = targetUser || sender;
+  const user = targetUser || sender;
 
-  // 해당 유저가 팀이 있으면, 해당 사실을 해당 유저에게 전송합니다.
-  const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
+  // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
+  const { teamId: targetUserTeamId } = await getTeam(user.socket);
   if (targetUserTeamId) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
@@ -53,7 +53,7 @@ export const alreadyHaveTeam = async (sender, targetUser = undefined) => {
   return false;
 };
 
-export const notFoundUser = (sender, targetUser = undefined) => {
+export const notFoundUser = (sender, targetUser) => {
   // 해당 유저를 찾을 수 없다면, 해당 사실을 해당 유저에게 전송합니다.
   if (!targetUser) {
     const rejectResponse = createResponse('response', 'S_Chat', {
@@ -105,7 +105,8 @@ export const alreadyInvited = async (sender, targetUser = undefined) => {
 export const notFoundInvitation = async (sender, targetUser = undefined) => {
   const targetUserSocket = targetUser ? targetUser.socket : null;
   const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
-  if (!targetUser || !(await getInvitedTeams(sender.socket)).includes(targetUserTeamId)) {
+  const isInvited = await getInvitedTeams(sender.socket);
+  if (!targetUser || !isInvited || !isInvited.includes(targetUserTeamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 당신은 팀에 초대되지 않았습니다.',

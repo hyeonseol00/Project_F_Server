@@ -15,10 +15,10 @@ export const inviteToTeam = async (sender, message) => {
 
   // 예외처리: 1. 팀이 없는 경우 2. 해당 유저가 없는 경우 3. 해당 유저가 이미 팀이 있는 경우 4.유저가 이미 초대를 한 경우
   if (
-    notFoundTeam(sender) ||
+    (await notFoundTeam(sender)) ||
     notFoundUser(sender, targetUser) ||
-    alreadyHaveTeam(sender, targetUser) ||
-    alreadyInvited(sender, targetUser)
+    (await alreadyHaveTeam(sender, targetUser)) ||
+    (await alreadyInvited(sender, targetUser))
   ) {
     return;
   }
@@ -27,10 +27,19 @@ export const inviteToTeam = async (sender, message) => {
   if (!(await getInvitedTeams(targetUser.socket))) {
     await setInvitedTeams(targetUser.socket, []);
   }
-  const invitedTeams = [];
+  const invitedTeams = (await getInvitedTeams(targetUser.socket))
+    ? await getInvitedTeams(targetUser.socket)
+    : [];
   const { teamId: senderTeamId } = await getTeam(sender.socket);
   invitedTeams.push(senderTeamId);
   await setInvitedTeams(targetUser.socket, invitedTeams);
+
+  const targetUserInfo = await getPlayerInfo(targetUser.socket);
+  const senderResponse = createResponse('response', 'S_Chat', {
+    playerId: sender.playerId,
+    chatMsg: `[System] ${targetUserInfo.nickname} 을(를) 당신의 팀에 초대하였습니다.`,
+  });
+  sender.socket.write(senderResponse);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: targetUser.playerId,

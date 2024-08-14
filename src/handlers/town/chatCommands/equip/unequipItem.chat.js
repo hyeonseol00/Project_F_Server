@@ -1,6 +1,6 @@
 import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
-import updateUnEquip from '../../../../utils/unequip.js';
+import updateUnEquip from './unequip.js';
 
 export const unequipItem = async (user, message) => {
   const userInfo = await getPlayerInfo(user.socket);
