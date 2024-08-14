@@ -8,12 +8,14 @@ import {
   setWorldLevel,
   skillPointUpdate,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import { getUserBySocket } from '../../../../session/user.session.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
     const btns = [{ msg: '다음', enable: true }];
     let battleLog = {};
 
+    const user = getUserBySocket(socket);
     const playerInfo = await getPlayerInfo(socket);
     const playerLevel = playerInfo.statInfo.level; // 유저의 현재 레벨
 
@@ -64,10 +66,10 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       };
       await setStatInfo(socket, statInfo);
       await setGold(socket, playerInfo.gold + gold);
-      await skillPointUpdate(socket, playerInfo.skillPoint + skillPoint);
+      skillPointUpdate(socket, user.skillPoint + skillPoint);
 
       if ((playerLevel + 1) % 5 === 0) {
-        await setWorldLevel(socket, playerInfo.worldLevel + 1);
+        setWorldLevel(socket, user.worldLevel + 1);
       }
 
       const message = `경험치 ${monsterExp}, 골드 ${gold}, 스킬포인트 ${skillPoint}를 획득했습니다!\n

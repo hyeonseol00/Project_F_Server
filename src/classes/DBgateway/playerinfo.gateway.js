@@ -1,4 +1,5 @@
 import { redisCli } from '../../init/redis/redis.js';
+import { getUserBySocket } from '../../session/user.session.js';
 
 const playerInfoKey = 'playerInfo:';
 
@@ -84,22 +85,14 @@ export const getLevel = async (socket) => {
 };
 
 // How...?
-export const skillPointUpdate = async (socket, skillPoint) => {
-  await redisCli.hSet(
-    `${playerInfoKey}${socket.remotePort}`,
-    'skillPoint',
-    JSON.stringify(skillPoint),
-  );
-  // await setStatInfo(socket, statInfo);
-  // this.skillPoint = statInfo.skillPoint;
+export const skillPointUpdate = (socket, skillPoint) => {
+  const user = getUserBySocket(socket);
+  user.skillPoint = skillPoint;
 };
 
-export const setWorldLevel = async (socket, worldLevel) => {
-  await redisCli.hSet(
-    `${playerInfoKey}${socket.remotePort}`,
-    'worldLevel',
-    JSON.stringify(worldLevel),
-  );
+export const setWorldLevel = (socket, worldLevel) => {
+  const user = getUserBySocket(socket);
+  user.worldLevel = worldLevel;
 };
 
 // =======getter, setter 메소드 끝=========
