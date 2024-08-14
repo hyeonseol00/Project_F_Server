@@ -13,7 +13,7 @@ const attackBossHatcheryHandler = async ({ socket, payload }) => {
     const isCritical = Math.floor(Math.random() * 101);
     if (isCritical <= playerStatInfo.critRate) {
       const criticalRate = playerStatInfo.critDmg / 100;
-      decreaseHp = playerStatInfo.atk * criticalRate;
+      decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
 
     hatcherySession.boss.hp -= decreaseHp;

@@ -7,6 +7,10 @@ const playerInfoKey = 'playerInfo:';
 
 // playerInfo
 export const getPlayerInfo = async (socket) => {
+  if (!socket) {
+    return null;
+  }
+
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
 
   for (const key in playerInfo) {
@@ -209,14 +213,3 @@ export const setInvitedTeams = async (socket, updatedInvitedTeams) => {
     JSON.stringify(updatedInvitedTeams),
   );
 };
-// 쓰레기 통
-
-// DB에서 관리 안 함
-// export const setTransformInfo = (transform) => {
-//   this.playerInfo.transform = transform;
-// };
-
-// export const setPosition = (transform) => {
-//   this.playerInfo.transform = transform;
-//   this.lastUpdateTime = Date.now();
-// };

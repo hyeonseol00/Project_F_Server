@@ -2,18 +2,20 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundUser, targetToSelf, includeInvalidParams } from '../exceptions.js';
 import { splitAtFirstSpace } from '../../../../utils/parser/messageParser.js';
+import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const sendDirectMessage = async (sender, message) => {
   const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
   const params = [recipientNickname, msg];
   const recipient = await getUserByNickname(recipientNickname);
-  const recipientInfo = await getPlayerInfo(recipient.socket);
+  const recipientSocket = recipient ? recipient.socket : null;
+  const recipientInfo = await getPlayerInfo(recipientSocket);
   const senderInfo = await getPlayerInfo(sender.socket);
 
   // 예외처리
   if (
     includeInvalidParams(sender, params) ||
-    targetToSelf(sender, recipientInfo) ||
+    (await targetToSelf(sender, recipientInfo)) ||
     notFoundUser(sender, recipient)
   ) {
     return;

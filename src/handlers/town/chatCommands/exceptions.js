@@ -7,14 +7,15 @@ import {
 } from '../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const notFoundTeam = async (sender, targetUser = undefined) => {
-  const targetUserInfo = await getPlayerInfo(targetUser.socket);
+  const targetUserSocket = targetUser ? targetUser.socket : null;
+  const targetUserInfo = await getPlayerInfo(targetUserSocket);
   let chatMsg = targetUser
     ? `[System] ${targetUserInfo.nickname} 은(는) 팀이 없습니다.`
     : `[System] 팀이 없습니다.`;
   targetUser = targetUser || sender;
 
   // 타켓 유저가 팀이 없다면, 해당 사실을 해당 유저에게 전송합니다.
-  const { teamId: targetUserTeamId } = await getTeam(targetUser.socket);
+  const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
   if (!targetUserTeamId) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
@@ -29,14 +30,15 @@ export const notFoundTeam = async (sender, targetUser = undefined) => {
 };
 
 export const alreadyHaveTeam = async (sender, targetUser = undefined) => {
-  const targetUserInfo = await getPlayerInfo(targetUser.socket);
+  const targetUserSocket = targetUser ? targetUser.socket : null;
+  const targetUserInfo = await getPlayerInfo(targetUserSocket);
   let chatMsg = targetUser
     ? `[System] ${targetUserInfo.nickname} 은(는) 이미 팀이 있습니다.`
     : `[System] 이미 팀이 있습니다.`;
   targetUser = targetUser || sender;
 
   // 해당 유저가 팀이 있으면, 해당 사실을 해당 유저에게 전송합니다.
-  const { teamId: targetUserTeamId } = await getTeam(targetUser.socket);
+  const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
   if (targetUserTeamId) {
     const rejectResponse = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
@@ -66,10 +68,9 @@ export const notFoundUser = (sender, targetUser = undefined) => {
 };
 
 export const notFoundUserInTeam = async (sender, targetUser = undefined) => {
+  const targetUserNickname = targetUser ? targetUser.nickname : null;
   const teamMembers = await getAllMembersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
-  const foundTargetUser = teamMembers
-    .map((member) => member.nickname)
-    .includes(targetUser.nickname);
+  const foundTargetUser = teamMembers.map((member) => member.nickname).includes(targetUserNickname);
 
   // 해당 유저를 찾을 수 없다면, 해당 사실을 해당 유저에게 전송합니다.
   if (!foundTargetUser) {
@@ -86,8 +87,9 @@ export const notFoundUserInTeam = async (sender, targetUser = undefined) => {
 };
 
 export const alreadyInvited = async (sender, targetUser = undefined) => {
+  const targetUserSocket = targetUser ? targetUser.socket : null;
   const { teamId: senderTeamId } = await getTeam(sender.socket);
-  if ((await getInvitedTeams(targetUser.socket))?.includes(senderTeamId)) {
+  if ((await getInvitedTeams(targetUserSocket))?.includes(senderTeamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: `[System] 해당 유저는 이미 초대되었습니다.`,
@@ -99,7 +101,8 @@ export const alreadyInvited = async (sender, targetUser = undefined) => {
 };
 
 export const notFoundInvitation = async (sender, targetUser = undefined) => {
-  const { teamId: targetUserTeamId } = await getTeam(targetUser.socket);
+  const targetUserSocket = targetUser ? targetUser.socket : null;
+  const { teamId: targetUserTeamId } = await getTeam(targetUserSocket);
   if (!targetUser || !(await getInvitedTeams(sender.socket)).includes(targetUserTeamId)) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
@@ -112,9 +115,10 @@ export const notFoundInvitation = async (sender, targetUser = undefined) => {
   return false;
 };
 
-export const targetToSelf = (sender, targetUserInfo = undefined) => {
-  const senderInfo = getPlayerInfo(sender.socket);
-  if (senderInfo.nickname == targetUserInfo.nickname) {
+export const targetToSelf = async (sender, targetUserInfo = undefined) => {
+  const targetUserNickname = targetUserInfo ? targetUserInfo.nickname : null;
+  const senderInfo = await getPlayerInfo(sender.socket);
+  if (senderInfo.nickname === targetUserNickname) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 본인이 대상이 될 수 없습니다.',
@@ -127,7 +131,6 @@ export const targetToSelf = (sender, targetUserInfo = undefined) => {
 };
 
 export const includeInvalidParams = (sender, params) => {
-  // console.log(params);
   const expectedParamsN = params.length;
   const filterdParams = params.filter((param) => param !== ' ' && param !== '');
 
