@@ -1,5 +1,5 @@
 import pools from '../database.js';
-import { SQL_QUERIES } from './user.queries.js';
+import { SQL_QUERIES, SQL_QUEST_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
@@ -129,4 +129,41 @@ export const updateCharacterStatus = async (user) => {
     nickname,
     playerInfo.class,
   ]);
+};
+
+export const getUserQuests = async (characterId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.GET_USER_QUESTS, [characterId]);
+  return toCamelCase(rows);
+};
+
+export const addUserQuest = async (characterId, questId, killCount = 0, status = 'NOT_STARTED') => {
+  const [existingQuest] = await pools.TOWN_MONSTER.query(
+    `SELECT * FROM user_quests WHERE character_id = ? AND quest_id = ?`,
+    [characterId, questId],
+  );
+
+  if (existingQuest.length > 0) {
+    console.log(`유저 ${characterId}는 이미 퀘스트 ${questId}를 가지고 있습니다.`);
+    return false;
+  }
+
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.ADD_USER_QUEST, [
+    characterId,
+    questId,
+    killCount,
+    status,
+  ]);
+};
+
+export const updateQuestProgress = async (characterId, questId, killCount, status) => {
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.UPDATE_QUEST_PROGRESS, [
+    killCount,
+    status,
+    characterId,
+    questId,
+  ]);
+};
+
+export const removeUserQuest = async (characterId, questId) => {
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.REMOVE_USER_QUEST, [characterId, questId]);
 };

@@ -7,12 +7,12 @@ import {
   findUserByUsername,
   getJobInfo,
   insertCharacter,
-  insertUserByUsername,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { checkAndStartQuestHandler } from '../town/chatCommands/quest/checkAndStartQuest.chat.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -72,6 +72,8 @@ const enterTownHandler = async ({ socket, payload }) => {
     }
 
     // ---------- spawn 끝 -----------------
+    // 사용자가 마을에 입장할 때 퀘스트 알림 제공
+    await checkAndStartQuestHandler(curUser); // curUser
   } catch (err) {
     handleError(socket, err);
   }
@@ -91,6 +93,9 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   const jobInfo = await getJobInfo(character.jobId);
   const { baseEffect, singleEffect, wideEffect } = jobInfo;
   const effectCode = { baseEffect, singleEffect, wideEffect };
+  if (!character || !character.characterId) {
+    throw new Error('Character data is not properly initialized.');
+  }
 
   const userItemInDB = await getUserItemsByCharacterId(character.characterId);
   const userItems = [];

@@ -14,6 +14,7 @@ export const addUser = async (socket, effectCode, character) => {
     skillPoint: character.skillPoint,
   };
   userSessions.push(user);
+
   return user;
 };
 
@@ -30,6 +31,7 @@ export const getUserById = (id) => {
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
 };
+
 export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };
