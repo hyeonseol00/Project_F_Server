@@ -16,7 +16,7 @@ export const onEnd = (socket) => async () => {
     const hatcherySession = getHatcherySession();
 
     if (user) {
-      gameSession.removeUser(user.playerId);
+      gameSession.removeUser(user.nickname);
       hatcherySession.removePlayer(user.nickname);
       const inventory = await getInven(socket);
       updateCharacterStatus(user);
