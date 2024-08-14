@@ -7,6 +7,10 @@ const playerInfoKey = 'playerInfo:';
 
 // playerInfo
 export const getPlayerInfo = async (socket) => {
+  if (!socket) {
+    return null;
+  }
+
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
 
   for (const key in playerInfo) {
