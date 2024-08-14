@@ -15,7 +15,7 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
     const isCritical = Math.floor(Math.random() * 101);
     if (isCritical <= boss.critical) {
       const criticalRate = boss.criticalAttack / 100;
-      decreaseHp = boss.power * criticalRate;
+      decreaseHp = Math.floor(boss.power * criticalRate);
     }
     const finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
 

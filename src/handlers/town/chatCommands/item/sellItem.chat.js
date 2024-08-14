@@ -62,7 +62,7 @@ export const sellItem = async (user, message) => {
 
   const itemCost = sellItem.itemCost;
   // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
-  if (Number(id) === sellItem.id) {
+  if (Number(id) === sellItem.itemId) {
     const findItem = await getItem(user.socket, Number(id));
     const findItemInfo = await getItemById(Number(id));
 
@@ -123,10 +123,10 @@ export const sellItem = async (user, message) => {
 
       const addGold = itemCost * Number(quantity) * 0.7;
       await setGold(user.socket, userInfo.gold + Math.floor(addGold));
-      await decItem(user.socket, sellItem.id, Number(quantity));
+      await decItem(user.socket, sellItem.itemId, Number(quantity));
 
-      if ((await getItemQuantity(user.socket, sellItem.id)) === 0) {
-        await deleteItem(user.socket, sellItem.id);
+      if ((await getItemQuantity(user.socket, sellItem.itemId)) === 0) {
+        await deleteItem(user.socket, sellItem.itemId);
       }
 
       const response = createResponse('response', 'S_Chat', {
