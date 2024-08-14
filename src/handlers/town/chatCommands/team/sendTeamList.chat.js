@@ -4,7 +4,7 @@ import { notFoundTeam } from '../exceptions.js';
 import { getPlayerInfo, getTeam } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const sendTeamList = async (sender) => {
-  // 예외처리: 1.떠날 팀이 없는 경우
+  // 예외처리: 1. 팀이 없는 경우
   if (await notFoundTeam(sender)) {
     return;
   }

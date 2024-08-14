@@ -8,7 +8,7 @@ export const sendMessageToTeam = async (sender, message) => {
   const { teamId: senderTeamId } = await getTeam(sender.socket);
   const teamMembers = await getAllMembersInTeam(senderTeamId);
 
-  // 예외처리: 1.떠날 팀이 없는 경우
+  // 예외처리: 1. 팀이 없는 경우
   if (await notFoundTeam(sender)) {
     return;
   }
