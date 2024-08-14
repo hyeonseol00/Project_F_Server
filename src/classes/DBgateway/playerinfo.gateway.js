@@ -14,7 +14,11 @@ export const getPlayerInfo = async (socket) => {
   const playerInfo = await redisCli.hGetAll(`${playerInfoKey}${socket.remotePort}`);
 
   for (const key in playerInfo) {
-    playerInfo[key] = JSON.parse(playerInfo[key]);
+    try {
+      playerInfo[key] = JSON.parse(playerInfo[key]);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return playerInfo;
@@ -268,7 +272,11 @@ export const setTeam = async (socket, teamId, isOwner = null) => {
   if (!socket) {
     return null;
   }
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'teamId', teamId);
+  if (teamId) {
+    await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'teamId', JSON.stringify(teamId));
+  } else {
+    await redisCli.hDel(`${playerInfoKey}${socket.remotePort}`, 'teamId');
+  }
   await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', +isOwner);
 };
 
