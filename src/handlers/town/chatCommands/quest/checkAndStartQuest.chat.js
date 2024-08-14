@@ -34,12 +34,7 @@ export const checkAndStartQuestHandler = async (sender) => {
         user.socket.write(chatResponse);
 
         // 지연시간 추가
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // 추가로 소켓 버퍼 상태 확인
-        if (!user.socket.writable) {
-          console.error('Socket is not writable');
-        }
+        // await new Promise((resolve) => setTimeout(resolve, 500));
       } else {
         console.log(
           `Quest ${quest.quest_name} has already been accepted by playerId ${user.playerId}`,

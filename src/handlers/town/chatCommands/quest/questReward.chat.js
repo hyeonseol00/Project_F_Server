@@ -10,10 +10,17 @@ import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
 import { getquestById } from '../../../../assets/quests.assets.js';
 import isInteger from '../../../../utils/isInteger.js';
+import {
+  getGold,
+  getStatInfo,
+  setGold,
+  setStatInfo,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 const questRewardHandler = async (sender, message) => {
   try {
     const user = sender;
+    const userStatInfo = await getStatInfo(user.socket);
 
     if (!isInteger(message)) {
       const response = createResponse('response', 'S_Chat', {
@@ -68,33 +75,34 @@ const questRewardHandler = async (sender, message) => {
     }
 
     // 보상 지급 (경험치, 골드 등)
-    let playerExp = user.playerInfo.statInfo.exp + quest.rewardExp;
-    let playerGold = user.gold + quest.rewardGold;
+    let playerExp = userStatInfo.exp + quest.rewardExp;
+    let playerGold = Number(await getGold(user.socket)) + quest.rewardGold;
 
-    // 골드 업데이트
-    user.setGold(playerGold);
+    await setGold(user.socket, playerGold);
 
     // 레벨업 로직
-    const playerLevel = user.playerInfo.statInfo.level;
+    const playerLevel = userStatInfo.level;
     const nextLevelData = getLevelById(playerLevel + 1);
     let levelUpMessage = '';
 
     if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
       playerExp -= nextLevelData.requiredExp;
-      user.setLevel(playerLevel + 1, playerExp);
 
-      user.playerInfo.statInfo.maxHp += nextLevelData.hp;
-      user.playerInfo.statInfo.maxMp += nextLevelData.mp;
-      user.playerInfo.statInfo.hp = user.playerInfo.statInfo.maxHp;
-      user.playerInfo.statInfo.mp = user.playerInfo.statInfo.maxMp;
-      user.playerInfo.statInfo.atk += nextLevelData.attack;
-      user.playerInfo.statInfo.def += nextLevelData.defense;
-      user.playerInfo.statInfo.magic += nextLevelData.magic;
-      user.playerInfo.statInfo.speed += nextLevelData.speed;
-      user.playerInfo.statInfo.critRate += nextLevelData.critical;
-      user.playerInfo.statInfo.critDmg += nextLevelData.criticalAttack;
-      user.playerInfo.statInfo.avoidRate += nextLevelData.avoidAbility;
-      user.playerInfo.skillPoint += nextLevelData.skillPoint;
+      userStatInfo.level = playerLevel + 1;
+      userStatInfo.exp = playerExp;
+      userStatInfo.maxHp += nextLevelData.hp;
+      userStatInfo.maxMp += nextLevelData.mp;
+      userStatInfo.hp = userStatInfo.maxHp;
+      userStatInfo.mp = userStatInfo.maxMp;
+      userStatInfo.atk += nextLevelData.attack;
+      userStatInfo.def += nextLevelData.defense;
+      userStatInfo.magic += nextLevelData.magic;
+      userStatInfo.speed += nextLevelData.speed;
+      userStatInfo.critRate += nextLevelData.critical;
+      userStatInfo.critDmg += nextLevelData.criticalAttack;
+      userStatInfo.avoidRate += nextLevelData.avoidAbility;
+
+      skillPointUpdate(socket, user.skillPoint + nextLevelData.skillPoint);
 
       if ((playerLevel + 1) % 5 === 0) {
         user.worldLevel++;
@@ -113,11 +121,12 @@ const questRewardHandler = async (sender, message) => {
 
       user.socket.write(chatMessageResponse);
     } else {
-      user.playerInfo.statInfo.exp = playerExp;
+      userStatInfo.exp = playerExp;
     }
 
-    // DB에 유저 상태와 퀘스트 상태 업데이트
-    await updateCharacterStatus(user);
+    await setStatInfo(user.socket, userStatInfo);
+
+    // DB에 퀘스트 상태 업데이트
     await updateQuestProgress(user.characterId, questId, userQuest.killCount, 'REWARD_CLAIMED');
 
     // 퀘스트를 보상 후에 제거

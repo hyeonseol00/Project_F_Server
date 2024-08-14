@@ -2,7 +2,7 @@ import { removeDungeon } from '../../../../session/dungeon.session.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 
 export default function gameOverWinScene(responseCode, dungeon, socket) {
-  const nickname = dungeon.id;
+  const nickname = dungeon.nickname;
 
   if (responseCode == 1) {
     const responseLeaveDungeon = createResponse('response', 'S_LeaveDungeon', {});

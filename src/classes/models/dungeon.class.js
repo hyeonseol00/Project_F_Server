@@ -1,11 +1,13 @@
 import { getDungeonItemsByDungeonCode, getItemById } from '../../assets/item.assets.js';
 import { config } from '../../config/config.js';
+import { getQuestIdForDungeon } from '../../handlers/town/chatCommands/quest/getQuestIdForDungeon.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
 class InstanceDungeon {
-  constructor(userId, dungeonCode) {
-    this.id = userId;
+  constructor(nickname, dungeonCode) {
+    this.nickname = nickname;
+    this.questId = getQuestIdForDungeon(dungeonCode + 5000);
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
     this.targetMonsterIdx = 0;

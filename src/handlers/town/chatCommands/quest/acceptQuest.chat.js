@@ -3,10 +3,12 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { addUserQuest, getUserQuests } from '../../../../db/user/user.db.js';
 import { getquestById } from '../../../../assets/quests.assets.js';
 import isInteger from '../../../../utils/isInteger.js';
+import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 const acceptQuestHandler = async (sender, message) => {
   try {
     const user = sender;
+    const userInfo = await getPlayerInfo(user.socket);
     if (!isInteger(message)) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
@@ -29,7 +31,7 @@ const acceptQuestHandler = async (sender, message) => {
       throw new Error('존재하지 않는 퀘스트입니다.');
     }
 
-    if (user.playerInfo.statInfo.level < quest.levelRequired) {
+    if (userInfo.statInfo.level < quest.levelRequired) {
       user.socket.write(
         createResponse('response', 'S_Chat', {
           playerId: user.playerId,

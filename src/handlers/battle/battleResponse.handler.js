@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { getDungeonByUserId } from '../../session/dungeon.session.js';
+import { getDungeonByNickname } from '../../session/dungeon.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import chooseActionScene from './battleFlows/action.battle.js';
 import messageWindowScene from './battleFlows/message.battle.js';
@@ -20,7 +20,7 @@ import dropItemScene from './battleFlows/clearGameWin/dropItem.clearGame.js';
 
 const battleResponseHandler = async ({ socket, payload }) => {
   const user = await getUserBySocket(socket);
-  const dungeon = getDungeonByUserId(user.nickname);
+  const dungeon = getDungeonByNickname(user.nickname);
   const responseCode = payload.responseCode ? payload.responseCode : 0;
 
   switch (dungeon.battleSceneStatus) {
@@ -46,7 +46,7 @@ const battleResponseHandler = async ({ socket, payload }) => {
       chooseSkillTypeScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.monsterDead:
-      monsterDeadScene(responseCode, dungeon, socket);
+      await monsterDeadScene(responseCode, dungeon, socket);
       break;
     case config.sceneStatus.getExp:
       await getExpScene(responseCode, dungeon, socket);
