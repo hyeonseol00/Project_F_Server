@@ -1,6 +1,6 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam, getUserByNickname } from '../../../../session/user.session.js';
-import { alreadyHaveTeam, notFoundInvitation, notFoundTeam } from '../exceptions.js';
+import { alreadyHaveTeam, notFoundInvitation, notFoundTeam, notFoundUser } from '../exceptions.js';
 import {
   getInvitedTeams,
   getPlayerInfo,
@@ -12,10 +12,11 @@ import {
 export const acceptTeam = async (sender, message) => {
   const nickname = message;
   const targetUser = await getUserByNickname(nickname);
-  const targetUserInfo = await getPlayerInfo(targetUser.socket);
+  const targetUserInfo = await getPlayerInfo(targetUser ? targetUser.socket : null);
 
-  // 예외처리: 1. 이미 팀에 속해 있는 경우, 2.초대받지 않은 경우 3. 팀을 찾지 못한 경우
+  // 예외처리: 1. 해당 유저가 없는 경우, 2. 이미 팀에 속해 있는 경우, 3. 초대받지 않은 경우 4. 팀을 찾지 못한 경우
   if (
+    notFoundUser(sender, targetUser) ||
     alreadyHaveTeam(sender) ||
     notFoundInvitation(sender, targetUser) ||
     notFoundTeam(sender, targetUser)

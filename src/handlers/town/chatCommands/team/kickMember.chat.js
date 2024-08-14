@@ -2,6 +2,7 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getAllMembersInTeam, getUserByNickname } from '../../../../session/user.session.js';
 import {
   notFoundTeam,
+  notFoundUser,
   notFoundUserInTeam,
   notHaveKickAuthority,
   targetToSelf,
@@ -17,8 +18,9 @@ export const kickMember = async (sender, message) => {
   const targetUser = await getUserByNickname(nickname);
   const targetUserInfo = await getPlayerInfo(targetUser.socket);
 
-  // 예외처리: 1. 본인을 지정한 경우 2. 팀이 없는 경우, 3. 해당 유저가 팀에 없는 경우, 4. 추방 권한이 없는 경우
+  // 예외처리: 0. 유저가 존재하지 않는 경우 1. 본인을 지정한 경우 2. 팀이 없는 경우, 3. 해당 유저가 팀에 없는 경우, 4. 추방 권한이 없는 경우
   if (
+    notFoundUser(sender, targetUser) ||
     targetToSelf(sender, targetUser) ||
     notFoundTeam(sender) ||
     notFoundUserInTeam(sender, targetUser) ||
