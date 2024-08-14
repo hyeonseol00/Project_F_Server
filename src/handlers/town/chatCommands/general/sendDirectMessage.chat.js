@@ -2,6 +2,7 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundUser, targetToSelf, includeInvalidParams } from '../exceptions.js';
 import { splitAtFirstSpace } from '../../../../utils/parser/messageParser.js';
+import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const sendDirectMessage = async (sender, message) => {
   const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
