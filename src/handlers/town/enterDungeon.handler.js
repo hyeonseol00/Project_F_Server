@@ -7,7 +7,7 @@ import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
-import { getQuestIdForDungeon } from './quest.handler.js';
+import { getQuestIdForDungeon } from './chatCommands/quest/getQuestIdForDungeon.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {

@@ -1,7 +1,7 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { questProgressHandler } from '../town/quest.handler.js';
+// import { questProgressHandler } from '../../town/chatCommands/quest/questProgress.chat.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
   try {
@@ -29,16 +29,16 @@ const attackBossHatcheryHandler = async ({ socket, payload }) => {
       player.socket.write(attackBossResponse);
     }
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
-    if (hatcherySession.boss.hp <= 0) {
-      questProgressHandler({
-        socket,
-        payload: {
-          questId: player.currentQuestId,
-          monsterId: hatcherySession.boss.monsterId,
-          progressIncrement: 1, // 보스 처치로 진행 상황 1 증가
-        },
-      });
-    }
+    // if (hatcherySession.boss.hp <= 0) {
+    //   questProgressHandler({
+    //     socket,
+    //     payload: {
+    //       questId: player.currentQuestId,
+    //       monsterId: hatcherySession.boss.monsterId,
+    //       progressIncrement: 1, // 보스 처치로 진행 상황 1 증가
+    //     },
+    //   });
+    // }
   } catch (err) {
     handleError(socket, err);
   }

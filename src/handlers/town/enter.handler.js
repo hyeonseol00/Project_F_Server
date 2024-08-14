@@ -11,7 +11,7 @@ import { getGameSession } from '../../session/game.session.js';
 import { addUser, getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { checkAndStartQuestHandler } from './quest.handler.js';
+import { checkAndStartQuestHandler } from '../town/chatCommands/quest/checkAndStartQuest.chat.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   try {
@@ -125,8 +125,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
   }
 
-  // 디버깅 로그 추가: character 객체가 정의되지 않은 경우 확인
-  console.log('Character data:', character);
   if (!character || !character.characterId) {
     throw new Error('Character data is not properly initialized.');
   }

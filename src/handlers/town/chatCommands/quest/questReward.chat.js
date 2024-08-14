@@ -1,16 +1,15 @@
-import { getUserBySocket } from '../../session/user.session.js';
 import {
   updateQuestProgress,
   getUserQuests,
   updateCharacterStatus,
   removeUserQuest,
-} from '../../db/user/user.db.js';
-import { createResponse } from '../../utils/response/createResponse.js';
-import { handleError } from '../../utils/error/errorHandler.js';
-import { config } from '../../config/config.js';
-import { getLevelById } from '../../assets/level.assets.js';
-import { getquestById } from '../../assets/quests.assets.js';
-import isInteger from '../../utils/isInteger.js';
+} from '../../../../db/user/user.db.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import { handleError } from '../../../../utils/error/errorHandler.js';
+import { config } from '../../../../config/config.js';
+import { getLevelById } from '../../../../assets/level.assets.js';
+import { getquestById } from '../../../../assets/quests.assets.js';
+import isInteger from '../../../../utils/isInteger.js';
 
 const questRewardHandler = async (sender, message) => {
   try {
@@ -102,10 +101,10 @@ const questRewardHandler = async (sender, message) => {
       }
 
       levelUpMessage = `[System] 레벨업! ${playerLevel + 1} 레벨이 되었습니다!\n
-        최대 체력: +${nextLevelData.hp}, 최대 마나: +${nextLevelData.mp}\n
-        공격력: +${nextLevelData.attack}, 방어력: +${nextLevelData.defense}, 마법력: +${nextLevelData.magic}\n
-        속도: +${nextLevelData.speed}, 크리티컬 확률: +${nextLevelData.critical}\n
-        회피 확률: +${nextLevelData.avoidAbility}, 스킬 포인트: +${nextLevelData.skillPoint}`;
+          최대 체력: +${nextLevelData.hp}, 최대 마나: +${nextLevelData.mp}\n
+          공격력: +${nextLevelData.attack}, 방어력: +${nextLevelData.defense}, 마법력: +${nextLevelData.magic}\n
+          속도: +${nextLevelData.speed}, 크리티컬 확률: +${nextLevelData.critical}\n
+          회피 확률: +${nextLevelData.avoidAbility}, 스킬 포인트: +${nextLevelData.skillPoint}`;
 
       const chatMessageResponse = createResponse('response', 'S_Chat', {
         playerId: user.playerId,

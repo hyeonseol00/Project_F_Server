@@ -12,13 +12,12 @@ import { sellItem } from './item/sellItem.chat.js';
 import { equipItem } from './item/equipItem.chat.js';
 import { unequipItem } from './item/unequipItem.chat.js';
 import { useItem } from './item/useItem.chat.js';
-import questRewardHandler from '../questReward.handler.js';
-import {
-  acceptQuestHandler,
-  getQuestsHandler,
-  questProgressHandler,
-  completeQuestHandler,
-} from '../quest.handler.js'; // 퀘스트 관련 핸들러들
+import getQuestsHandler from './quest/getQuest.chat.js';
+import acceptQuestHandler from './quest/acceptQuest.chat.js';
+import completeQuestHandler from './quest/completeQuest.chat.js';
+import questRewardHandler from './quest/questReward.chat.js';
+import questProgressHandler from './quest/questProgress.chat.js';
+
 const chatCommandMappings = new Map([
   // -------general cmd begin--------
   ['/w', sendDirectMessage],

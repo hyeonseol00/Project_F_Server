@@ -2,7 +2,7 @@ import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToMonsterAttackScene from './switchScene/monsterAttack.switch.js';
 import switchToMonsterDeadScene from './switchScene/monsterDead.switch.js';
-import { updateQuestProgressAfterBattle } from '../../town/quest.handler.js';
+import { updateQuestProgressAfterBattle } from '../../town/chatCommands/quest/updateQuest.chat.js';
 
 export default function monsterDeadScene(responseCode, dungeon, socket) {
   if (responseCode == 1) {
