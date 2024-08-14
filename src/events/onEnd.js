@@ -27,9 +27,9 @@ export const onEnd = (socket) => async () => {
     console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
     console.log('현재 접속 중인 유저: ', gameSession.getAllUserIds());
 
-    await removeUser(socket);
-
     leaveTownHandler(socket, user);
+
+    await removeUser(socket);
   } catch (err) {
     handleError(socket, err);
   }
