@@ -70,7 +70,8 @@ export const notFoundUser = (sender, targetUser = undefined) => {
 
 export const notFoundUserInTeam = async (sender, targetUser = undefined) => {
   const targetUserNickname = targetUser ? targetUser.nickname : null;
-  const teamMembers = await getAllMembersInTeam(sender.teamId); // 팀 멤버들을 불러옵니다.
+  const { teamId } = await getTeam(sender.socket);
+  const teamMembers = await getAllMembersInTeam(teamId); // 팀 멤버들을 불러옵니다.
   const foundTargetUser = teamMembers.map((member) => member.nickname).includes(targetUserNickname);
 
   // 해당 유저를 찾을 수 없다면, 해당 사실을 해당 유저에게 전송합니다.
@@ -147,8 +148,9 @@ export const includeInvalidParams = (sender, params) => {
   return false;
 };
 
-export const notHaveKickAuthority = (sender) => {
-  if (!sender.isOwner) {
+export const notHaveKickAuthority = async (sender) => {
+  const { isOwner } = await getTeam(sender.socket);
+  if (!isOwner) {
     const response = createResponse('response', 'S_Chat', {
       playerId: sender.playerId,
       chatMsg: '[System] 해당 유저를 추방할 권한이 없습니다',

@@ -1,3 +1,4 @@
+import { getPlayerInfo, getTeam } from '../classes/DBgateway/playerinfo.gateway.js';
 import { getRegistCount } from './GaApplication.session.js';
 import { userSessions } from './sessions.js';
 
@@ -33,8 +34,18 @@ export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };
 
-export const getAllMembersInTeam = (teamId) => {
-  return userSessions.filter((user) => user.teamId === teamId);
+export const getAllMembersInTeam = async (teamId) => {
+  const result = [];
+
+  for (const key in userSessions) {
+    const team = await getTeam(userSessions[key].socket);
+
+    if (team.teamId === teamId) {
+      result.push(userSessions[key]);
+    }
+  }
+
+  return result;
 };
 
 export const getAllUsers = () => {
