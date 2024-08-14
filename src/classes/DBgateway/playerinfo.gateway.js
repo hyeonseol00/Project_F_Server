@@ -269,7 +269,7 @@ export const setTeam = async (socket, teamId, isOwner = null) => {
     return null;
   }
   await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'teamId', teamId);
-  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', isOwner);
+  await redisCli.hSet(`${playerInfoKey}${socket.remotePort}`, 'isOwner', +isOwner);
 };
 
 export const getInvitedTeams = async (socket) => {

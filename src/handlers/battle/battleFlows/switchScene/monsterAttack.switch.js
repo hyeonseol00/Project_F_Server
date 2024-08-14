@@ -73,7 +73,7 @@ export default async function switchToMonsterAttackScene(dungeon, socket) {
 
     const isCritical = Math.floor(Math.random() * 101);
     if (isCritical <= monster.critical) {
-      finalDamage = finalDamage * (monster.criticalAttack / 100);
+      finalDamage = Math.floor(finalDamage * (monster.criticalAttack / 100));
       message = `몬스터 ${monster.name}이(가) 강화된 공격으로 ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${finalDamage} 데미지를 입었습니다.`;
     }
 
