@@ -23,18 +23,15 @@ export const updateCharacterItems = async (characterId, sessionItems) => {
 
   // 2. 데이터베이스에 있지만 세션에 없는 아이템을 찾아 삭제합니다.
   for (const dbItem of dbItems) {
-    const sessionItem = sessionItems.find((item) => item.id === dbItem.itemId);
+    const sessionItem = sessionItems.find((item) => item.id === dbItem.id);
     if (!sessionItem) {
-      await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
-        characterId,
-        dbItem.itemId,
-      ]);
+      await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [characterId, dbItem.id]);
     }
   }
 
   // 3. 세션 인벤토리를 데이터베이스에 업데이트합니다.
   for (const sessionItem of sessionItems) {
-    const dbItem = dbItems.find((item) => item.itemId === sessionItem.id);
+    const dbItem = dbItems.find((item) => item.id === sessionItem.id);
     if (dbItem) {
       // 데이터베이스에 이미 있는 경우 업데이트
       if (sessionItem.quantity > 0) {

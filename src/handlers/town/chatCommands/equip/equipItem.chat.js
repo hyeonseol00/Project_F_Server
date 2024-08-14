@@ -50,7 +50,7 @@ export const equipItem = async (user, message) => {
   }
 
   const findItemInfo = await getItemById(findItem.id);
-  const { itemId: id, itemType, itemName, requireLevel } = findItemInfo;
+  const { id, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,

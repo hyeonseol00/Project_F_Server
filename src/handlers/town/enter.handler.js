@@ -95,7 +95,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   const userItemInDB = await getUserItemsByCharacterId(character.characterId);
   const userItems = [];
   for (const userItem of userItemInDB) {
-    const item = new Item(userItem.itemId, userItem.quantity);
+    const item = new Item(userItem.id, userItem.quantity);
     userItems.push(item);
   }
   const inven = {};
