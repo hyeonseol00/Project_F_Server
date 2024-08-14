@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import { findMonsterById } from '../../db/game/game.db.js';
+import { getUserByNickname } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import toEulerAngles from '../../utils/toEulerAngle.js';
 import IntervalManager from '../managers/interval.manager.js';
@@ -11,10 +12,15 @@ class Hatchery {
   }
 
   initialize() {
-    this.players = [];
+    this.playerNicknames = [];
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
     this.lastAttackTime = Date.now();
+    this.transforms = {};
+    /* this.transforms = {
+      nickname: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+      nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+    }; */
 
     this.initMonster({ ...config.hatchery.bossInitTransform });
   }
@@ -51,10 +57,10 @@ class Hatchery {
     );
   }
 
-  addPlayer(player) {
-    if (this.players.length >= config.hatchery.maxPlayers) {
+  addPlayer(playerNickname) {
+    if (this.playerNicknames.length >= config.hatchery.maxPlayers) {
       throw new Error('게임 세션에 자리가 없습니다!');
-    } else if (this.players.length <= 0) {
+    } else if (this.playerNicknames.length <= 0) {
       this.intervalManager.addPlayer(
         config.hatchery.bossTargetIntervalId,
         () => this.bossMove(),
@@ -63,30 +69,38 @@ class Hatchery {
       );
       this.lastUpdateTime = Date.now();
     }
-    this.players.push(player);
+    this.playerNicknames.push(playerNickname);
   }
 
   removePlayer(nickname) {
-    this.players = this.players.filter((player) => player.nickname !== nickname);
+    this.playerNicknames = this.playerNicknames.filter(
+      (playerNickname) => playerNickname !== nickname,
+    );
 
-    if (this.players.length <= 0) {
+    if (this.playerNicknames.length <= 0) {
       this.intervalManager.removePlayer(config.hatchery.bossTargetIntervalId);
       this.initialize();
     }
   }
 
-  bossMove() {
-    if (this.players.length <= 0 || this.boss.hp <= 0) {
+  async bossMove() {
+    if (this.playerNicknames.length <= 0 || this.boss.hp <= 0) {
       return;
     }
 
+    const players = [];
+    for (let i = 0; i < this.playerNicknames.length; i++) {
+      players.push(getUserByNickname(this.playerNicknames[i]));
+    }
+
     const bossTr = this.boss.transform;
-    let targetPlayerTr = this.players[0].playerInfo.transform;
+    const firstTr = players[0].transform;
+    let targetPlayerTr = firstTr;
     let minDistance = 2e9;
 
     // 플레이어들과 몬스터 간의 거리 계산
-    for (const player of this.players) {
-      const playerTr = player.playerInfo.transform;
+    for (const player of players) {
+      const playerTr = this.transforms[player.nickname];
       const distance = this.boss.getDistanceFromPlayer(playerTr);
       const hp = player.playerInfo.statInfo.hp;
       if (minDistance > distance && hp > 0) {
@@ -150,14 +164,14 @@ class Hatchery {
       bossUnitVector,
     });
 
-    for (const player of this.players) {
+    for (const player of players) {
       player.socket.write(bossMoveResponse);
     }
 
     const elapsedAttackTime = Date.now() - this.lastAttackTime;
     if (inRange && elapsedAttackTime > config.hatchery.bossAttackSpeed) {
       const bossAttackResponse = createResponse('response', 'S_BossTryAttack', {});
-      for (const player of this.players) {
+      for (const player of players) {
         player.socket.write(bossAttackResponse);
       }
       this.lastAttackTime = Date.now();

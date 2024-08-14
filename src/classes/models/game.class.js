@@ -1,3 +1,4 @@
+import { getPlayerInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 
 const MAX_PLAYERS = 10;
@@ -5,34 +6,27 @@ const MAX_PLAYERS = 10;
 class Game {
   constructor(id) {
     this.id = id;
-    this.users = [];
-    this.intervalManager = new IntervalManager();
+    this.playerNicknames = [];
+    this.transforms = {};
+    /* this.transforms = {
+      nickname: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+      nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+    }; */
   }
 
-  addUser(user) {
-    if (this.users.length >= MAX_PLAYERS) {
+  addUser(nickname) {
+    if (this.playerNicknames.length >= MAX_PLAYERS) {
       throw new Error('게임 세션에 자리가 없습니다!');
     }
-    this.users.push(user);
-
-    if (this.users.length === MAX_PLAYERS) {
-      setTimeout(() => this.startGame(), 3000);
-    }
-  }
-
-  getUser(userId) {
-    return this.users.find((user) => user.playerId === userId);
+    this.playerNicknames.push(nickname);
   }
 
   getAllUserIds() {
-    const userIds = this.users.map((user) => user.nickname);
-
-    return userIds;
+    return this.playerNicknames;
   }
 
-  removeUser(userId) {
-    this.users = this.users.filter((user) => user.playerId !== userId);
-    this.intervalManager.removePlayer(userId);
+  removeUser(nickname) {
+    this.playerNicknames = this.playerNicknames.filter((ele) => ele !== nickname);
   }
 }
 

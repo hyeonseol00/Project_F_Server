@@ -132,3 +132,19 @@ message UnitVector {
   float unitX = 1;
   float unitZ = 2;
 }
+// 퀘스트 정보
+message QuestInfo {
+  int32 questId = 1;
+  string questName = 2;
+  string questDescription = 3;
+  int32 questStatus = 4;
+  repeated QuestObjective objectives = 5;
+}
+
+// 퀘스트 목표
+message QuestObjective {
+  int32 objectiveId = 1;
+  string description = 2;
+  int32 currentProgress = 3;
+  int32 targetProgress = 4;
+}

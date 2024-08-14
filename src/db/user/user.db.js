@@ -1,6 +1,7 @@
 import pools from '../database.js';
-import { SQL_QUERIES } from './user.queries.js';
+import { SQL_QUERIES, SQL_QUEST_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
+import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 export const findUserByUsername = async (username) => {
   const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.FIND_USER_BY_USERNAME, [username]);
@@ -95,12 +96,13 @@ export const getCharacterWideEffectCode = async (jobId) => {
 };
 
 export const updateCharacterStatus = async (user) => {
-  const statInfo = user.playerInfo.statInfo;
+  const playerInfo = await getPlayerInfo(user.socket);
+  const statInfo = playerInfo.statInfo;
   const { level, hp, maxHp, mp, maxMp, atk, speed, critRate, critDmg, avoidRate, exp, def, magic } =
     statInfo;
-
-  const { nickname, characterClass, gold, worldLevel, skillPoint } = user;
-  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
+  const { worldLevel, skillPoint } = user;
+  const { nickname, gold } = playerInfo;
+  const { weapon, armor, gloves, shoes, accessory } = playerInfo.equipment;
 
   await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_STATUS, [
     level,
@@ -125,6 +127,43 @@ export const updateCharacterStatus = async (user) => {
     shoes,
     accessory,
     nickname,
-    characterClass,
+    playerInfo.class,
   ]);
+};
+
+export const getUserQuests = async (characterId) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.GET_USER_QUESTS, [characterId]);
+  return toCamelCase(rows);
+};
+
+export const addUserQuest = async (characterId, questId, killCount = 0, status = 'NOT_STARTED') => {
+  const [existingQuest] = await pools.TOWN_MONSTER.query(
+    `SELECT * FROM user_quests WHERE character_id = ? AND quest_id = ?`,
+    [characterId, questId],
+  );
+
+  if (existingQuest.length > 0) {
+    console.log(`유저 ${characterId}는 이미 퀘스트 ${questId}를 가지고 있습니다.`);
+    return false;
+  }
+
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.ADD_USER_QUEST, [
+    characterId,
+    questId,
+    killCount,
+    status,
+  ]);
+};
+
+export const updateQuestProgress = async (characterId, questId, killCount, status) => {
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.UPDATE_QUEST_PROGRESS, [
+    killCount,
+    status,
+    characterId,
+    questId,
+  ]);
+};
+
+export const removeUserQuest = async (characterId, questId) => {
+  await pools.TOWN_MONSTER.query(SQL_QUEST_QUERIES.REMOVE_USER_QUEST, [characterId, questId]);
 };

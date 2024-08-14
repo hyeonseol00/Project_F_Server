@@ -6,15 +6,14 @@ export const loadItemTable = async () => {
   const itemComponent = await getAllItemData();
 
   itemComponent.forEach(async (item) => {
-    await redisCli.hSet(`${config.redisKey.itemTable}`, `${item.itemId}`, JSON.stringify(item));
-  }); 
-
+    await redisCli.hSet(`${config.redisKey.itemTable}`, `${item.id}`, JSON.stringify(item));
+  });
 };
 
-export const getItemById = async (itemId) => {
-  const itemData = await redisCli.hGet(`${config.redisKey.itemTable}`, `${itemId}`);
-  
-  if (itemId !== 0) {
+export const getItemById = async (id) => {
+  const itemData = await redisCli.hGet(`${config.redisKey.itemTable}`, `${id}`);
+
+  if (id !== 0) {
     return JSON.parse(itemData);
   } else {
     return undefined;
@@ -36,12 +35,3 @@ export const getDungeonItemsByDungeonCode = async (dungeonCode) => {
 
   return dungeonItems;
 };
-
-// export const getItemCostbyId = async (itemId) => {
-//   const item = await getItemById(itemId);
-//   if (item) {
-//     return item.itemCost;
-//   } else {
-//     return 0;
-//   }
-// };

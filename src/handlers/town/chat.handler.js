@@ -9,7 +9,7 @@ import chatCommandMappings from './chatCommands/chatCommandMappings.js';
 const chatHandler = async ({ socket, payload }) => {
   const { playerId, chatMsg } = payload;
   try {
-    const sender = getUserBySocket(socket);
+    const sender = await getUserBySocket(socket);
     if (!sender) throw new Error('유저를 찾을 수 없습니다.');
 
     const gameSession = getGameSession(config.session.townId);
@@ -32,18 +32,16 @@ const chatHandler = async ({ socket, payload }) => {
 
       // 해당 명령어 핸들러 실행
       chatCommandHandler(sender, message);
-
     } else {
       sendMessageToAll(sender, chatMsg);
     }
-
   } catch (err) {
     handleError(socket, err.message, '채팅 전송 중 에러가 발생했습니다: ' + err.message);
   }
 };
 
-function sendMessageToAll(sender, message) {
-  const allUsers = getAllUsers();
+async function sendMessageToAll(sender, message) {
+  const allUsers = await getAllUsers();
 
   const chatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
@@ -53,7 +51,6 @@ function sendMessageToAll(sender, message) {
   allUsers.forEach((user) => {
     user.socket.write(chatResponse);
   });
-
 }
 
 export default chatHandler;

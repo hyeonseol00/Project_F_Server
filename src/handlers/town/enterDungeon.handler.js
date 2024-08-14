@@ -2,22 +2,21 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
-import { getMonsterEffectById } from '../../db/game/game.db.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
 import { getMonsterByDungeonId } from '../../assets/monster.assets.js';
 import { getMonsterById } from '../../assets/monster.assets.js';
+import { getPlayerInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
-    const user = getUserBySocket(socket);
-    const { nickname } = user;
+    const user = await getUserBySocket(socket);
+    const userPlayerInfo = await getPlayerInfo(socket);
 
     const gameSession = getGameSession(config.session.townId);
-    const player = gameSession.getUser(user.playerId);
-    const dungeon = addDungeon(nickname, player, dungeonCode);
-    gameSession.removeUser(user.playerId);
+    const dungeon = addDungeon(userPlayerInfo.nickname, dungeonCode);
+    gameSession.removeUser(user.nickname);
 
     const monsters = await getMonsterByDungeonId(dungeonCode + 5000);
 
@@ -74,14 +73,23 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     };
 
     const playerStatus = {
-      playerClass: player.characterClass,
-      playerLevel: player.playerInfo.statInfo.level,
-      playerName: player.nickname,
-      playerFullHp: player.playerInfo.statInfo.maxHp,
-      playerFullMp: player.playerInfo.statInfo.maxMp,
-      playerCurHp: player.playerInfo.statInfo.hp,
-      playerCurMp: player.playerInfo.statInfo.mp,
+      playerClass: userPlayerInfo.class,
+      playerLevel: userPlayerInfo.statInfo.level,
+      playerName: userPlayerInfo.nickname,
+      playerFullHp: userPlayerInfo.statInfo.maxHp,
+      playerFullMp: userPlayerInfo.statInfo.maxMp,
+      playerCurHp: userPlayerInfo.statInfo.hp,
+      playerCurMp: userPlayerInfo.statInfo.mp,
     };
+
+    // // 던전 ID를 기반으로 퀘스트 ID 매핑
+    // const questId = getQuestIdForDungeon(dungeonCode + 5000);
+    // if (questId) {
+    //   user.currentQuestId = questId; // 사용자의 currentQuestId에 퀘스트 ID 저장
+    //   console.log(`Quest ID ${questId} assigned for Dungeon ID ${dungeonCode + 5000}`);
+    // } else {
+    //   console.log(`No Quest ID assigned for Dungeon ID ${dungeonCode + 5000}`);
+    // }
 
     const screenTextAlignment = {
       x: config.screenTextAlignment.x,
@@ -100,7 +108,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       b: config.screenColor.b,
     };
 
-    const message = `${nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
+    const message = `${userPlayerInfo.nickname}님이 던전에 진입합니다.\n야생의 ${monsterStatus[0].monsterName},\n${monsterStatus[1].monsterName},\n${monsterStatus[2].monsterName}이(가) 등장했습니다!.\n전투를 준비하세요.`;
 
     const screenText = {
       msg: message,

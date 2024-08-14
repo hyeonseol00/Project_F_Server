@@ -1,4 +1,11 @@
 import { getItemById } from '../../../assets/item.assets.js';
+import {
+  addItem,
+  decItem,
+  getPotionItems,
+  getStatInfo,
+  setStatInfo,
+} from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import switchToActionScene from './switchScene/action.switch.js';
@@ -6,18 +13,18 @@ import switchToActionScene from './switchScene/action.switch.js';
 export default async function selectItemScene(responseCode, dungeon, socket) {
   const usedItemIdx = responseCode - 1;
   const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
-  const potions = player.getPotionItems();
+  const playerStatInfo = await getStatInfo(socket);
+  const potions = await getPotionItems(socket);
   const usedItem = potions[usedItemIdx];
   // 취소 버튼이면 action 선택씬으로 복귀
   if (responseCode === potions.length + 1) {
     switchToActionScene(dungeon, socket);
     return;
   }
-  const usedItemInfo = await getItemById(usedItem.itemId);
+  const usedItemInfo = await getItemById(usedItem.id);
 
   let msg = `${usedItemInfo.itemName}을 사용하여\n`;
-  player.decItem(usedItem.itemId, 1);
+  await decItem(socket, usedItem.id, 1);
 
   // S_SetPlayerHp 패킷
   if (usedItemInfo.itemHp && playerStatInfo.hp !== playerStatInfo.maxHp) {
@@ -41,9 +48,11 @@ export default async function selectItemScene(responseCode, dungeon, socket) {
 
   if (msg === `${usedItemInfo.itemName}을 사용하여\n`) {
     // 회복할 스탯이 없다면
-    player.addItem(usedItem.itemId, 1);
+    await addItem(socket, usedItem.id, 1);
     if (usedItemInfo.itemHp) msg = `이미 hp가 가득 찬 상태입니다.\n`;
     else if (usedItemInfo.itemMp) msg = `이미 mp가 가득 찬 상태입니다.\n`;
+  } else {
+    await setStatInfo(socket, playerStatInfo);
   }
 
   const btns = [{ msg: '다음', enable: true }];

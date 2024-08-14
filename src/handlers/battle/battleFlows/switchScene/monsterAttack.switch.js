@@ -1,10 +1,12 @@
 import { config } from '../../../../config/config.js';
+import { getUserBySocket } from '../../../../session/user.session.js';
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import switchToActionScene from './action.switch.js';
+import { getStatInfo, setStatInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
-export default function switchToMonsterAttackScene(dungeon, socket) {
-  const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
+export default async function switchToMonsterAttackScene(dungeon, socket) {
+  const player = getUserBySocket(socket);
+  const playerStatInfo = await getStatInfo(socket);
 
   let index = dungeon.targetMonsterIdx;
   let monster = dungeon.monsters[index];
@@ -71,7 +73,7 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
 
     const isCritical = Math.floor(Math.random() * 101);
     if (isCritical <= monster.critical) {
-      finalDamage = finalDamage * (monster.criticalAttack / 100);
+      finalDamage = Math.floor(finalDamage * (monster.criticalAttack / 100));
       message = `몬스터 ${monster.name}이(가) 강화된 공격으로 ${player.nickname}를 공격합니다!\n${player.nickname}은(는) ${finalDamage} 데미지를 입었습니다.`;
     }
 
@@ -106,6 +108,8 @@ export default function switchToMonsterAttackScene(dungeon, socket) {
       hp: playerStatInfo.hp,
     });
     socket.write(playerHp);
+
+    await setStatInfo(socket, playerStatInfo);
 
     dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
     dungeon.accTargetIdx();

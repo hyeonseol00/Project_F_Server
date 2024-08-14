@@ -1,11 +1,14 @@
+import { getStatInfo, setStatInfo } from '../../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../../config/config.js';
+import { getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 
-export default function targetMonsterScene(responseCode, dungeon, socket) {
+export default async function targetMonsterScene(responseCode, dungeon, socket) {
   const btns = [{ msg: '다음', enable: true }];
 
-  const player = dungeon.player;
-  const playerStatInfo = player.playerInfo.statInfo;
+  const user = getUserBySocket(socket);
+  const playerEffectCode = user.effectCode;
+  const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
   const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
   const targetMonster = dungeon.monsters[targetMonsterIdx[attackType]];
@@ -14,7 +17,11 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     `단일 스킬로 ${targetMonster.name}을(를) 공격합니다!`,
     `광역 스킬로 몬스터들을 공격합니다!`,
   ];
-  const effectCode = [player.effectCode.normal, player.effectCode.single, player.effectCode.wide];
+  const effectCode = [
+    playerEffectCode.baseEffect,
+    playerEffectCode.singleEffect,
+    playerEffectCode.wideEffect,
+  ];
   let decreaseHp = [playerStatInfo.atk, playerStatInfo.magic, playerStatInfo.magic];
   const decreaseMp = [0, 25, 50];
 
@@ -22,9 +29,9 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
   if (isCritical <= playerStatInfo.critRate) {
     const criticalRate = playerStatInfo.critDmg / 100;
     decreaseHp = [
-      playerStatInfo.atk * criticalRate,
-      playerStatInfo.magic * criticalRate,
-      playerStatInfo.magic * criticalRate,
+      Math.floor(playerStatInfo.atk * criticalRate),
+      Math.floor(playerStatInfo.magic * criticalRate),
+      Math.floor(playerStatInfo.magic * criticalRate),
     ];
     msg = [
       `크리티컬으로 강화되어 ${targetMonster.name}을(를) 공격합니다!`,
@@ -102,5 +109,7 @@ export default function targetMonsterScene(responseCode, dungeon, socket) {
     dungeon.setTargetIdx(responseCode - 1);
     dungeon.currentAttackType = config.attackType.normal;
   }
+
+  await setStatInfo(socket, playerStatInfo);
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
 }

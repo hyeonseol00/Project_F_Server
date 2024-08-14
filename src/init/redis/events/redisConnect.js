@@ -6,7 +6,6 @@ import { loadDungeonItem } from '../../../assets/item.assets.js';
 
 export const redisConnect = async () => {
   console.info('Redis connected');
-
   await loadLevelTable();
   await loadItemTable();
   await loadMonsterTable();

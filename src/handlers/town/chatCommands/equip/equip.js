@@ -1,15 +1,27 @@
-import Item from '../classes/models/item.class.js';
-import { createResponse } from './response/createResponse.js';
-import { getItemById } from '../assets/item.assets.js';
+import Item from '../../../../classes/models/item.class.js';
+import { createResponse } from '../../../../utils/response/createResponse.js';
+import { getItemById } from '../../../../assets/item.assets.js';
+import {
+  addItem,
+  decItem,
+  deleteItem,
+  getItem,
+  getItemQuantity,
+  getPlayerInfo,
+  pushItem,
+  setItemId,
+  setStatInfo,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 let statInfo;
 const quantity = 1;
 async function updateEquip(equippedItem, findItemInfo, user) {
+  const userInfo = await getPlayerInfo(user.socket);
   const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed, critRate, critDmg, avoidRate, exp } =
-    user.playerInfo.statInfo;
+    userInfo.statInfo;
 
   const {
-    itemId,
+    id,
     itemType,
     itemName,
     itemHp,
@@ -24,7 +36,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
 
   if (equippedItem !== 0) {
     const equippedItemInfo = await getItemById(equippedItem);
-    user.setItemId(itemType, itemId);
+    await setItemId(user.socket, itemType, id);
 
     const updateCritical = critRate + itemCritical - equippedItemInfo.itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance - equippedItemInfo.itemAvoidance;
@@ -51,23 +63,23 @@ async function updateEquip(equippedItem, findItemInfo, user) {
       exp,
     };
 
-    user.setStatInfo(statInfo);
+    await setStatInfo(user.socket, statInfo);
 
-    const isInven = user.getItem(equippedItem);
+    const isInven = await getItem(user.socket, equippedItem);
     if (!isInven) {
       const item = new Item(equippedItem, quantity);
-      user.pushItem(item);
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteItem(itemId);
+      await pushItem(user.socket, item);
+      if ((await getItemQuantity(user.socket, id)) === 1) {
+        await deleteItem(user.socket, id);
       } else {
-        user.decItem(itemId, quantity);
+        await decItem(user.socket, id, quantity);
       }
     } else {
-      user.addItem(isInven.itemId, quantity);
-      if (user.getItemQuantity(itemId) === 1) {
-        user.deleteItem(itemId);
+      await addItem(user.socket, isInven.id, quantity);
+      if ((await getItemQuantity(user.socket, id)) === 1) {
+        await deleteItem(user.socket, id);
       } else {
-        user.decItem(itemId, quantity);
+        await decItem(user.socket, id, quantity);
       }
     }
 
@@ -77,7 +89,7 @@ async function updateEquip(equippedItem, findItemInfo, user) {
     });
     user.socket.write(response);
   } else {
-    user.setItemId(itemType, itemId);
+    await setItemId(user.socket, itemType, id);
     const updateCritical = critRate + itemCritical;
     const updateAvoidAbility = avoidRate + itemAvoidance;
 
@@ -97,12 +109,12 @@ async function updateEquip(equippedItem, findItemInfo, user) {
       exp,
     };
 
-    user.setStatInfo(statInfo);
+    await setStatInfo(user.socket, statInfo);
 
-    if (user.getItemQuantity(itemId) === 1) {
-      user.deleteItem(itemId);
+    if ((await getItemQuantity(user.socket, id)) === 1) {
+      await deleteItem(user.socket, id);
     } else {
-      user.decItem(itemId, quantity);
+      await decItem(user.socket, id, quantity);
     }
 
     const response = createResponse('response', 'S_Chat', {

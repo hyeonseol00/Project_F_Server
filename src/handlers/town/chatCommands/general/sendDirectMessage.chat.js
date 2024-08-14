@@ -2,16 +2,20 @@ import { createResponse } from '../../../../utils/response/createResponse.js';
 import { getUserByNickname } from '../../../../session/user.session.js';
 import { notFoundUser, targetToSelf, includeInvalidParams } from '../exceptions.js';
 import { splitAtFirstSpace } from '../../../../utils/parser/messageParser.js';
+import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
-export const sendDirectMessage = (sender, message) => {
+export const sendDirectMessage = async (sender, message) => {
   const { firstPart: recipientNickname, secondPart: msg } = splitAtFirstSpace(message);
   const params = [recipientNickname, msg];
-  const recipient = getUserByNickname(recipientNickname);
+  const recipient = await getUserByNickname(recipientNickname);
+  const recipientSocket = recipient ? recipient.socket : null;
+  const recipientInfo = await getPlayerInfo(recipientSocket);
+  const senderInfo = await getPlayerInfo(sender.socket);
 
   // 예외처리
   if (
     includeInvalidParams(sender, params) ||
-    targetToSelf(sender, recipient) ||
+    (await targetToSelf(sender, recipientInfo)) ||
     notFoundUser(sender, recipient)
   ) {
     return;
@@ -19,12 +23,12 @@ export const sendDirectMessage = (sender, message) => {
 
   const senderChatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
-    chatMsg: `[DM] To_${recipient.nickname}: ${msg}`,
+    chatMsg: `[DM] To_${recipientInfo.nickname}: ${msg}`,
   });
 
   const recipientChatResponse = createResponse('response', 'S_Chat', {
     playerId: recipient.playerId,
-    chatMsg: `[DM] ${sender.nickname}: ${msg}`,
+    chatMsg: `[DM] ${senderInfo.nickname}: ${msg}`,
   });
 
   try {

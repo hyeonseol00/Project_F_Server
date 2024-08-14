@@ -1,18 +1,20 @@
-import { userSessions } from './sessions.js';
-import User from '../classes/models/user.class.js';
+import { getPlayerInfo, getTeam } from '../classes/DBgateway/playerinfo.gateway.js';
 import { getRegistCount } from './GaApplication.session.js';
+import { userSessions } from './sessions.js';
 
-export const addUser = (socket, nickname, characterClass, effect, items, character) => {
-  const user = new User(
-    getRegistCount(),
-    nickname,
-    characterClass,
-    socket,
-    effect,
-    items,
-    character,
-  );
+export const addUser = async (socket, effectCode, character) => {
+  const user = {
+    playerId: getRegistCount(),
+    characterId: character.characterId,
+    socket: socket,
+    lastUpdateTime: Date.now(),
+    nickname: character.characterName,
+    effectCode,
+    worldLevel: character.worldLevel,
+    skillPoint: character.skillPoint,
+  };
   userSessions.push(user);
+
   return user;
 };
 
@@ -29,12 +31,23 @@ export const getUserById = (id) => {
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
 };
+
 export const getUserByNickname = (nickname) => {
   return userSessions.find((user) => user.nickname === nickname);
 };
 
-export const getAllMembersInTeam = (teamId) => {
-  return userSessions.filter((user) => user.teamId === teamId);
+export const getAllMembersInTeam = async (teamId) => {
+  const result = [];
+
+  for (const key in userSessions) {
+    const team = await getTeam(userSessions[key].socket);
+
+    if (team.teamId === teamId) {
+      result.push(userSessions[key]);
+    }
+  }
+
+  return result;
 };
 
 export const getAllUsers = () => {

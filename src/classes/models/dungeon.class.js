@@ -1,12 +1,13 @@
 import { getDungeonItemsByDungeonCode, getItemById } from '../../assets/item.assets.js';
 import { config } from '../../config/config.js';
+import { getQuestIdForDungeon } from '../../handlers/town/chatCommands/quest/getQuestIdForDungeon.js';
 import Item from './item.class.js';
 import Monster from './monster.class.js';
 
 class InstanceDungeon {
-  constructor(userId, player, dungeonCode) {
-    this.id = userId;
-    this.player = player;
+  constructor(nickname, dungeonCode) {
+    this.nickname = nickname;
+    this.questId = getQuestIdForDungeon(dungeonCode + 5000);
     this.monsters = [];
     this.battleSceneStatus = config.sceneStatus.message;
     this.targetMonsterIdx = 0;
@@ -73,17 +74,17 @@ class InstanceDungeon {
 
     const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      const itemInfo = await getItemById(item.itemId);
+      const itemInfo = await getItemById(item.id);
       if (itemInfo.itemType === 'potion') {
         // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
-        const potion = new Item(item.itemId, dungeonCode);
+        const potion = new Item(item.id, dungeonCode);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.potions.push(this.items.length); // items에 저장될 idx
         }
         this.items.push(potion);
       } else {
-        const mountingItem = new Item(item.itemId);
+        const mountingItem = new Item(item.id);
         for (let i = 0; i < item.itemProbability; i++) {
           // 확률 90% = 90개, 1% = 1개 넣어줌
           this.mountingItems.push(this.items.length); // items에 저장될 idx

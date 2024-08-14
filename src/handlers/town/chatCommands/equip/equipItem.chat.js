@@ -1,11 +1,13 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import isInteger from '../../../../utils/isInteger.js';
-import updateEquip from '../../../../utils/equip.js';
+import updateEquip from './equip.js';
 import { getItemById } from '../../../../assets/item.assets.js';
+import { getItem, getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const equipItem = async (user, message) => {
-  const { weapon, armor, gloves, shoes, accessory } = user.equipment;
-  const { level } = user.playerInfo.statInfo;
+  const userInfo = await getPlayerInfo(user.socket);
+  const { weapon, armor, gloves, shoes, accessory } = userInfo.equipment;
+  const { level } = userInfo.statInfo;
 
   if (!isInteger(message)) {
     const response = createResponse('response', 'S_Chat', {
@@ -36,19 +38,19 @@ export const equipItem = async (user, message) => {
     return;
   }
 
-  const findItem = user.getItem(Number(message));
+  const findItem = await getItem(user.socket, Number(message));
   if (!findItem) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[System] ${user.nickname}의 인벤토리에 아이템이 존재하지 않습니다.`,
+      chatMsg: `[System] ${userInfo.nickname}의 인벤토리에 아이템이 존재하지 않습니다.`,
     });
     user.socket.write(response);
 
     return;
   }
 
-  const findItemInfo = await getItemById(findItem.itemId);
-  const { itemId, itemType, itemName, requireLevel } = findItemInfo;
+  const findItemInfo = await getItemById(findItem.id);
+  const { id, itemType, itemName, requireLevel } = findItemInfo;
   if (level < requireLevel) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
@@ -80,7 +82,7 @@ export const equipItem = async (user, message) => {
   }
   // S_EquipWeapon 패킷 전송
   const equipResponse = createResponse('response', 'S_EquipWeapon', {
-    itemId: itemId,
+    itemId: id,
   });
   user.socket.write(equipResponse);
 };

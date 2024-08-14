@@ -24,11 +24,10 @@ const loginHandler = async ({ socket, payload }) => {
       if (!userInDB || userInDB.password !== password) {
         flag = false;
         message = '아이디 또는 비밀번호가 틀렸습니다.';
-      } else if(getUserByNickname(nickname)){
+      } else if (await getUserByNickname(nickname)) {
         flag = false;
         message = '이미 접속 중인 유저입니다';
-      }
-        else {
+      } else {
         message = '로그인을 성공했습니다.';
       }
     }

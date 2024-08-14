@@ -7,8 +7,6 @@ DROP TABLE dungeon_items;
 DROP TABLE effects;
 DROP TABLE monsters;
 DROP TABLE items;
-DROP TABLE shops;
-DROP TABLE shop_Items;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
@@ -61,19 +59,9 @@ CREATE TABLE IF NOT EXISTS dungeon_monsters
   FOREIGN KEY (monster_id) REFERENCES monsters(monster_id)
 );
 
-CREATE TABLE IF NOT EXISTS shops
-(
-  shop_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  shop_name VARCHAR(100) UNIQUE NOT NULL,
-  shop_location VARCHAR(100),
-
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS items
 (
-  item_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   item_name VARCHAR(100) NOT NULL,
   item_description TEXT,
   item_type VARCHAR(50),
@@ -93,26 +81,11 @@ CREATE TABLE IF NOT EXISTS items
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS shop_items
-(
-  shop_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  shop_id INTEGER,
-  item_id INTEGER,
-  price INTEGER NOT NULL,
-  stock INTEGER DEFAULT 0,
-
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (shop_id) REFERENCES shops(shop_id),
-  FOREIGN KEY (item_id) REFERENCES items(item_id)
-);
-
 CREATE TABLE IF NOT EXISTS dungeon_items
 (
   dungeon_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   dungeon_id INTEGER NOT NULL,
-  item_id INTEGER NOT NULL,
+  id INTEGER NOT NULL,
   item_probability FLOAT NOT NULL DEFAULT '0',
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -266,7 +239,7 @@ INSERT INTO effects (effect_id, effect_name, effect_type) VALUES
 (3027, "Effect27", "전체 대상");
 
 -- 장착 아이템 데이터 삽입
-INSERT INTO items (item_id, item_name, item_description, item_type, item_hp, item_mp, item_attack, item_defense, item_magic, item_speed, item_cost, require_level, item_avoidance, item_critical, can_sell)
+INSERT INTO items (id, item_name, item_description, item_type, item_hp, item_mp, item_attack, item_defense, item_magic, item_speed, item_cost, require_level, item_avoidance, item_critical, can_sell)
 VALUES 
 (1, '초심자의 USB', '', 'accessory', 100, 100, 0, 50, 0, 0, 1000, 1, 0, 0, 1),
 (2, '불꽃의 USB', '', 'accessory', 200, 100, 0, 100, 50, 0, 5000, 5, 0.05, 0, 1),
@@ -322,7 +295,7 @@ VALUES
 
 
 -- 던전 별 보상 아이템 데이터 삽입
-INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, item_id, item_probability) VALUES
+INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, id, item_probability) VALUES
 (1, 5001, 46, 30),
 (2, 5001, 47, 30),
 (3, 5001, 48, 30),

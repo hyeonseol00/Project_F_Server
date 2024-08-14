@@ -154,7 +154,37 @@ message S_UnequipWeapon{
 message S_UseItem{
   ItemInfo item = 1;  // 사용한 후 남은 아이템 id, quantity
 }
+// 퀘스트 수락
+message S_AcceptQuest {
+  QuestInfo quest = 1;
+  bool success = 2;
+  string message = 3;
+}
 
+// 퀘스트 업데이트
+message S_UpdateQuest {
+  QuestInfo quest = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// 퀘스트 완료
+message S_CompleteQuest {
+  int32 questId = 1;
+  bool success = 2;
+  string message = 3;
+  QuestInfo quest = 4;
+}
+
+// 퀘스트 목록 응답
+message S_GetQuests {
+  repeated QuestInfo quests = 1;
+}
+// 퀘스트 시작 메시지 추가
+message S_EnterQuest {
+  QuestInfo quest = 1;
+  string message = 2;
+}
 message S_BossTryAttack{
 }
 

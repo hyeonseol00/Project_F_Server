@@ -1,15 +1,23 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import { config } from '../../../../config/config.js';
 import { getLevelById } from '../../../../assets/level.assets.js';
+import {
+  getPlayerInfo,
+  setGold,
+  setStatInfo,
+  setWorldLevel,
+  skillPointUpdate,
+} from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import { getUserBySocket } from '../../../../session/user.session.js';
 
 export default async function getExpScene(responseCode, dungeon, socket) {
   if (responseCode === 1) {
     const btns = [{ msg: '다음', enable: true }];
     let battleLog = {};
 
-    const player = dungeon.player; // user 클래스
-    const playerStatus = player.playerInfo.statInfo; // user 클래스 내의 playerInfo -> statInfo
-    const playerLevel = playerStatus.level; // 유저의 현재 레벨
+    const user = getUserBySocket(socket);
+    const playerInfo = await getPlayerInfo(socket);
+    const playerLevel = playerInfo.statInfo.level; // 유저의 현재 레벨
 
     let levelTable;
     if (playerLevel < config.battleScene.maxLevel) {
@@ -38,26 +46,30 @@ export default async function getExpScene(responseCode, dungeon, socket) {
       monsterExp += monster.exp;
       gold += monster.gold;
     }
-    const playerExp = monsterExp + playerStatus.exp;
+    const playerExp = monsterExp + playerInfo.statInfo.exp;
     // 현재 경험치가 필요 경험치보다 높을 경우 와 현재 레벨이 최고 레벨보다 작을 경우
     if (requiredExp <= playerExp && playerLevel < config.battleScene.maxLevel) {
-      player.setLevel(playerLevel + 1, playerExp - requiredExp);
-      playerStatus.maxHp += hp;
-      playerStatus.maxMp += mp;
-      playerStatus.hp = playerStatus.maxHp;
-      playerStatus.mp = playerStatus.maxMp;
-      playerStatus.atk += attack;
-      playerStatus.def += defense;
-      playerStatus.magic += magic;
-      playerStatus.speed += speed;
-      playerStatus.critRate += critical;
-      playerStatus.critDmg += criticalAttack;
-      playerStatus.avoidRate += avoidAbility;
-      player.gold += gold;
-      player.skillPoint += skillPoint;
+      const statInfo = {
+        level: playerLevel + 1,
+        exp: playerExp - requiredExp,
+        maxHp: playerInfo.statInfo.maxHp + hp,
+        maxMp: playerInfo.statInfo.maxMp + mp,
+        hp: playerInfo.statInfo.maxHp,
+        mp: playerInfo.statInfo.maxMp,
+        atk: playerInfo.statInfo.atk + attack,
+        def: playerInfo.statInfo.def + defense,
+        magic: playerInfo.statInfo.magic + magic,
+        speed: playerInfo.statInfo.speed + speed,
+        critRate: playerInfo.statInfo.critRate + critical,
+        critDmg: playerInfo.statInfo.critDmg + criticalAttack,
+        avoidRate: playerInfo.statInfo.avoidRate + avoidAbility,
+      };
+      await setStatInfo(socket, statInfo);
+      await setGold(socket, playerInfo.gold + gold);
+      skillPointUpdate(socket, user.skillPoint + skillPoint);
 
       if ((playerLevel + 1) % 5 === 0) {
-        player.worldLevel++;
+        setWorldLevel(socket, user.worldLevel + 1);
       }
 
       const message = `경험치 ${monsterExp}, 골드 ${gold}, 스킬포인트 ${skillPoint}를 획득했습니다!\n
@@ -71,8 +83,24 @@ export default async function getExpScene(responseCode, dungeon, socket) {
         btns,
       };
     } else {
-      playerStatus.exp += monsterExp;
-      player.gold += gold;
+      const statInfo = {
+        level: playerLevel,
+        maxHp: playerInfo.statInfo.maxHp,
+        maxMp: playerInfo.statInfo.maxMp,
+        hp: playerInfo.statInfo.hp,
+        mp: playerInfo.statInfo.mp,
+        atk: playerInfo.statInfo.atk,
+        def: playerInfo.statInfo.def,
+        magic: playerInfo.statInfo.magic,
+        speed: playerInfo.statInfo.speed,
+        critRate: playerInfo.statInfo.critRate,
+        critDmg: playerInfo.statInfo.critDmg,
+        avoidRate: playerInfo.statInfo.avoidRate,
+        exp: playerExp + monsterExp,
+      };
+
+      await setStatInfo(socket, statInfo);
+      await setGold(socket, playerInfo.gold + gold);
 
       battleLog = {
         msg: `경험치 ${monsterExp}, 골드 ${gold}를 획득했습니다!`,

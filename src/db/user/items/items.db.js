@@ -10,8 +10,8 @@ export const getUserItemsByCharacterId = async (characterId) => {
   return toCamelCase(rows);
 };
 
-export const existItem = async (characterId, itemId) => {
-  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.IS_EXIST_ITEM, [characterId, itemId]);
+export const existItem = async (characterId, id) => {
+  const [rows] = await pools.TOWN_MONSTER.query(SQL_QUERIES.IS_EXIST_ITEM, [characterId, id]);
 
   if (rows.length) return true;
   return false;
@@ -23,31 +23,28 @@ export const updateCharacterItems = async (characterId, sessionItems) => {
 
   // 2. 데이터베이스에 있지만 세션에 없는 아이템을 찾아 삭제합니다.
   for (const dbItem of dbItems) {
-    const sessionItem = sessionItems.find((item) => item.itemId === dbItem.itemId);
+    const sessionItem = sessionItems.find((item) => item.id === dbItem.id);
     if (!sessionItem) {
-      await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
-        characterId,
-        dbItem.itemId,
-      ]);
+      await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [characterId, dbItem.id]);
     }
   }
 
   // 3. 세션 인벤토리를 데이터베이스에 업데이트합니다.
   for (const sessionItem of sessionItems) {
-    const dbItem = dbItems.find((item) => item.itemId === sessionItem.itemId);
+    const dbItem = dbItems.find((item) => item.id === sessionItem.id);
     if (dbItem) {
       // 데이터베이스에 이미 있는 경우 업데이트
       if (sessionItem.quantity > 0) {
         await pools.TOWN_MONSTER.query(SQL_QUERIES.UPDATE_CHARACTER_ITEM, [
           sessionItem.quantity,
           characterId,
-          sessionItem.itemId,
+          sessionItem.id,
         ]);
       } else {
         // 수량이 0인 경우 삭제
         await pools.TOWN_MONSTER.query(SQL_QUERIES.DELETE_CHARACTER_ITEM, [
           characterId,
-          sessionItem.itemId,
+          sessionItem.id,
         ]);
       }
     } else {
@@ -55,7 +52,7 @@ export const updateCharacterItems = async (characterId, sessionItems) => {
       if (sessionItem.quantity > 0) {
         await pools.TOWN_MONSTER.query(SQL_QUERIES.INSERT_CHARACTER_ITEM, [
           characterId,
-          sessionItem.itemId,
+          sessionItem.id,
           sessionItem.quantity,
         ]);
       }
