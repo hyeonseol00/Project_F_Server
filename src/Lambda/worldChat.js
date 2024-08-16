@@ -15,13 +15,6 @@ export const eventNotificationHandler = async (data) => {
       return;
     }
 
-    console.log(
-      'eventNotificationHandler: eventName, eventId, rewardId',
-      eventName,
-      eventId,
-      rewardId,
-    );
-
     PROCESSING_EVENTS.push({
       eventId,
       rewardId: rewardId ? rewardId : 1,

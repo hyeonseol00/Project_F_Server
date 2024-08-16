@@ -14,8 +14,8 @@ export const chatEventHandler = (payload) => {
     const time = Math.abs(Number(min) - curMin) * 60 * 1000; // 2분일 경우 120000
 
     userPoints = [];
-    console.log('userPoints', userPoints);
-    setTimeout(timeOver, 10000);
+
+    setTimeout(timeOver, time);
 
     // 정시에 시작?
     // if (Number(hour) - curHour === 0) {

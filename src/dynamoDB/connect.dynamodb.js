@@ -14,8 +14,6 @@ function lookupFunc() {
       const camelData = toCamelCase(Items);
       if (Items.length >= 1) {
         // 여기에 이벤트 매핑 핸들러로 데이터 던져주기
-        console.log('camelData', camelData);
-
         camelData.forEach((event) => {
           eventNotificationHandler(event);
 
