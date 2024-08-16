@@ -43,7 +43,7 @@ export const acceptTeam = async (sender, message) => {
   const senderInfo = await getPlayerInfo(sender.socket);
   for (const member of teamMembers) {
     if (member.playerId === sender.playerId) continue;
-    let joinResponse = createResponse('response', 'S_Chat', {
+    const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
       chatMsg: `[System] ${senderInfo.nickname} 이(가) 팀에 가입했습니다!`,
     });
