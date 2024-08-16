@@ -84,6 +84,16 @@ CREATE TABLE IF NOT EXISTS character_Items
   FOREIGN KEY (character_id) REFERENCES characters(character_id)
 );
 
+CREATE TABLE user_quests
+(
+  character_id INTEGER NOT NULL,
+  quest_id INTEGER NOT NULL,
+  kill_count INTEGER DEFAULT 0,
+  `status` ENUM('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_STARTED',
+  completed_at TIMESTAMP DEFAULT NULL,
+  PRIMARY KEY (character_id, quest_id),
+);
+
 -- 데이터 삽입
 
 -- Jobs 데이터 삽입

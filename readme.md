@@ -44,11 +44,11 @@
 
 ### **유저 DB**
 
-![townmonster](https://github.com/user-attachments/assets/fcd8744f-2379-401d-be37-1e97bb568a40)
+![townmonster](https://github.com/user-attachments/assets/07fb1b24-7dc7-4914-9cbc-41422d61c872)
 
 ### **게임 DB**
 
-![towngame](https://github.com/user-attachments/assets/bf895d42-c989-408f-8914-1caeb3b2dab1)
+![towngame](https://github.com/user-attachments/assets/e33cf02e-fafd-40b3-923f-67fb612f2317)
 
 ## 📃 패킷 구조
 
