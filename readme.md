@@ -38,11 +38,17 @@
 
 ## 📃 와이어 프레임
 
-### ![와이어프레임](https://github.com/user-attachments/assets/8d601aa0-0397-44cc-a1e5-a6f56ea08a19)
+![와이어프레임](https://github.com/user-attachments/assets/8d601aa0-0397-44cc-a1e5-a6f56ea08a19)
 
 ## 📃 ERD Diagram
 
-### [ERD Diagram]
+### **유저 DB**
+
+![townmonster](https://github.com/user-attachments/assets/fcd8744f-2379-401d-be37-1e97bb568a40)
+
+### **게임 DB**
+
+![towngame](https://github.com/user-attachments/assets/bf895d42-c989-408f-8914-1caeb3b2dab1)
 
 ## 📃 패킷 구조
 
