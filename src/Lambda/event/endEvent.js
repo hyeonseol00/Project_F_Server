@@ -2,6 +2,7 @@ import { getPlayerInfo, setGold } from '../../classes/DBgateway/playerinfo.gatew
 import { getAllUsers } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { REWARD_LIST } from '../rewardMapping.js';
+import { PROCESSING_EVENTS } from '../worldChat.js';
 
 export const endEvent = async (winUser, eventId) => {
   const allUser = getAllUsers();
@@ -17,10 +18,10 @@ export const endEvent = async (winUser, eventId) => {
 
   const winUserInfo = await getPlayerInfo(winUser.socket);
 
-  // flags의 idx로 reward[flagIdx]로 rewardId 찾아서 REWARD_LIST에서 불러오기
-  const index = FLAGS.indexOf(eventId);
-  const rewardId = REWARDS[index];
-  await setGold(winUser.socket, winUserInfo.gold + REWARD_LIST[rewardId].gold);
+  // 종료된 이벤트 보상 지급 및 이벤트 배열에서 해당 이벤트 삭제
+  const endedEventIdx = PROCESSING_EVENTS.findIndex((e) => e.eventId === eventId);
+  await setGold(winUser.socket, winUserInfo.gold + REWARD_LIST[endedEventIdx].rewardId.gold);
+  if (endedEventIdx !== -1) PROCESSING_EVENTS.splice(endedEventIdx, 1);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: winUser.playerId,

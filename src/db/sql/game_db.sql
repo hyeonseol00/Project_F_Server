@@ -7,6 +7,7 @@ DROP TABLE dungeon_items;
 DROP TABLE effects;
 DROP TABLE monsters;
 DROP TABLE items;
+DROP TABLE quests;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
@@ -61,10 +62,10 @@ CREATE TABLE IF NOT EXISTS dungeon_monsters
 
 CREATE TABLE IF NOT EXISTS items
 (
-  id INTEGER PRIMARY KEY,
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   item_name VARCHAR(100) NOT NULL,
   item_description TEXT,
-  item_type VARCHAR(50),
+  item_type VARCHAR(50) NOT NULL,
   item_hp FLOAT NOT NULL,
   item_mp FLOAT NOT NULL,
   item_attack FLOAT NOT NULL,
@@ -74,8 +75,8 @@ CREATE TABLE IF NOT EXISTS items
   item_cost INTEGER NOT NULL,
   can_sell BIT(1) NOT NULL DEFAULT b'1',
   require_level INTEGER NOT NULL,
-  item_avoidance FLOAT DEFAULT '0',
-  item_critical FLOAT DEFAULT '0',
+  item_avoidance FLOAT DEFAULT 0,
+  item_critical FLOAT DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -83,10 +84,10 @@ CREATE TABLE IF NOT EXISTS items
 
 CREATE TABLE IF NOT EXISTS dungeon_items
 (
-  dungeon_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  dungeon_item_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   dungeon_id INTEGER NOT NULL,
-  id INTEGER NOT NULL,
-  item_probability FLOAT NOT NULL DEFAULT '0',
+  `id` INTEGER NOT NULL,
+  item_probability FLOAT NOT NULL DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS dungeon_items
 
 CREATE TABLE IF NOT EXISTS levels
 (
-  level_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  level_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   required_exp INTEGER NOT NULL,
   hp FLOAT NOT NULL,
   mp FLOAT NOT NULL,
@@ -111,6 +112,17 @@ CREATE TABLE IF NOT EXISTS levels
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS quests
+(
+  quest_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  quest_name VARCHAR(255) NOT NULL,
+  quest_description TEXT,
+  level_required INTEGER NOT NULL,
+  monster_target INTEGER NOT NULL,
+  reward_exp INTEGER NOT NULL,
+  reward_gold INTEGER NOT NULL,
+)
 
 -- 데이터 삽입
 
@@ -295,7 +307,7 @@ VALUES
 
 
 -- 던전 별 보상 아이템 데이터 삽입
-INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, id, item_probability) VALUES
+INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, `id`, item_probability) VALUES
 (1, 5001, 46, 30),
 (2, 5001, 47, 30),
 (3, 5001, 48, 30),
@@ -424,3 +436,9 @@ INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, id, item_probability) VA
 (126, 5004, 34, 1),
 (127, 5004, 40, 1),
 (128, 5004, 45, 1);
+
+INSERT INTO quests(quest_id, quest_name, quest_description, required_level, monster_target, required_exp, quest_reward_exp) VALUES
+(1, "Level 1 Quest", "Defeat 5 monsters in 1-star dungeon", 1, 5, 200, 1000),
+(2, "Level 5 Quest", "Defeat 10 monsters in 2-star dungeon", 5, 10, 600, 3000),
+(3, "Level 10 Quest", "Defeat 20 monsters in 3-star dungeon", 10, 20, 1000, 5000),
+(4, "Level 15 Quest", "Defeat 30 monsters in 4-star dungeon", 15, 30, 1500, 10000);

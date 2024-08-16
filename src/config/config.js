@@ -57,6 +57,10 @@ import {
   REDIS_PORT,
   REDIS_USERNAME,
   REDIS_PASSWORD,
+  ACCESS_KEY_ID,
+  SECRET_ACCESS_KEY,
+  REGION,
+  AWS_TABLE_NAME,
 } from '../constants/env.js';
 import {
   BOSS_ATTACK_RANGE,
@@ -87,6 +91,7 @@ import {
   DUNGEON_TABLE_KEY,
   DUNGEON_MONSTER_TABLE_KEY,
 } from '../constants/redisKey.js';
+import { LOOKUP_INTERVAL } from '../constants/dynamoDB.js';
 
 export const config = {
   server: {
@@ -215,5 +220,14 @@ export const config = {
   },
   dropItem: {
     quantity: DROP_ITEMS_QUANTITY,
+  },
+  dynamoDB: {
+    awsTableName: AWS_TABLE_NAME,
+    awsRemoteConfig: {
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY,
+      region: REGION,
+    },
+    lookupInterval: LOOKUP_INTERVAL,
   },
 };

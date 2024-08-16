@@ -3,17 +3,18 @@ import { getAllUsers } from '../session/user.session.js';
 import { createResponse } from '../utils/response/createResponse.js';
 import { chatHandlerMappings } from './eventMapping.js';
 
-export const FLAGS = [];
-export const REWARDS = [];
+export const PROCESSING_EVENTS = []; // 현재 진행 중인 이벤트 목록
 
 // 이벤트 감지 시 유저들에게 이벤트 알림 전송.
 export const eventNotificationHandler = async (data) => {
-  const { message, eventId, rewardId, payload } = data;
+  const { message, eventId, rewardId, Items: payload } = data;
 
   const allUser = getAllUsers();
 
-  FLAGS.push(eventId);
-  REWARDS.push(rewardId);
+  PROCESSING_EVENTS.push({
+    eventId,
+    rewardId,
+  });
 
   for (const user of allUser) {
     const response = createResponse('response', 'S_Chat', {
@@ -21,7 +22,7 @@ export const eventNotificationHandler = async (data) => {
       chatMsg: `[Event]: ${message}`,
     });
 
-    chatHandlerMappings[eventId](payload);
+    chatHandlerMappings[eventId]([...payload]);
 
     user.socket.write(response);
   }
