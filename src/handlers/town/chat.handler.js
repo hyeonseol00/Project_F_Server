@@ -5,6 +5,8 @@ import { getGameSession } from '../../session/game.session.js';
 import { config } from '../../config/config.js';
 import { splitAtFirstSpace } from '../../utils/parser/messageParser.js';
 import chatCommandMappings from './chatCommands/chatCommandMappings.js';
+import { chatEventMappings } from '../../Lambda/eventMapping.js';
+import { FLAGS } from '../../Lambda/worldChat.js';
 
 const chatHandler = async ({ socket, payload }) => {
   const { playerId, chatMsg } = payload;
@@ -40,8 +42,8 @@ const chatHandler = async ({ socket, payload }) => {
   }
 };
 
-async function sendMessageToAll(sender, message) {
-  const allUsers = await getAllUsers();
+export async function sendMessageToAll(sender, message) {
+  const allUsers = getAllUsers();
 
   const chatResponse = createResponse('response', 'S_Chat', {
     playerId: sender.playerId,
@@ -51,6 +53,13 @@ async function sendMessageToAll(sender, message) {
   allUsers.forEach((user) => {
     user.socket.write(chatResponse);
   });
+
+  // 현재 진행 중인 이벤트 플레그에 해당하는 eventId가 존재하는 경우 실행
+  for (const eventId of FLAGS) {
+    if (chatEventMappings.hasOwnProperty(eventId)) {
+      chatEventMappings[eventId]({ sender, message });
+    }
+  }
 }
 
 export default chatHandler;
