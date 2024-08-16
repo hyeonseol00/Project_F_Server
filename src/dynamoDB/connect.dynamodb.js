@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk';
 import { config } from '../config/config.js';
+import { eventNotificationHandler } from '../Lambda/worldChat.js';
+import { toCamelCase } from '../utils/transformCase.js';
 
 let docClient;
 
@@ -8,10 +10,19 @@ function lookupFunc() {
   docClient.scan(params, (err, data) => {
     if (!err) {
       const { Items } = data;
-      console.log(Items);
+      const camelData = toCamelCase(Items);
       // 여기에 이벤트 매핑 핸들러로 데이터 던져주기
+      eventNotificationHandler([...camelData]);
     } else {
       console.log('dynamoDB 데이터 읽는 중 오류 발생!', err);
+    }
+  });
+
+  docClient.delete(params, (err, data) => {
+    if (!err) {
+      console.log('DynamoDB 데이터 삭제 성공!', data);
+    } else {
+      console.log('DynamoDB 데이터 삭제 실패!', err);
     }
   });
 }

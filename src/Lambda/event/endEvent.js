@@ -5,22 +5,21 @@ import { REWARD_LIST } from '../rewardMapping.js';
 import { PROCESSING_EVENTS } from '../worldChat.js';
 
 export const endEvent = async (winUser, eventId) => {
-  const allUser = getAllUsers();
+  const endedEventIdx = PROCESSING_EVENTS.findIndex((e) => e.eventId === eventId);
 
+  const allUser = getAllUsers();
   for (const user of allUser) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: `[Event]: 우승자 ${winUser.nickname}!!\n[Event]: 우승자에게 ~~@@#$%$% 보상이 지급됩니다.`,
+      chatMsg: `[Event]: 우승자 ${winUser.nickname}!!\n[Event]: 우승자에게 ${REWARD_LIST[endedEventIdx].gold} 골드가 지급됩니다.`,
     });
 
     user.socket.write(response);
   }
 
+  // 보상 지급 및 종료된 이벤트 삭제
   const winUserInfo = await getPlayerInfo(winUser.socket);
-
-  // 종료된 이벤트 보상 지급 및 이벤트 배열에서 해당 이벤트 삭제
-  const endedEventIdx = PROCESSING_EVENTS.findIndex((e) => e.eventId === eventId);
-  await setGold(winUser.socket, winUserInfo.gold + REWARD_LIST[endedEventIdx].rewardId.gold);
+  await setGold(winUser.socket, winUserInfo.gold + REWARD_LIST[endedEventIdx].gold);
   if (endedEventIdx !== -1) PROCESSING_EVENTS.splice(endedEventIdx, 1);
 
   const response = createResponse('response', 'S_Chat', {

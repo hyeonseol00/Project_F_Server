@@ -1,4 +1,5 @@
 import { getAllUsers } from '../../../session/user.session.js';
+import { endEvent } from '../endEvent.js';
 
 const userPoints = [];
 
