@@ -1,10 +1,12 @@
 import { config } from '../../config/config.js';
 import { findMonsterById } from '../../db/game/game.db.js';
+import { gameQueueProcess } from '../../handlers/hatchery/attackBoss.handler.js';
 import { getUserByNickname } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import toEulerAngles from '../../utils/toEulerAngle.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
+import Bull from 'bull';
 
 class Hatchery {
   constructor() {
@@ -12,6 +14,20 @@ class Hatchery {
   }
 
   initialize() {
+    this.gameQueue = new Bull('game-queue', {
+      redis: {
+        host: config.redis.host,
+        port: config.redis.port,
+        username: config.redis.username,
+        password: config.redis.password,
+      },
+    });
+
+    this.gameQueue.process((queue) => {
+      gameQueueProcess(JSON.parse(queue.data.nickname));
+      done();
+    });
+
     this.playerNicknames = [];
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
@@ -23,6 +39,10 @@ class Hatchery {
     }; */
 
     this.initMonster({ ...config.hatchery.bossInitTransform });
+  }
+
+  addGameQueue(data) {
+    this.gameQueue.add({ nickname: JSON.stringify(data) });
   }
 
   async initMonster(transform) {
