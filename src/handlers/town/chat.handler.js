@@ -43,22 +43,27 @@ const chatHandler = async ({ socket, payload }) => {
 };
 
 export async function sendMessageToAll(sender, message) {
-  const allUsers = getAllUsers();
+  try {
+    const allUsers = getAllUsers();
 
-  const chatResponse = createResponse('response', 'S_Chat', {
-    playerId: sender.playerId,
-    chatMsg: `[All] ${sender.nickname}: ${message}`,
-  });
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: `[All] ${sender.nickname}: ${message}`,
+    });
 
-  allUsers.forEach((user) => {
-    user.socket.write(chatResponse);
-  });
+    allUsers.forEach((user) => {
+      user.socket.write(chatResponse);
+    });
 
-  // 현재 진행 중인 이벤트에 해당하는 eventId가 존재하는 경우 실행
-  for (const e of PROCESSING_EVENTS) {
-    if (chatEventMappings.hasOwnProperty(e.eventId)) {
-      chatEventMappings[e.eventId]({ sender, message });
+    // 현재 진행 중인 이벤트에 해당하는 eventId가 존재하는 경우 실행
+    for (const e of PROCESSING_EVENTS) {
+      if (chatEventMappings.hasOwnProperty(e.eventId)) {
+        console.log('event: ', e);
+        chatEventMappings[e.eventId]({ sender, message });
+      }
     }
+  } catch (err) {
+    console.log(err);
   }
 }
 

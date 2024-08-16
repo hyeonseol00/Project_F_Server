@@ -7,22 +7,30 @@ let docClient;
 
 function lookupFunc() {
   const params = { TableName: config.dynamoDB.awsTableName };
+
   docClient.scan(params, (err, data) => {
     if (!err) {
       const { Items } = data;
       const camelData = toCamelCase(Items);
-      // 여기에 이벤트 매핑 핸들러로 데이터 던져주기
-      eventNotificationHandler([...camelData]);
+      if (Items.length >= 1) {
+        // 여기에 이벤트 매핑 핸들러로 데이터 던져주기
+        console.log('camelData', camelData);
+
+        camelData.forEach((event) => {
+          eventNotificationHandler(event);
+
+          params.Key = { id: event.id };
+          docClient.delete(params, (err, data) => {
+            if (!err) {
+              console.log('DynamoDB 데이터 삭제 성공!', data);
+            } else {
+              console.log('DynamoDB 데이터 삭제 실패!', err);
+            }
+          });
+        });
+      }
     } else {
       console.log('dynamoDB 데이터 읽는 중 오류 발생!', err);
-    }
-  });
-
-  docClient.delete(params, (err, data) => {
-    if (!err) {
-      console.log('DynamoDB 데이터 삭제 성공!', data);
-    } else {
-      console.log('DynamoDB 데이터 삭제 실패!', err);
     }
   });
 }
