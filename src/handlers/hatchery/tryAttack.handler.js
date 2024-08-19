@@ -1,12 +1,12 @@
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 
 const tryAttackHatcheryHandler = async ({ socket, payload }) => {
 
   try {
     const {rotX, rotY, rotZ} = payload;
-
     const user = await getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
     const nicknames = hatcherySession.playerNicknames;
