@@ -22,3 +22,8 @@ export const REDIS_HOST = process.env.REDIS_HOST || 'redis';
 export const REDIS_PORT = process.env.REDIS_PORT || '10000';
 export const REDIS_USERNAME = process.env.REDIS_USERNAME || 'default';
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || 'aaaa';
+
+export const AWS_TABLE_NAME = process.env.AWS_TABLE_NAME;
+export const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+export const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+export const REGION = process.env.REGION;
