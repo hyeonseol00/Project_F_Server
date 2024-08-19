@@ -36,7 +36,7 @@ export const joinTeam = async (sender, message) => {
   // 팀 전체에게 메세지 전송
   for (const member of teamMembers) {
     if (member.playerId === sender.playerId) continue;
-    let joinResponse = createResponse('response', 'S_Chat', {
+    const joinResponse = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
       chatMsg: `[System] ${senderInfo.nickname} 이(가) 팀에 가입했습니다!`,
     });

@@ -41,7 +41,7 @@ export const kickMember = async (sender, message) => {
   const { teamId: senderTeamId } = await getTeam(sender.socket);
   const teamMembers = await getAllMembersInTeam(senderTeamId);
   for (const member of teamMembers) {
-    let response = createResponse('response', 'S_Chat', {
+    const response = createResponse('response', 'S_Chat', {
       playerId: member.playerId,
       chatMsg: `[System] ${targetUserInfo.nickname} 이(가) 팀에서 추방되었습니다.`,
     });

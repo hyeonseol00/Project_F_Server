@@ -7,6 +7,7 @@ DROP TABLE dungeon_items;
 DROP TABLE effects;
 DROP TABLE monsters;
 DROP TABLE items;
+DROP TABLE quests;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
@@ -61,10 +62,10 @@ CREATE TABLE IF NOT EXISTS dungeon_monsters
 
 CREATE TABLE IF NOT EXISTS items
 (
-  id INTEGER PRIMARY KEY,
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   item_name VARCHAR(100) NOT NULL,
   item_description TEXT,
-  item_type VARCHAR(50),
+  item_type VARCHAR(50) NOT NULL,
   item_hp FLOAT NOT NULL,
   item_mp FLOAT NOT NULL,
   item_attack FLOAT NOT NULL,
@@ -74,8 +75,8 @@ CREATE TABLE IF NOT EXISTS items
   item_cost INTEGER NOT NULL,
   can_sell BIT(1) NOT NULL DEFAULT b'1',
   require_level INTEGER NOT NULL,
-  item_avoidance FLOAT DEFAULT '0',
-  item_critical FLOAT DEFAULT '0',
+  item_avoidance FLOAT DEFAULT 0,
+  item_critical FLOAT DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -83,10 +84,10 @@ CREATE TABLE IF NOT EXISTS items
 
 CREATE TABLE IF NOT EXISTS dungeon_items
 (
-  dungeon_item_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  dungeon_item_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   dungeon_id INTEGER NOT NULL,
-  id INTEGER NOT NULL,
-  item_probability FLOAT NOT NULL DEFAULT '0',
+  `id` INTEGER NOT NULL,
+  item_probability FLOAT NOT NULL DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS dungeon_items
 
 CREATE TABLE IF NOT EXISTS levels
 (
-  level_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  level_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   required_exp INTEGER NOT NULL,
   hp FLOAT NOT NULL,
   mp FLOAT NOT NULL,
@@ -111,6 +112,17 @@ CREATE TABLE IF NOT EXISTS levels
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS quests
+(
+  quest_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  quest_name VARCHAR(255) NOT NULL,
+  quest_description TEXT,
+  level_required INTEGER NOT NULL,
+  monster_target INTEGER NOT NULL,
+  reward_exp INTEGER NOT NULL,
+  reward_gold INTEGER NOT NULL,
+)
 
 -- 데이터 삽입
 
@@ -242,10 +254,10 @@ INSERT INTO effects (effect_id, effect_name, effect_type) VALUES
 INSERT INTO items (id, item_name, item_description, item_type, item_hp, item_mp, item_attack, item_defense, item_magic, item_speed, item_cost, require_level, item_avoidance, item_critical, can_sell)
 VALUES 
 (1, '초심자의 USB', '', 'accessory', 100, 100, 0, 50, 0, 0, 1000, 1, 0, 0, 1),
-(2, '불꽃의 USB', '', 'accessory', 200, 100, 0, 100, 50, 0, 5000, 5, 0.05, 0, 1),
-(3, '얼음의 USB', '', 'accessory', 150, 150, 0, 80, 50, 0, 7500, 5, 0.1, 0, 1),
-(4, '카시오시계', '', 'accessory', 100, 100, 0, 100, 100, 0, 10000, 10, 0.15, 0, 1),
-(5, '스마트워치', '', 'accessory', 200, 200, 0, 200, 200, 0, -1, 10, 0.2, 0, 0),
+(2, '불꽃의 USB', '', 'accessory', 200, 100, 0, 100, 50, 0, 5000, 5, 5, 0, 1),
+(3, '얼음의 USB', '', 'accessory', 150, 150, 0, 80, 50, 0, 7500, 5, 10, 0, 1),
+(4, '카시오시계', '', 'accessory', 100, 100, 0, 100, 100, 0, 10000, 10, 15, 0, 1),
+(5, '스마트워치', '', 'accessory', 200, 200, 0, 200, 200, 0, -1, 10, 20, 0, 0),
 (6, '초심자의 키보드', '', 'weapon', 0, 0, 100, 0, 0, 0, 1000, 1, 0, 0, 1),
 (7, '불타오르는 키보드', '', 'weapon', 0, 0, 200, 0, 0, 0, 5000, 5, 0, 0, 1),
 (8, '얼음의 서리 키보드', '', 'weapon', 0, 0, 180, 0, 0, 0, 6000, 5, 0, 0, 1),
@@ -275,11 +287,11 @@ VALUES
 (32, '불꽃의 헤드셋', '', 'armor', 0, 0, 0, 120, 0, 0, 4500, 5, 0, 0, 1),
 (33, '서리의 헤드셋', '', 'armor', 0, 0, 0, 110, 0, 0, 4200, 5, 0, 0, 1),
 (34, '번개의 헤드셋', '', 'armor', 0, 0, 0, 150, 0, 0, 5000, 10, 0, 0, 1),
-(35, '초보자의 보호장갑', '', 'gloves', 100, 0, 0, 0, 0, 0, 1500, 1, 0.05, 0, 1),
-(36, '드래곤 보호장갑', '', 'gloves', 250, 0, 0, 0, 0, 0, 7500, 5, 0.07, 0, 1),
-(37, '불꽃의 보호장갑', '', 'gloves', 200, 0, 0, 0, 0, 0, 7000, 5, 0.08, 0, 1),
-(38, '얼음의 보호장갑', '', 'gloves', 180, 0, 0, 0, 0, 0, 8000, 5, 0.1, 0, 1),
-(39, '번개의 보호장갑', '', 'gloves', 220, 0, 0, 0, 0, 0, -1, 10, 0.12, 0, 0),
+(35, '초보자의 보호장갑', '', 'gloves', 100, 0, 0, 0, 0, 0, 1500, 1, 5, 0, 1),
+(36, '드래곤 보호장갑', '', 'gloves', 250, 0, 0, 0, 0, 0, 7500, 5, 7, 0, 1),
+(37, '불꽃의 보호장갑', '', 'gloves', 200, 0, 0, 0, 0, 0, 7000, 5, 8, 0, 1),
+(38, '얼음의 보호장갑', '', 'gloves', 180, 0, 0, 0, 0, 0, 8000, 5, 10, 0, 1),
+(39, '번개의 보호장갑', '', 'gloves', 220, 0, 0, 0, 0, 0, -1, 10, 12, 0, 0),
 (40, '초심자의 운동화', '', 'shoes', 0, 0, 0, 50, 0, 2, 1000, 1, 0, 0, 1),
 (41, '바람의 운동화', '', 'shoes', 0, 0, 0, 100, 0, 5, 3000, 5, 0, 0, 1),
 (42, '불꽃의 운동화', '', 'shoes', 0, 0, 0, 120, 0, 3, 4000, 5, 0, 0, 1),
@@ -295,7 +307,7 @@ VALUES
 
 
 -- 던전 별 보상 아이템 데이터 삽입
-INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, id, item_probability) VALUES
+INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, `id`, item_probability) VALUES
 (1, 5001, 46, 30),
 (2, 5001, 47, 30),
 (3, 5001, 48, 30),
@@ -424,3 +436,9 @@ INSERT INTO dungeon_items (dungeon_item_id, dungeon_id, id, item_probability) VA
 (126, 5004, 34, 1),
 (127, 5004, 40, 1),
 (128, 5004, 45, 1);
+
+INSERT INTO quests(quest_id, quest_name, quest_description, required_level, monster_target, required_exp, quest_reward_exp) VALUES
+(1, "Level 1 Quest", "Defeat 5 monsters in 1-star dungeon", 1, 5, 200, 1000),
+(2, "Level 5 Quest", "Defeat 10 monsters in 2-star dungeon", 5, 10, 600, 3000),
+(3, "Level 10 Quest", "Defeat 20 monsters in 3-star dungeon", 10, 20, 1000, 5000),
+(4, "Level 15 Quest", "Defeat 30 monsters in 4-star dungeon", 15, 30, 1500, 10000);

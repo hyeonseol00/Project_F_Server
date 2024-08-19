@@ -5,9 +5,9 @@ export const updateAbility = async (socket, upAbility, statInfo, quantity, skill
   const updateStatInfo = {
     level: statInfo.level,
     hp: upAbility === 'hp' ? statInfo.hp + upAbilityValue * quantity : statInfo.hp,
-    maxHp: upAbility === 'hp' ? statInfo.maxHp + upAbilityValue * quantity : statInfo.hp,
+    maxHp: upAbility === 'hp' ? statInfo.maxHp + upAbilityValue * quantity : statInfo.maxHp,
     mp: upAbility === 'mp' ? statInfo.mp + upAbilityValue * quantity : statInfo.mp,
-    maxMp: upAbility === 'mp' ? statInfo.maxMp + upAbilityValue * quantity : statInfo.mp,
+    maxMp: upAbility === 'mp' ? statInfo.maxMp + upAbilityValue * quantity : statInfo.maxMp,
     atk: upAbility === 'atk' ? statInfo.atk + upAbilityValue * quantity : statInfo.atk,
     def: upAbility === 'def' ? statInfo.def + upAbilityValue * quantity : statInfo.def,
     magic: upAbility === 'magic' ? statInfo.magic + upAbilityValue * quantity : statInfo.magic,

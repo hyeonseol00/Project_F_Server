@@ -5,6 +5,8 @@ import { getGameSession } from '../../session/game.session.js';
 import { config } from '../../config/config.js';
 import { splitAtFirstSpace } from '../../utils/parser/messageParser.js';
 import chatCommandMappings from './chatCommands/chatCommandMappings.js';
+import { chatEventMappings } from '../../Lambda/eventMapping.js';
+import { PROCESSING_EVENTS } from '../../Lambda/worldChat.js';
 
 const chatHandler = async ({ socket, payload }) => {
   const { playerId, chatMsg } = payload;
@@ -40,17 +42,29 @@ const chatHandler = async ({ socket, payload }) => {
   }
 };
 
-async function sendMessageToAll(sender, message) {
-  const allUsers = await getAllUsers();
+export async function sendMessageToAll(sender, message) {
+  try {
+    const allUsers = getAllUsers();
 
-  const chatResponse = createResponse('response', 'S_Chat', {
-    playerId: sender.playerId,
-    chatMsg: `[All] ${sender.nickname}: ${message}`,
-  });
+    const chatResponse = createResponse('response', 'S_Chat', {
+      playerId: sender.playerId,
+      chatMsg: `[All] ${sender.nickname}: ${message}`,
+    });
 
-  allUsers.forEach((user) => {
-    user.socket.write(chatResponse);
-  });
+    allUsers.forEach((user) => {
+      user.socket.write(chatResponse);
+    });
+
+    // 현재 진행 중인 이벤트에 해당하는 eventId가 존재하는 경우 실행
+    for (const e of PROCESSING_EVENTS) {
+      if (chatEventMappings.hasOwnProperty(e.eventId)) {
+        console.log('event: ', e);
+        chatEventMappings[e.eventId]({ sender, message });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export default chatHandler;

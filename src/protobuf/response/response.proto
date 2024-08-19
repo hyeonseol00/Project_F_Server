@@ -125,6 +125,9 @@ message S_SetHatcheryBossHp{
 
 message S_TryAttack{
   int32 playerId = 1;
+  optional float rotX = 2;
+  optional float rotY = 3;
+  optional float rotZ = 4;
 }
 
 message S_BossMove{

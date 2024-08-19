@@ -2,12 +2,21 @@ import { getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import { handleError } from '../../utils/error/errorHandler.js';
 // import { questProgressHandler } from '../../town/chatCommands/quest/questProgress.chat.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
+  const user = getUserBySocket(socket);
+  const hatcherySession = getHatcherySession();
+  hatcherySession.addGameQueue(user.nickname);
+};
+
+export const gameQueueProcess = async (nickname) => {
+  const curUser = getUserByNickname(nickname);
+
   try {
-    const playerStatInfo = await getStatInfo(socket);
     const hatcherySession = getHatcherySession();
+    const playerStatInfo = await getStatInfo(curUser.socket);
 
     let decreaseHp = playerStatInfo.atk;
 
@@ -40,7 +49,7 @@ const attackBossHatcheryHandler = async ({ socket, payload }) => {
     //   });
     // }
   } catch (err) {
-    handleError(socket, err);
+    handleError(curUser.socket, err);
   }
 };
 

@@ -11,9 +11,11 @@ import {
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 
 export const sellItem = async (user, message) => {
+  const [stringId, stringQuantity] = message.split(' ');
+  const id = Number(stringId),
+    quantity = Number(stringQuantity);
   const userInfo = await getPlayerInfo(user.socket);
-  const [id, quantity] = message.split(' ');
-  const sellItem = await getItemById(Number(id));
+  const sellItem = await getItemById(id);
 
   if (!isInteger(id)) {
     const response = createResponse('response', 'S_Chat', {
@@ -33,7 +35,7 @@ export const sellItem = async (user, message) => {
     return;
   }
 
-  if (Number(quantity) <= 0) {
+  if (quantity <= 0) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: `[System] 1개 이상만 판매할 수 있습니다. `,
@@ -62,9 +64,9 @@ export const sellItem = async (user, message) => {
 
   const itemCost = sellItem.itemCost;
   // 아이템 테이블과 팔고 싶은 아이템 ID가 같을 경우
-  if (Number(id) === sellItem.id) {
-    const findItem = await getItem(user.socket, Number(id));
-    const findItemInfo = await getItemById(Number(id));
+  if (id === sellItem.id) {
+    const findItem = await getItem(user.socket, id);
+    const findItemInfo = await getItemById(id);
 
     if (!findItem) {
       const response = createResponse('response', 'S_Chat', {
@@ -76,7 +78,7 @@ export const sellItem = async (user, message) => {
     }
 
     if (findItemInfo.itemType === 'potion') {
-      if (findItem.quantity < Number(quantity)) {
+      if (findItem.quantity < quantity) {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
           chatMsg: `[System] 포션을 ${findItem.quantity}개 이상 판매할 수 없습니다. `,
@@ -85,9 +87,10 @@ export const sellItem = async (user, message) => {
         return;
       }
 
-      const addGold = itemCost * Number(quantity) * 0.7;
-      await setGold(user.socket, userInfo.gold + Math.floor(addGold));
-      await decItem(user.socket, sellItem.id, Number(quantity));
+      const addGold = itemCost * quantity * 0.7;
+      const leftGold = userInfo.gold + Math.floor(addGold);
+      await setGold(user.socket, leftGold);
+      await decItem(user.socket, sellItem.id, quantity);
 
       if ((await getItemQuantity(user.socket, sellItem.id)) === 0) {
         await deleteItem(user.socket, sellItem.id);
@@ -95,7 +98,7 @@ export const sellItem = async (user, message) => {
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${userInfo.gold} 있습니다.`,
+        chatMsg: `[System] ${sellItem.itemName} 포션이 ${quantity}개 판매가 완료되었습니다. 골드가 ${leftGold} 있습니다.`,
       });
       user.socket.write(response);
 
@@ -105,14 +108,14 @@ export const sellItem = async (user, message) => {
           id,
           quantity: await getItemQuantity(user.socket, id),
         },
-        gold: userInfo.gold,
+        gold: leftGold,
       });
       user.socket.write(sellItemResponse);
       return;
     }
 
     if (findItemInfo.itemType !== 'potion') {
-      if (findItem.quantity < Number(quantity)) {
+      if (findItem.quantity < quantity) {
         const response = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
           chatMsg: `[System] ${findItem.quantity}개 이상 판매할 수 없습니다. `,
@@ -121,9 +124,10 @@ export const sellItem = async (user, message) => {
         return;
       }
 
-      const addGold = itemCost * Number(quantity) * 0.7;
-      await setGold(user.socket, userInfo.gold + Math.floor(addGold));
-      await decItem(user.socket, sellItem.id, Number(quantity));
+      const addGold = itemCost * quantity * 0.7;
+      const leftGold = userInfo.gold + Math.floor(addGold);
+      await setGold(user.socket, leftGold);
+      await decItem(user.socket, sellItem.id, quantity);
 
       if ((await getItemQuantity(user.socket, sellItem.id)) === 0) {
         await deleteItem(user.socket, sellItem.id);
@@ -131,7 +135,7 @@ export const sellItem = async (user, message) => {
 
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
-        chatMsg: `[System] ${sellItem.itemName} 아이템이 ${quantity}개 판매가 완료되었습니다. 골드가 ${userInfo.gold} 있습니다.`,
+        chatMsg: `[System] ${sellItem.itemName} 아이템이 ${quantity}개 판매가 완료되었습니다. 골드가 ${leftGold} 있습니다.`,
       });
       user.socket.write(response);
 
@@ -139,9 +143,9 @@ export const sellItem = async (user, message) => {
       const sellItemResponse = createResponse('response', 'S_SellItem', {
         item: {
           id,
-          quantity: (await getItem(user.socket, id)) ? await getItem(user.socket, id).quantity : 0,
+          quantity: await getItemQuantity(user.socket, id),
         },
-        gold: userInfo.gold,
+        gold: leftGold,
       });
       user.socket.write(sellItemResponse);
       return;

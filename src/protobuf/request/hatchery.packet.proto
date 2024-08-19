@@ -10,6 +10,9 @@ message C_AttackBoss{
 }
 
 message C_TryAttack{
+  optional float rotX = 1;
+  optional float rotY = 2;
+  optional float rotZ = 3;
 }
 
 message C_LeaveHatchery{

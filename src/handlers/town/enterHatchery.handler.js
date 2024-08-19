@@ -20,9 +20,9 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
     /***** S_EnterHatchery *****/
     const transformInfo = {
-      posX: Math.random() * 18 - 9, // -9 ~ 9
+      posX: Math.random() * 10 - 5, // -5 ~ 5
       posY: 1.0,
-      posZ: Math.random() * 16 - 8, // -8 ~ 8
+      posZ: Math.random() * 10 - 5, // -5 ~ 5
       rot: 180,
     };
     hatcherySession.transforms[user.nickname] = transformInfo;
