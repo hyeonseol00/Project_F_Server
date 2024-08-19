@@ -20,7 +20,7 @@ export const skillPointHandler = async (user, message) => {
   }
 
   if (Number(skillPoint) === 0) {
-    const response = createResponse('response', 'S_CHAT', {
+    const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: '[System] 스킬 포인트가 없습니다.',
     });
@@ -30,7 +30,7 @@ export const skillPointHandler = async (user, message) => {
 
   //남은 스킬포인트보다 더 많은 quantity를 요청할 경우
   if (skillPoint < quantity) {
-    const response = createResponse('response', 'S_CHAT', {
+    const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
       chatMsg: '[System] 스킬 포인트가 부족합니다.',
     });
@@ -67,6 +67,13 @@ export const skillPointHandler = async (user, message) => {
       user.socket.write(response);
       return;
   }
+
+  const playerInfo = await getPlayerInfo(user.socket);
+  const statUpdateResponse = createResponse('response', 'S_Enter', {
+    player: playerInfo,
+  });
+  user.socket.write(statUpdateResponse);
+  console.log(playerInfo);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: user.playerId,
