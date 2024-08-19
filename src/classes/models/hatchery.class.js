@@ -14,7 +14,7 @@ class Hatchery {
   }
 
   initialize() {
-    this.gameQueue = new Bull('game-queue', {
+    this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
         host: config.redis.host,
         port: config.redis.port,

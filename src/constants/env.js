@@ -27,3 +27,5 @@ export const AWS_TABLE_NAME = process.env.AWS_TABLE_NAME;
 export const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
 export const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 export const REGION = process.env.REGION;
+
+export const BULL_QUEUE_NAME = process.env.BULL_QUEUE_NAME;
