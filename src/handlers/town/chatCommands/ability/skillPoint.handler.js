@@ -73,7 +73,6 @@ export const skillPointHandler = async (user, message) => {
     player: playerInfo,
   });
   user.socket.write(statUpdateResponse);
-  console.log(playerInfo);
 
   const response = createResponse('response', 'S_Chat', {
     playerId: user.playerId,

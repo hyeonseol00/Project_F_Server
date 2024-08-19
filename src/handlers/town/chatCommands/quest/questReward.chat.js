@@ -12,6 +12,7 @@ import { getquestById } from '../../../../assets/quests.assets.js';
 import isInteger from '../../../../utils/isInteger.js';
 import {
   getGold,
+  getPlayerInfo,
   getStatInfo,
   setGold,
   setStatInfo,
@@ -131,6 +132,12 @@ const questRewardHandler = async (sender, message) => {
 
     // 퀘스트를 보상 후에 제거
     await removeUserQuest(user.characterId, questId);
+
+    const playerInfo = await getPlayerInfo(user.socket);
+    const statUpdateResponse = createResponse('response', 'S_Enter', {
+      player: playerInfo,
+    });
+    user.socket.write(statUpdateResponse);
 
     const rewardMessage = `[System] 퀘스트 완료 보상으로 ${quest.rewardExp} 경험치와 ${quest.rewardGold} 골드를 획득했습니다!`;
     const rewardResponse = createResponse('response', 'S_Chat', {
