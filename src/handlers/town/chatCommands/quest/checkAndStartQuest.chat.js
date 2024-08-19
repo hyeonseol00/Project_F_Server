@@ -28,7 +28,7 @@ export const checkAndStartQuestHandler = async (sender) => {
       if (!acceptedQuestIds.includes(quest.quest_id)) {
         const chatResponse = createResponse('response', 'S_Chat', {
           playerId: user.playerId,
-          chatMsg: `[System] ${quest.quest_name}가 도착했습니다!`,
+          chatMsg: `[System] ${quest.quest_name}(questId: ${quest.quest_id})가 도착했습니다!`,
         });
 
         user.socket.write(chatResponse);
