@@ -8,7 +8,7 @@ import { handleError } from '../../utils/error/errorHandler.js';
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const hatcherySession = getHatcherySession();
-  hatcherySession.addGameQueue(user.nickname);
+  await hatcherySession.addGameQueue(user.nickname);
 };
 
 export const gameQueueProcess = async (nickname) => {
