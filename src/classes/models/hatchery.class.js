@@ -4,6 +4,7 @@ import { gameQueueProcess } from '../../handlers/hatchery/attackBoss.handler.js'
 import { getUserByNickname } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import toEulerAngles from '../../utils/toEulerAngle.js';
+import { getStatInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 import Bull from 'bull';
@@ -122,7 +123,8 @@ class Hatchery {
     for (const player of players) {
       const playerTr = this.transforms[player.nickname];
       const distance = this.boss.getDistanceFromPlayer(playerTr);
-      const hp = player.playerInfo.statInfo.hp;
+      const playerStatInfo = await getStatInfo(player.socket);
+      const hp = playerStatInfo.hp;
       if (minDistance > distance && hp > 0) {
         minDistance = distance;
         targetPlayerTr = playerTr;
