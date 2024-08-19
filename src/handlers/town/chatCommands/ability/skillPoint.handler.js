@@ -32,7 +32,7 @@ export const skillPointHandler = async (user, message) => {
   if (skillPoint < quantity) {
     const response = createResponse('response', 'S_Chat', {
       playerId: user.playerId,
-      chatMsg: '[System] 스킬 포인트가 부족합니다.',
+      chatMsg: `[System] 스킬 포인트가 부족합니다. 남은 포인트 ${skillPoint}`,
     });
     user.socket.write(response);
     return;
