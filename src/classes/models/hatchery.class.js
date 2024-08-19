@@ -14,7 +14,7 @@ class Hatchery {
   }
 
   initialize() {
-    this.gameQueue = new Bull('game-queue', {
+    this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
         host: config.redis.host,
         port: config.redis.port,
@@ -23,8 +23,8 @@ class Hatchery {
       },
     });
 
-    this.gameQueue.process((queue) => {
-      gameQueueProcess(JSON.parse(queue.data.nickname));
+    this.gameQueue.process(async (queue) => {
+      await gameQueueProcess(JSON.parse(queue.data.nickname));
       done();
     });
 
@@ -41,8 +41,8 @@ class Hatchery {
     this.initMonster({ ...config.hatchery.bossInitTransform });
   }
 
-  addGameQueue(data) {
-    this.gameQueue.add({ nickname: JSON.stringify(data) });
+  async addGameQueue(data) {
+    await this.gameQueue.add({ nickname: JSON.stringify(data) });
   }
 
   async initMonster(transform) {

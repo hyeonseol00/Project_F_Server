@@ -61,6 +61,7 @@ import {
   SECRET_ACCESS_KEY,
   REGION,
   AWS_TABLE_NAME,
+  BULL_QUEUE_NAME,
 } from '../constants/env.js';
 import {
   BOSS_ATTACK_RANGE,
@@ -229,5 +230,8 @@ export const config = {
       region: REGION,
     },
     lookupInterval: LOOKUP_INTERVAL,
+  },
+  bullQueue: {
+    queueName: BULL_QUEUE_NAME,
   },
 };
