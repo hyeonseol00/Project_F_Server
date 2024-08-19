@@ -17,6 +17,7 @@ function lookupFunc() {
         camelData.forEach((event) => {
           eventNotificationHandler(event);
 
+          /* DB에 TTL 설정
           params.Key = { id: event.id };
           docClient.delete(params, (err, data) => {
             if (!err) {
@@ -25,6 +26,7 @@ function lookupFunc() {
               console.log('DynamoDB 데이터 삭제 실패!', err);
             }
           });
+          */
         });
       }
     } else {
