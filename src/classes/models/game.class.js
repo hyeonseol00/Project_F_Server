@@ -1,7 +1,7 @@
 import { getPlayerInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 
-const MAX_PLAYERS = 10;
+const MAX_PLAYERS = 50;
 
 class Game {
   constructor(id) {
