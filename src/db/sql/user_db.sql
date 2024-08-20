@@ -1,7 +1,10 @@
 -- 외래키 문제로 데이터 먼저 삭제
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE jobs;
+DROP TABLE users;
+DROP TABLE character_items;
 DROP TABLE characters;
+DROP TABLE user_quests;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS jobs
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS characters
   critical FLOAT NOT NULL,
   critical_attack FLOAT NOT NULL,
   avoid_ability FLOAT NOT NULL,
-  gold INTEGER NOT NULL DEFAULT 0,
+  gold INTEGER NOT NULL DEFAULT 1000,
   world_level INTEGER NOT NULL DEFAULT 1,
   skill_point INTEGER NOT NULL DEFAULT 0,
   weapon INTEGER NOT NULL DEFAULT 0,
@@ -71,7 +74,7 @@ CREATE TABLE IF NOT EXISTS characters
   FOREIGN KEY (job_id) REFERENCES jobs(job_id)
 );
 
-CREATE TABLE IF NOT EXISTS character_Items
+CREATE TABLE IF NOT EXISTS character_items
 (
   character_item_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   character_id INTEGER,
@@ -84,14 +87,14 @@ CREATE TABLE IF NOT EXISTS character_Items
   FOREIGN KEY (character_id) REFERENCES characters(character_id)
 );
 
-CREATE TABLE user_quests
+CREATE TABLE IF NOT EXISTS user_quests
 (
   character_id INTEGER NOT NULL,
   quest_id INTEGER NOT NULL,
   kill_count INTEGER DEFAULT 0,
   `status` ENUM('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_STARTED',
   completed_at TIMESTAMP DEFAULT NULL,
-  PRIMARY KEY (character_id, quest_id),
+  PRIMARY KEY (character_id, quest_id)
 );
 
 -- 데이터 삽입
