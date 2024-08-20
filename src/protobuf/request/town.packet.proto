@@ -40,6 +40,7 @@ message C_Register{
 message C_LogIn{
   string nickname = 1;
   string password = 2;
+  string clientVersion = 3;
 }
 
 // 둥지 입장
