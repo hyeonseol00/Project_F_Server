@@ -2,21 +2,33 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { findUserByUsername } from '../../db/user/user.db.js';
 import { getUserByNickname } from '../../session/user.session.js';
+import { config } from '../../config/config.js';
 
 const loginHandler = async ({ socket, payload }) => {
   try {
-    const { nickname, password } = payload;
+    const { nickname, password, clientVersion } = payload;
     let response;
     let flag = true;
     let message;
 
-    // DB에서 user, character 정보 가져오기
+    if (clientVersion !== config.client.version) {
+      response = createResponse('response', 'S_LogIn', {
+        success: false,
+        message: '클라이언트 버전이 일치하지 않습니다.',
+      });
+
+      socket.write(response);
+
+      return;
+    }
+
     if (
       nickname === null ||
       nickname.trim() === '' ||
       password === null ||
       password.trim() === ''
     ) {
+      // DB에서 user, character 정보 가져오기
       flag = false;
       message = '아이디와 비밀번호를 모두 입력하세요.';
     } else {
