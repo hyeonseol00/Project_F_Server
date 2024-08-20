@@ -78,7 +78,10 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     const channelNumberResponse = createResponse('response', 'S_Chat', {
       playerId: curUser.playerId,
-      chatMsg: `[System] ${config.server.channel}번 채널에 입장했습니다.`,
+      chatMsg: `[System] ${config.server.channel}번 채널에 입장했습니다.
+[System] 마을에서는 마우스 왼쪽 클릭으로 이동, 오른쪽 클릭으로 카메라를 회전할 수 있습니다.
+[System] 마을 호수 부분의 불타는 모양 포탈에 서서 E키를 누르면 보스가 등장하는 던전으로 진입할 수 있습니다.
+[System] 보스 던전에서는 WASD와 마우스 왼쪽 클릭으로 캐릭터를 조작할 수 있습니다.`,
     });
     socket.write(channelNumberResponse);
 
