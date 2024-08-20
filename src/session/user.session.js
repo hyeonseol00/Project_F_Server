@@ -53,3 +53,7 @@ export const getAllMembersInTeam = async (teamId) => {
 export const getAllUsers = () => {
   return userSessions;
 };
+
+export function getAllUserNicknames() {
+  return userSessions.map((user) => user.nickname);
+}

@@ -9,7 +9,12 @@ import {
   insertCharacter,
 } from '../../db/user/user.db.js';
 import { getGameSession } from '../../session/game.session.js';
-import { addUser, getUserByNickname, getUserBySocket } from '../../session/user.session.js';
+import {
+  addUser,
+  getAllUserNicknames,
+  getUserByNickname,
+  getUserBySocket,
+} from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { checkAndStartQuestHandler } from '../town/chatCommands/quest/checkAndStartQuest.chat.js';
@@ -38,7 +43,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     await setPlayerInfo(socket, playerInfo);
     gameSession.addUser(nickname);
 
-    console.log('현재 접속 중인 유저: ', await gameSession.getAllUserIds());
+    console.log('현재 접속 중인 유저: ', getAllUserNicknames());
 
     // 현재 유저에게 응답을 보냄
     const enterTownResponse = createResponse('response', 'S_Enter', {
