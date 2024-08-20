@@ -6,7 +6,7 @@ import { updateQuestProgressAfterBattle } from '../../town/chatCommands/quest/up
 import { getUserBySocket } from '../../../session/user.session.js';
 
 export default async function monsterDeadScene(responseCode, dungeon, socket) {
-  if (responseCode == 1) {
+  if (responseCode === 1) {
     const user = await getUserBySocket(socket); // 현재 플레이어
 
     // 사용자에게 할당된 퀘스트 ID를 가져옴

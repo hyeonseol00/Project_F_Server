@@ -42,7 +42,12 @@ export default function switchToMonsterDeadScene(dungeon, socket) {
     }
     dungeon.battleSceneStatus = config.sceneStatus.monsterDead;
   } else {
-    dungeon.initTargetIdx();
-    switchToMonsterAttackScene(dungeon, socket);
+    if (index < 2) {
+      dungeon.accTargetIdx();
+      switchToMonsterDeadScene(dungeon, socket);
+    } else {
+      dungeon.initTargetIdx();
+      switchToMonsterAttackScene(dungeon, socket);
+    }
   }
 }

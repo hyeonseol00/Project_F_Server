@@ -10,7 +10,7 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
   const playerEffectCode = user.effectCode;
   const playerStatInfo = await getStatInfo(socket);
   const attackType = dungeon.currentAttackType;
-  const targetMonsterIdx = [responseCode - 1, responseCode - 1, 1];
+  const targetMonsterIdx = [responseCode - 1, responseCode - 1, 0];
   const targetMonster = dungeon.monsters[targetMonsterIdx[attackType]];
   let msg = [
     `${targetMonster.name}을(를) 공격합니다!`,
@@ -80,12 +80,23 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
     effectCode: effectCode[attackType] + changeEffect,
   };
 
-  const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
-    targetMonsterIdx: targetMonsterIdx[attackType],
-    actionSet,
-  });
-  socket.write(responsePlayerAction);
-
+  if (dungeon.currentAttackType === config.attackType.wide) {
+    for (let idx = 0; idx < 3; idx++) {
+      if (dungeon.monsters[idx].isDead === false) {
+        const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
+          targetMonsterIdx: idx,
+          actionSet,
+        });
+        socket.write(responsePlayerAction);
+      }
+    }
+  } else {
+    const responsePlayerAction = createResponse('response', 'S_PlayerAction', {
+      targetMonsterIdx: targetMonsterIdx[attackType],
+      actionSet,
+    });
+    socket.write(responsePlayerAction);
+  }
   // S_SetMonsterHp 패킷
   for (let monsterIdx in dungeon.monsters) {
     const monster = dungeon.monsters[monsterIdx];
