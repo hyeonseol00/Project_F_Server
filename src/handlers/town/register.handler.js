@@ -9,6 +9,10 @@ const registerHandler = async ({ socket, payload }) => {
     let message;
     let flag = true;
 
+    // 특수문자 및 공백 정규 표현식
+    const specialCharRegex = /[^a-zA-Z0-9가-힣]/; // 알파벳 대소문자 및 숫자만 허용 (특수문자는 금지)
+    const whitespaceRegex = /\s/; // 공백 문자(띄어쓰기)를 찾는 정규 표현식
+
     if (
       nickname === null ||
       nickname.trim() === '' ||
@@ -33,6 +37,12 @@ const registerHandler = async ({ socket, payload }) => {
       } else if (nickname.length > 10) {
         flag = false;
         message = '아이디는 10자 이하로 입력하세요.';
+      } else if (whitespaceRegex.test(nickname)) {
+        flag = false;
+        message = '아이디에 공백을 사용할 수 없습니다.';
+      } else if (specialCharRegex.test(nickname)) {
+        flag = false;
+        message = '아이디에 특수문자를 사용할 수 없습니다.';
       }
 
       if (password.trim().length === 0) {
@@ -41,6 +51,12 @@ const registerHandler = async ({ socket, payload }) => {
       } else if (password.length < 6) {
         flag = false;
         message = '비밀번호는 6자 이상으로 입력하세요.';
+      } else if (whitespaceRegex.test(password)) {
+        flag = false;
+        message = '비밀번호에 공백을 사용할 수 없습니다.';
+      } else if (specialCharRegex.test(password)) {
+        flag = false;
+        message = '비밀번호에 특수문자를 사용할 수 없습니다.';
       }
 
       if (flag) {
