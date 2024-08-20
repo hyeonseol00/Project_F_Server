@@ -62,6 +62,7 @@ import {
   REGION,
   AWS_TABLE_NAME,
   BULL_QUEUE_NAME,
+  CHANNEL_NUMBER,
 } from '../constants/env.js';
 import {
   BOSS_ATTACK_RANGE,
@@ -98,6 +99,7 @@ export const config = {
   server: {
     port: PORT,
     host: HOST,
+    channel: CHANNEL_NUMBER,
   },
   client: {
     version: CLIENT_VERSION,

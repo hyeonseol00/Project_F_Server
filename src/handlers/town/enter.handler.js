@@ -71,6 +71,12 @@ const enterTownHandler = async ({ socket, payload }) => {
       user.socket.write(spawnTownResponse);
     }
 
+    const channelNumberResponse = createResponse('response', 'S_Chat', {
+      playerId: curUser.playerId,
+      chatMsg: `[System] ${config.server.channel}번 채널에 입장했습니다.`,
+    });
+    socket.write(channelNumberResponse);
+
     // ---------- spawn 끝 -----------------
     // 사용자가 마을에 입장할 때 퀘스트 알림 제공
     await checkAndStartQuestHandler(curUser); // curUser

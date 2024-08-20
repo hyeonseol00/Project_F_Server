@@ -29,3 +29,5 @@ export const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 export const REGION = process.env.REGION;
 
 export const BULL_QUEUE_NAME = process.env.BULL_QUEUE_NAME;
+
+export const CHANNEL_NUMBER = process.env.CHANNEL_NUMBER;
