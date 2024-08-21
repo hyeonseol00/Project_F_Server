@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package battle;
+
+// 메시지 출력이 완료된 후 화면 클릭 시
+// responseCode 의 가용 범위는 0 ~ 6
+message C_PlayerResponse{
+  int32 responseCode = 1;
+}

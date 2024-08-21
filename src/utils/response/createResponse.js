@@ -2,33 +2,31 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
-export const createResponse = (handlerId, responseCode, data = null, userId, dataType = null) =>
-{
-	const protoMessages = getProtoMessages();
-	const Response = protoMessages.response.Response;
+export const createResponse = (packageType, packetId, data = null) => {
+  const protoMessages = getProtoMessages();
 
-	let ResponseData;
-	let encodedData = data ? Buffer.from(JSON.stringify(data)) : null;
-	if (dataType)
-	{
-		ResponseData = protoMessages.responseData[dataType];
-		encodedData = ResponseData.encode(data).finish();
-	}
+  if (!protoMessages[packageType]) {
+    console.error(`유효하지 않은 패키지 타입: ${packageType}`);
+    throw new Error(`Invalid package type: ${packageType}`);
+  }
 
-	const responsePayload = {
-		handlerId,
-		responseCode,
-		timestamp: Date.now(),
-		data: encodedData,
-	};
+  const Response = protoMessages[packageType][packetId];
 
-	const buffer = Response.encode(responsePayload).finish();
+  if (!Response || !Response.encode) {
+    console.error(`패킷 ID ${packetId}에 대한 Response가 정의되지 않았습니다.`);
+    throw new Error(`Response not defined for packet ID: ${packetId}`);
+  }
 
-	const packetLength = Buffer.alloc(config.packet.totalLength);
-	packetLength.writeUInt32BE(buffer.length + config.packet.totalLength + config.packet.typeLength, 0);
+  const buffer = Response.encode(data).finish();
 
-	const packetType = Buffer.alloc(config.packet.typeLength);
-	packetType.writeUInt8(PACKET_TYPE.NORMAL, 0);
+  const packetLength = Buffer.alloc(config.packet.totalLength);
+  packetLength.writeUInt32BE(
+    buffer.length + config.packet.totalLength + config.packet.typeLength,
+    0,
+  );
 
-	return Buffer.concat([packetLength, packetType, buffer]);
+  const packetType = Buffer.alloc(config.packet.typeLength);
+  packetType.writeUInt8(PACKET_TYPE[packetId], 0);
+
+  return Buffer.concat([packetLength, packetType, buffer]);
 };

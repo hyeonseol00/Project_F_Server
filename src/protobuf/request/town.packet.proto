@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package town;
+
+//캐릭터 선택 + 닉네임 입력
+message C_Enter{
+  string nickname = 1;
+  int32 class = 2;
+}
+
+//캐릭터 이동
+message C_Move {
+  TransformInfo transform = 1;
+}
+
+//마을에서 애니메이션 패킷 전달
+message C_Animation {
+  int32 animCode = 1;
+}
+
+//채팅 
+message C_Chat{
+  int32 playerId = 1;
+  string senderName = 2;
+  string chatMsg = 3;
+}
+
+//던전 입장
+message C_EnterDungeon{
+  int32 dungeonCode = 1;
+}
+
+// 회원가입
+message C_Register{
+  string nickname = 1;
+  string password = 2;
+}
+
+// 로그인
+message C_LogIn{
+  string nickname = 1;
+  string password = 2;
+  string clientVersion = 3;
+}
+
+// 둥지 입장
+message C_EnterHatchery{
+}
+
+// ===현재 실제로 사용 안 함(CLI로 대체하여 사용 중....)===
+// 아이템 구매
+message C_BuyItem{
+  ItemInfo item = 1;
+}
+
+// 아이템 판매
+message C_SellItem{
+  ItemInfo item = 1;
+}
+
+// 아이템 장착
+message C_EquipWeapon{
+ int32 itemId = 1;
+}
+
+// 아이템 탈착
+message C_UnequipWeapon{
+ string itemType = 1;
+}
+
+// 아이템 사용
+message C_UseItem{
+ int32 itemId = 1;
+}
+// =======================================================
+// 퀘스트 수락
+message C_AcceptQuest {
+  int32 questId = 1;
+}
+
+// 퀘스트 업데이트
+message C_UpdateQuest {
+  int32 questId = 1;
+  int32 progress = 2;
+}
+
+// 퀘스트 완료
+message C_CompleteQuest {
+  int32 questId = 1;
+}
+
+// 퀘스트 목록 요청
+message C_GetQuests {}

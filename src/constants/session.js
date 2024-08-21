@@ -1,1 +1,1 @@
-export const GAME_SESSION_ID = "unique-game-session";
+export const TOWN_SESSION_ID = 'unique-town-session-id';

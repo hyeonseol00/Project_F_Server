@@ -1,75 +1,53 @@
-import { createPingPacket } from '../../utils/notification/game.notification.js';
-import roundM5 from '../../utils/round.js';
+class User {
+  constructor(playerId, nickname, characterClass, socket, effect, items, character) {
+    // session management field(user:[socket.remotePort])
+    // 통째로 불러와도 괜찮은 정도
+    this.playerId = playerId;
+    this.characterId = character.characterId;
+    this.nickname = nickname;
 
-class User
-{
-	constructor(id, playerId, socket, latency, x, y)
-	{
-		this.id = id;
-		this.playerId = playerId;
-		this.socket = socket;
-		this.x = x;
-		this.y = y;
-		this.lastUpdateTime = Date.now();
-		this.latency = latency;
-	}
+    // this.characterClass = characterClass;
+    // this.characterId = character.characterId || 0;
+    this.socket = socket;
+    // this.lastUpdateTime = Date.now();
+    this.lastLoginTime = Date.now();
+    this.state = 'connect';
+    this.zoneId = 'town';
 
-	updatePosition(x, y)
-	{
-		this.x = x;
-		this.y = y;
-		this.lastUpdateTime = Date.now();
-	}
+    // this.playerId = playerId;
+    // this.nickname = nickname;
+    // this.characterClass = characterClass;
+    // this.items = items;
+    // this.gold = character.gold;
+    // this.equipment = {
+    //   weapon: character.weapon,
+    //   armor: character.armor,
+    //   gloves: character.gloves,
+    //   shoes: character.shoes,
+    //   accessory: character.accessory,
+    // };
 
-	ping()
-	{
-		const now = Date.now();
+    // players's game data(playerInfo:[socket.remotePort])
+    this.playerInfo = {};
+    // const playerInfo = {
+    //   playerId: curUser.playerId, // not neccessary
+    //   nickname,
+    //   class: characterClass,
+    //   gold: curUser.gold,
+    //   transform: transformInfo,  // not neccessary
+    //   statInfo,
+    //   inven,
+    //   equipment,
+    // };
 
-		console.log(`${this.id}: ping`);
-		this.socket.write(createPingPacket(now));
-	}
-
-	handlePong(data)
-	{
-		const now = Date.now();
-		this.latency = (now - data.timestamp) / 2;
-		console.log(`${now}에 사용자 ${this.id}로부터 pong을 수신했습니다. 지연 시간: ${this.latency}ms`);
-	}
-
-	calculatePosition(latency, newX = this.x, newY = this.y)
-	{
-		const elapsedTime = Date.now() - this.lastUpdateTime;
-		const timeDiff = elapsedTime / 1000;
-		const speed = 3;
-		const distance = speed * timeDiff;
-
-		const deltaPos = {
-			x: roundM5(newX) - this.x,
-			y: roundM5(newY) - this.y
-		};
-		const deltaDistance = Math.sqrt(deltaPos.x * deltaPos.x + deltaPos.y * deltaPos.y);
-
-		if (deltaDistance === 0 || (newX == 0 && newY == 0))
-			return {
-				x: this.x,
-				y: this.y
-			};
-
-		const unitVector = {
-			x: deltaPos.x / deltaDistance,
-			y: deltaPos.y / deltaDistance
-		};
-
-		const vector = {
-			x: unitVector.x * distance,
-			y: unitVector.y * distance
-		};
-
-		return {
-			x: roundM5(this.x + vector.x),
-			y: roundM5(this.y + vector.y),
-		};
-	}
+    // 공격 이펙트 코드 // not neccessary... but packet is defined
+    this.effectCode = {
+      normal: effect.baseEffect,
+      single: effect.singleEffect,
+      wide: effect.wideEffect,
+    };
+    this.quests = [];
+  }
 }
 
 export default User;

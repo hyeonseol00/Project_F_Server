@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package hatchery;
+
+message C_MoveAtHatchery{
+  TransformInfo transform = 1;
+}
+
+message C_AttackBoss{
+}
+
+message C_TryAttack{
+  optional float rotX = 1;
+  optional float rotY = 2;
+  optional float rotZ = 3;
+}
+
+message C_LeaveHatchery{
+}
+
+message C_PlayerHit{
+}

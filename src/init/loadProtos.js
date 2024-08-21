@@ -8,49 +8,39 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const protoDir = path.join(__dirname, '../protobuf');
 
-const getAllProtoFiles = (dir, fileList = []) =>
-{
-	const files = fs.readdirSync(dir);
-	files.forEach((file) =>
-	{
-		const filePath = path.join(dir, file);
+const getAllProtoFiles = (dir, fileList = []) => {
+  const files = fs.readdirSync(dir);
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
 
-		if (fs.statSync(filePath).isDirectory())
-			getAllProtoFiles(filePath, fileList);
-		else if (path.extname(file) === '.proto')
-			fileList.push(filePath);
-	});
-	return fileList;
+    if (fs.statSync(filePath).isDirectory()) getAllProtoFiles(filePath, fileList);
+    else if (path.extname(file) === '.proto') fileList.push(filePath);
+  });
+  return fileList;
 };
 
 const protoFiles = getAllProtoFiles(protoDir);
 const protoMessages = {};
 
-export const loadProtos = async () =>
-{
-	try
-	{
-		const root = new protobuf.Root();
+export const loadProtos = async () => {
+  try {
+    const root = new protobuf.Root();
 
-		await Promise.all(protoFiles.map((file) => root.load(file)));
+    await Promise.all(protoFiles.map((file) => root.load(file)));
 
-		for (const [namespace, types] of Object.entries(packetNames))
-		{
-			protoMessages[namespace] = {};
+    for (const [namespace, types] of Object.entries(packetNames)) {
+      protoMessages[namespace] = {};
 
-			for (const [type, typeName] of Object.entries(types))
-				protoMessages[namespace][type] = root.lookupType(typeName);
-		}
+      for (const [type, typeName] of Object.entries(types))
+        protoMessages[namespace][type] = root.lookupType(typeName);
+    }
 
-		console.log('Protobuf 파일이 로드되었습니다.');
-	}
-	catch (err)
-	{
-		console.error('Protobuf 파일 로드 중 오류가 발생했습니다:', err);
-	}
+    console.log('Protobuf 파일이 로드되었습니다.');
+  } catch (err) {
+    console.error('Protobuf 파일 로드 중 오류가 발생했습니다:', err);
+  }
 };
 
-export const getProtoMessages = () =>
-{
-	return { ...protoMessages };
+export const getProtoMessages = () => {
+  return Object.freeze(protoMessages);
 };
