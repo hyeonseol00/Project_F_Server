@@ -1,21 +1,24 @@
-import { getItemById } from '../../assets/item.assets';
+import { getItemById } from '../../assets/item.assets.js';
 import {
   decItem,
   deleteItem,
   getItem,
   getStatInfo,
   setStatInfo,
-} from '../../classes/DBgateway/playerinfo.gateway';
-import { handleError } from '../../utils/error/errorHandler';
-import { getUserByNickname, getUserBySocket } from '../../session/user.session';
-import { getHatcherySession } from '../../session/hatchery.session';
+} from '../../classes/DBgateway/playerinfo.gateway.js';
+import { handleError } from '../../utils/error/errorHandler.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
+import { getHatcherySession } from '../../session/hatchery.session.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 export const usePotionHandler = async ({ socket, payload }) => {
+
+  console.log("usePotionHandler", payload);
   try {
     const userStatInfo = await getStatInfo(socket);
     const { hp, maxHp, mp, maxMp, level } = userStatInfo;
 
-    const { id: useItemId } = payload;
+    const { itemId: useItemId } = payload;
     const userItem = await getItem(socket, useItemId);
 
     const useItemInfo = await getItemById(useItemId);

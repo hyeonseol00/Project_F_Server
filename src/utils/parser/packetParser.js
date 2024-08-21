@@ -11,6 +11,8 @@ export const packetParser = (data, packetId) => {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `알 수 없는 패킷 ID: ${packetId}`);
 
   const [namespace, typeName] = protoTypeName.split('.');
+
+  console.log("namespace, typeName, packetId", namespace, typeName, packetId);
   const PayloadType = protoMessages[namespace][typeName];
   let payload;
   try {
