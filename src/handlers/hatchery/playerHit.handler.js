@@ -27,6 +27,7 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
     const playerHitResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
       playerId: player.playerId,
       playerCurHp: playerStatInfo.hp,
+      playerCurMp: playerStatInfo.mp,
     });
     hatcherySession.playerNicknames.forEach((nickname) => {
       const user = getUserByNickname(nickname);
