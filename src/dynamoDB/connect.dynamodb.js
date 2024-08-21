@@ -6,16 +6,7 @@ import { toCamelCase } from '../utils/transformCase.js';
 let docClient;
 
 async function lookupFunc() {
-  const params = {
-    TableName: config.dynamoDB.awsTableName,
-    FilterExpression: 'attribute_not_exists(#processedAttr) OR #processedAttr = :false',
-    ExpressionAttributeNames: {
-      '#processedAttr': 'processed', // 'processed' 예약어 대체
-    },
-    ExpressionAttributeValues: {
-      ':false': false,
-    },
-  };
+  const params = { TableName: config.dynamoDB.awsTableName };
 
   try {
     const data = await docClient.scan(params).promise();
@@ -28,14 +19,8 @@ async function lookupFunc() {
           TableName: config.dynamoDB.awsTableName,
           Key: { id: event.id },
           UpdateExpression:
-            'SET #processedAttr = :true, processedCount = if_not_exists(processedCount, :zero) + :increment',
-          ConditionExpression: 'attribute_not_exists(#processedAttr) OR #processedAttr = :false',
-          ExpressionAttributeNames: {
-            '#processedAttr': 'processed', // 'processed' 예약어 대체
-          },
+            'SET processedCount = if_not_exists(processedCount, :zero) + :increment',
           ExpressionAttributeValues: {
-            ':true': true,
-            ':false': false,
             ':zero': 0,
             ':increment': 1,
           },
@@ -110,7 +95,7 @@ export default function initDynamoDB() {
     docClient = new AWS.DynamoDB.DocumentClient();
 
     setInterval(async () => {
-      await lookupFunc();
+      lookupFunc;
     }, config.dynamoDB.lookupInterval);
 
     console.log('dynamoDB 연결 성공!');
