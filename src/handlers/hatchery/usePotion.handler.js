@@ -9,7 +9,7 @@ import {
 import { handleError } from '../../utils/error/errorHandler.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { createResponse } from '../../utils/response/createResponse';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 export const usePotionHandler = async ({ socket, payload }) => {
   try {
