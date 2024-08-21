@@ -1,14 +1,15 @@
 import { createResponse } from '../../../../utils/response/createResponse.js';
 import isInteger from '../../../../utils/isInteger.js';
 import { getPlayerInfo } from '../../../../classes/DBgateway/playerinfo.gateway.js';
-import { getUserBySocket } from '../../../../session/user.session.js';
 import { updateAbility } from './upAbility.js';
+import { getGameSession } from '../../../../session/game.session.js';
+import { config } from '../../../../config/config.js';
 
 export const skillPointHandler = async (user, message) => {
-  const userSession = getUserBySocket(user.socket);
+  const gameSession = getGameSession(config.session.townId);
   const userInfo = await getPlayerInfo(user.socket);
   const [upAbility, quantity] = message.split(' ');
-  const { skillPoint } = userSession;
+  const { skillPoint } = user;
 
   if (!isInteger(quantity)) {
     const response = createResponse('response', 'S_Chat', {
@@ -42,20 +43,10 @@ export const skillPointHandler = async (user, message) => {
   const upAbilityValue = 5;
   switch (upAbility) {
     case 'hp':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'mp':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'atk':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'def':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'magic':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'speed':
       await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
       break;
@@ -69,6 +60,7 @@ export const skillPointHandler = async (user, message) => {
   }
 
   const playerInfo = await getPlayerInfo(user.socket);
+  playerInfo.transform = gameSession.transforms[user.nickname];
   const statUpdateResponse = createResponse('response', 'S_Enter', {
     player: playerInfo,
   });
