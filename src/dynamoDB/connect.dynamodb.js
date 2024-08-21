@@ -29,8 +29,10 @@ async function lookupFunc() {
             ExpressionAttributeValues: {
               ':zero': 0,
               ':increment': 1,
+              ':inProgress': 'inProgress',
             },
             ReturnValues: 'UPDATED_NEW',
+            ConditionExpression: 'attribute_not_exists(eventStatus) OR eventStatus = :pending',
           };
 
           docClient.update(updateParams, (updateErr, updateData) => {
