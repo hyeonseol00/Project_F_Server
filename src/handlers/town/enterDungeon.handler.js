@@ -1,6 +1,6 @@
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { addDungeon } from '../../session/dungeon.session.js';
 import { config } from '../../config/config.js';
 import { getGameSession } from '../../session/game.session.js';
@@ -139,6 +139,15 @@ const enterDungeonHandler = async ({ socket, payload }) => {
     });
 
     socket.write(enterDungeonResponse);
+
+    const despawnTownResponse = createResponse('response', 'S_Despawn', {
+      playerIds: [user.playerId],
+    });
+    const townUserIds = gameSession.getAllUserIds();
+    townUserIds.forEach((nickname) => {
+      const user = getUserByNickname(nickname);
+      user.socket.write(despawnTownResponse);
+    });
   } catch (err) {
     handleError(socket, err);
   }

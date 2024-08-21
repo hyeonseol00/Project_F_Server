@@ -67,6 +67,16 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
       user.socket.write(spawnHatcheryResponse);
     }
+
+    /***** S_Despawn *****/
+    const despawnTownResponse = createResponse('response', 'S_Despawn', {
+      playerIds: [user.playerId],
+    });
+    const townUserIds = gameSession.getAllUserIds();
+    townUserIds.forEach((nickname) => {
+      const user = getUserByNickname(nickname);
+      user.socket.write(despawnTownResponse);
+    });
   } catch (err) {
     handleError(socket, err);
   }
