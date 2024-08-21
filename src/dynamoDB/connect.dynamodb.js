@@ -41,7 +41,7 @@ async function lookupFunc() {
 
               console.log('이벤트 진행 횟수 : ', processedCount);
 
-              if (processedCount >= 3) {
+              if (processedCount >= 2) {
                 const deleteParams = {
                   TableName: config.dynamoDB.awsTableName,
                   Key: { id: event.id },
