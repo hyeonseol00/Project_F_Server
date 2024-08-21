@@ -43,20 +43,10 @@ export const skillPointHandler = async (user, message) => {
   const upAbilityValue = 5;
   switch (upAbility) {
     case 'hp':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'mp':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'atk':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'def':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'magic':
-      await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
-      break;
     case 'speed':
       await updateAbility(user.socket, upAbility, userInfo.statInfo, Number(quantity), skillPoint);
       break;
