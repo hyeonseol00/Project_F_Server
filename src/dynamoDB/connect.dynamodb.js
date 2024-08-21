@@ -2,7 +2,6 @@ import AWS from 'aws-sdk';
 import { config } from '../config/config.js';
 import { eventNotificationHandler } from '../Lambda/worldChat.js';
 import { toCamelCase } from '../utils/transformCase.js';
-import EventEmitter from 'events';
 
 let docClient;
 
@@ -99,22 +98,14 @@ async function lookupFunc() {
 //   });
 // }
 
-class MyEmitter extends EventEmitter {}
-const myEmitter = new MyEmitter();
-
 export default function initDynamoDB() {
   try {
     AWS.config.update(config.dynamoDB.awsRemoteConfig);
     docClient = new AWS.DynamoDB.DocumentClient();
 
-    myEmitter.on('triggerScan', async () => {
+    setInterval(async () => {
       await lookupFunc();
-    });
-
-    setInterval(() => {
-      myEmitter.emit('triggerScan');
     }, config.dynamoDB.lookupInterval);
-    // setInterval(lookupFunc, config.dynamoDB.lookupInterval);
 
     console.log('dynamoDB 연결 성공!');
   } catch (err) {
