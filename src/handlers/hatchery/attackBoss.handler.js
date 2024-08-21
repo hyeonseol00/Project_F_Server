@@ -33,9 +33,25 @@ export const gameQueueProcess = async (nickname) => {
       bossCurHp,
     });
 
+    let phaseChanged = false;
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
       user.socket.write(attackBossResponse);
+
+      if (hatcherySession.phase === 0 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 2)) {
+        phaseChanged = true;
+        user.socket.write(hatcherySession.firstPhaseResponse);
+      }
+      if (hatcherySession.phase === 1 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 5)) {
+        phaseChanged = true;
+        user.socket.write(hatcherySession.secondPhaseResponse);
+      }
+    }
+    if (phaseChanged) {
+      hatcherySession.phase++;
+      if (hatcherySession.phase === 2) {
+        await startSecondPhase(hatcherySession);
+      }
     }
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
     // if (hatcherySession.boss.hp <= 0) {
@@ -51,6 +67,23 @@ export const gameQueueProcess = async (nickname) => {
   } catch (err) {
     handleError(curUser.socket, err);
   }
+};
+
+const startSecondPhase = async (hatcherySession) => {
+  setTimeout(async () => {
+    if (hatcherySession.boss.hp !== 0) {
+      for (const nickname of hatcherySession.playerNicknames) {
+        const user = getUserByNickname(nickname);
+        const userStatInfo = await getStatInfo(user.socket);
+        const gameOverResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
+          playerId: user.playerId,
+          playerCurHp: 0,
+          playerCurMp: userStatInfo.mp,
+        });
+        user.socket.write(gameOverResponse);
+      }
+    }
+  }, 30000);
 };
 
 export default attackBossHatcheryHandler;

@@ -15,6 +15,10 @@ class Hatchery {
   }
 
   initialize() {
+    this.phase = 0;
+    this.firstPhaseResponse = createResponse('response', '', {});
+    this.secondPhaseResponse = createResponse('response', '', {});
+
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
         host: config.redis.host,
