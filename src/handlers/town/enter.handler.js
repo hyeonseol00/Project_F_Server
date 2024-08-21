@@ -64,7 +64,10 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
     for (const nickname of gameSession.playerNicknames) {
-      const filterdPlayers = playerInfos.filter((playerInfo) => playerInfo.nickname !== nickname);
+      const filterdPlayers = playerInfos.filter((playerInfo) => {
+        playerInfo.transform = gameSession.transforms[playerInfo.nickname];
+        return playerInfo.nickname !== nickname;
+      });
 
       const user = await getUserByNickname(nickname);
 

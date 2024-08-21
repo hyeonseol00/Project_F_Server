@@ -54,9 +54,10 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
-      const filterdPlayerInfos = playerInfos.filter(
-        (playerInfo) => playerInfo.nickname !== nickname,
-      );
+      const filterdPlayerInfos = playerInfos.filter((playerInfo) => {
+        playerInfo.transform = gameSession.transforms[playerInfo.nickname];
+        return playerInfo.nickname !== nickname;
+      });
 
       const spawnHatcheryResponse = createResponse('response', 'S_SpawnPlayerHatchery', {
         players: filterdPlayerInfos,
