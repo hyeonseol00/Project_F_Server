@@ -94,7 +94,7 @@ export default function initDynamoDB() {
     AWS.config.update(config.dynamoDB.awsRemoteConfig);
     docClient = new AWS.DynamoDB.DocumentClient();
 
-    setInterval(async () => {
+    setInterval(() => {
       lookupFunc;
     }, config.dynamoDB.lookupInterval);
 
