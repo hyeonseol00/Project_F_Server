@@ -72,6 +72,7 @@ import {
   BOSS_TARGET_INTERVAL,
   BOSS_TARGET_INTERVAL_ID,
   DROP_ITEMS_QUANTITY,
+  HATCHERY_SPAWN_AREA_POSITION,
   MAX_PLAYERS,
 } from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
@@ -94,6 +95,7 @@ import {
   DUNGEON_MONSTER_TABLE_KEY,
 } from '../constants/redisKey.js';
 import { LOOKUP_INTERVAL } from '../constants/dynamoDB.js';
+import { TOWN_SPAWN_AREA_POSTION } from '../constants/town/townSceneConfig.js';
 
 export const config = {
   server: {
@@ -204,6 +206,10 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
     bossAttackSpeed: BOSS_ATTACK_SPEED,
+    spawnAreaPos: HATCHERY_SPAWN_AREA_POSITION,
+  },
+  town: {
+    spawnAreaPos: TOWN_SPAWN_AREA_POSTION,
   },
   battleScene: {
     maxLevel: PLAYER_MAX_LEVEL,

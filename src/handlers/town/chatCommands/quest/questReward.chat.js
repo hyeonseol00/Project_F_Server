@@ -17,9 +17,11 @@ import {
   setGold,
   setStatInfo,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
+import { getGameSession } from '../../../../session/game.session.js';
 
 const questRewardHandler = async (sender, message) => {
   try {
+    const gameSession = getGameSession(config.session.townId);
     const user = sender;
     const userStatInfo = await getStatInfo(user.socket);
 
@@ -134,6 +136,7 @@ const questRewardHandler = async (sender, message) => {
     await removeUserQuest(user.characterId, questId);
 
     const playerInfo = await getPlayerInfo(user.socket);
+    playerInfo.transform = gameSession.transforms[user.nickname];
     const statUpdateResponse = createResponse('response', 'S_Enter', {
       player: playerInfo,
     });
