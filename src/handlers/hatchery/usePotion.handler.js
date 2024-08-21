@@ -1,14 +1,14 @@
-import { getItemById } from '../../assets/item.assets';
+import { getItemById } from '../../assets/item.assets.js';
 import {
   decItem,
   deleteItem,
   getItem,
   getStatInfo,
   setStatInfo,
-} from '../../classes/DBgateway/playerinfo.gateway';
-import { handleError } from '../../utils/error/errorHandler';
-import { getUserByNickname, getUserBySocket } from '../../session/user.session';
-import { getHatcherySession } from '../../session/hatchery.session';
+} from '../../classes/DBgateway/playerinfo.gateway.js';
+import { handleError } from '../../utils/error/errorHandler.js';
+import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
+import { getHatcherySession } from '../../session/hatchery.session.js';
 
 export const usePotionHandler = async ({ socket, payload }) => {
   try {
