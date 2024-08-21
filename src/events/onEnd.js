@@ -23,13 +23,11 @@ export const onEnd = (socket) => async () => {
       updateCharacterItems(user.characterId, inventory);
     }
     removeDungeon(user.nickname);
+    leaveTownHandler(socket, user);
+    await removeUser(socket);
 
     console.log('클라이언트 연결이 해제되었습니다: ', socket.remoteAddress, socket.remotePort);
     console.log('현재 접속 중인 유저: ', getAllUserNicknames());
-
-    leaveTownHandler(socket, user);
-
-    await removeUser(socket);
   } catch (err) {
     handleError(socket, err);
   }
