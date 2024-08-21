@@ -11,6 +11,7 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(config.session.townId);
     const hatcherySession = getHatcherySession();
     const user = await getUserBySocket(socket);
+    const playerInfo = await getPlayerInfo(socket);
 
     const { hp, maxHp, name, transform, speed } = hatcherySession.boss;
     const { posX, posY, posZ, rot } = transform;
@@ -26,10 +27,11 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
       rot: 180,
     };
     hatcherySession.transforms[user.nickname] = transformInfo;
+    playerInfo.transform = transformInfo;
 
     const bossTransformInfo = { posX, posY, posZ, rot };
     const enterHatcheryResponse = createResponse('response', 'S_EnterHatchery', {
-      player: await getPlayerInfo(socket),
+      player: playerInfo,
       bossTransformInfo,
       bossMaxHp: maxHp,
       bossSpeed: speed,
@@ -55,7 +57,7 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
       const filterdPlayerInfos = playerInfos.filter((playerInfo) => {
-        playerInfo.transform = gameSession.transforms[playerInfo.nickname];
+        playerInfo.transform = hatcherySession.transforms[playerInfo.nickname];
         return playerInfo.nickname !== nickname;
       });
 
