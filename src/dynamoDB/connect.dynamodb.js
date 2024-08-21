@@ -8,7 +8,10 @@ let docClient;
 async function lookupFunc() {
   const params = {
     TableName: config.dynamoDB.awsTableName,
-    FilterExpression: 'attribute_not_exists(processed) OR processed = :false',
+    FilterExpression: 'attribute_not_exists(#processedAttr) OR #processedAttr = :false',
+    ExpressionAttributeNames: {
+      '#processedAttr': 'processed', // 'processed' 예약어 대체
+    },
     ExpressionAttributeValues: {
       ':false': false,
     },
@@ -25,8 +28,11 @@ async function lookupFunc() {
           TableName: config.dynamoDB.awsTableName,
           Key: { id: event.id },
           UpdateExpression:
-            'SET processed = :true, processedCount = if_not_exists(processedCount, :zero) + :increment',
-          ConditionExpression: 'attribute_not_exists(processed) OR processed = :false',
+            'SET #processedAttr = :true, processedCount = if_not_exists(processedCount, :zero) + :increment',
+          ConditionExpression: 'attribute_not_exists(#processedAttr) OR #processedAttr = :false',
+          ExpressionAttributeNames: {
+            '#processedAttr': 'processed', // 'processed' 예약어 대체
+          },
           ExpressionAttributeValues: {
             ':true': true,
             ':false': false,
