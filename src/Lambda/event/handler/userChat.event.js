@@ -15,7 +15,7 @@ export const chatEventHandler = (payload) => {
 
     userPoints = [];
 
-    setTimeout(timeOver, time);
+    setTimeout(timeOver, 20000);
 
     // 정시에 시작?
     // if (Number(hour) - curHour === 0) {
