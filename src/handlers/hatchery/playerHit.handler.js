@@ -24,7 +24,7 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
       playerStatInfo.hp = 0;
     }
 
-    const playerHitResponse = createResponse('response', 'S_SetPlayerHpHatchery', {
+    const playerHitResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
       playerId: player.playerId,
       playerCurHp: playerStatInfo.hp,
     });

@@ -20,3 +20,7 @@ message C_LeaveHatchery{
 
 message C_PlayerHit{
 }
+
+message C_TryUsePotion {
+  int32 itemId = 1;
+}
