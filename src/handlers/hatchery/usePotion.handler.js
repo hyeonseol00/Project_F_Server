@@ -9,13 +9,14 @@ import {
 import { handleError } from '../../utils/error/errorHandler.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
+import { createResponse } from '../../utils/response/createResponse';
 
 export const usePotionHandler = async ({ socket, payload }) => {
   try {
     const userStatInfo = await getStatInfo(socket);
     const { hp, maxHp, mp, maxMp, level } = userStatInfo;
 
-    const { id: useItemId } = payload;
+    const { itemId: useItemId } = payload;
     const userItem = await getItem(socket, useItemId);
 
     const useItemInfo = await getItemById(useItemId);

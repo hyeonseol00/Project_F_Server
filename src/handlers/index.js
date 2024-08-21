@@ -76,7 +76,7 @@ const handlers = {
   },
   [PACKET_TYPE.C_TryUsePotion]: {
     handler: usePotionHandler,
-    protoType: 'hatchery.C_TryUsePotion ',
+    protoType: 'hatchery.C_TryUsePotion',
   },
 };
 
