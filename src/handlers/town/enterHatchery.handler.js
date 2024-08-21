@@ -20,9 +20,9 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
     /***** S_EnterHatchery *****/
     const transformInfo = {
-      posX: Math.random() * 4 - 2, // -2 ~ 2
-      posY: 1.0,
-      posZ: Math.random() * 4 - 2, // -2 ~ 2
+      posX: Math.random() * 4 - 2 + config.hatchery.spawnAreaPos.x, // -2 ~ 2
+      posY: 1.0 + config.hatchery.spawnAreaPos.y,
+      posZ: Math.random() * 4 - 2 + config.hatchery.spawnAreaPos.z, // -2 ~ 2
       rot: 180,
     };
     hatcherySession.transforms[user.nickname] = transformInfo;
@@ -54,9 +54,10 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
-      const filterdPlayerInfos = playerInfos.filter(
-        (playerInfo) => playerInfo.nickname !== nickname,
-      );
+      const filterdPlayerInfos = playerInfos.filter((playerInfo) => {
+        playerInfo.transform = gameSession.transforms[playerInfo.nickname];
+        return playerInfo.nickname !== nickname;
+      });
 
       const spawnHatcheryResponse = createResponse('response', 'S_SpawnPlayerHatchery', {
         players: filterdPlayerInfos,

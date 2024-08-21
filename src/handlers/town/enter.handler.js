@@ -64,7 +64,10 @@ const enterTownHandler = async ({ socket, payload }) => {
 
     // 각 유저에게 본인을 제외한 플레이어 데이터 전송
     for (const nickname of gameSession.playerNicknames) {
-      const filterdPlayers = playerInfos.filter((playerInfo) => playerInfo.nickname !== nickname);
+      const filterdPlayers = playerInfos.filter((playerInfo) => {
+        playerInfo.transform = gameSession.transforms[playerInfo.nickname];
+        return playerInfo.nickname !== nickname;
+      });
 
       const user = await getUserByNickname(nickname);
 
@@ -149,9 +152,9 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
   };
 
   const transformInfo = {
-    posX: Math.random() * 18 - 9, // -9 ~ 9
-    posY: 1.0,
-    posZ: Math.random() * 16 - 8, // -8 ~ 8
+    posX: Math.random() * 18 - 9 + config.town.spawnAreaPos.x, // -9 ~ 9
+    posY: 1.0 + config.town.spawnAreaPos.y,
+    posZ: Math.random() * 16 - 8 + config.town.spawnAreaPos.z, // -8 ~ 8
     rot: Math.random() * 360, // 0 ~ 360
   };
 
