@@ -86,7 +86,7 @@ class Hatchery {
   }
 
   async changeMonster(transform, bossId) {
-    const monster = await findMonsterById(bossId);
+    const monster = await getMonsterById(bossId);
     const {
       monsterId,
       monsterName,
