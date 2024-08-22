@@ -105,6 +105,7 @@ export const config = {
     port: PORT,
     host: HOST,
     channel: CHANNEL_NUMBER,
+    count: 3,
   },
   client: {
     version: CLIENT_VERSION,
