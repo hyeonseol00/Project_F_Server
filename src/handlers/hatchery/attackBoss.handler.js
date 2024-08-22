@@ -102,16 +102,20 @@ const startThirdPhase = async (hatcherySession) => {
   setTimeout(async () => {
     if (hatcherySession.boss.hp > 0) {
       for (const nickname of hatcherySession.playerNicknames) {
-        const user = getUserByNickname(nickname);
-        const userStatInfo = await getStatInfo(user.socket);
+        const attackedUser = getUserByNickname(nickname);
+        const userStatInfo = await getStatInfo(attackedUser.socket);
+        if (userStatInfo.hp <= 0) continue;
         userStatInfo.hp = 0;
-        await setStatInfo(user.socket, userStatInfo);
+        await setStatInfo(attackedUser.socket, userStatInfo);
         const gameOverResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
-          playerId: user.playerId,
+          playerId: attackedUser.playerId,
           playerCurHp: userStatInfo.hp,
           playerCurMp: userStatInfo.mp,
         });
-        user.socket.write(gameOverResponse);
+        hatcherySession.playerNicknames.forEach((nickname) => {
+          const user = getUserByNickname(nickname);
+          user.socket.write(gameOverResponse);
+        });
       }
     }
   }, config.hatchery.deathCountTime * 1000);
