@@ -1,4 +1,4 @@
-import { getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import { getStatInfo, setStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -103,9 +103,11 @@ const startThirdPhase = async (hatcherySession) => {
       for (const nickname of hatcherySession.playerNicknames) {
         const user = getUserByNickname(nickname);
         const userStatInfo = await getStatInfo(user.socket);
+        userStatInfo.hp = 0;
+        await setStatInfo(user.socket, userStatInfo);
         const gameOverResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
           playerId: user.playerId,
-          playerCurHp: 0,
+          playerCurHp: userStatInfo.hp,
           playerCurMp: userStatInfo.mp,
         });
         user.socket.write(gameOverResponse);
