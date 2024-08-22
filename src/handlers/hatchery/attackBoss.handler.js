@@ -3,6 +3,7 @@ import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handleError } from '../../utils/error/errorHandler.js';
+import { config } from '../../config/config.js';
 // import { questProgressHandler } from '../../town/chatCommands/quest/questProgress.chat.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
@@ -33,24 +34,29 @@ export const gameQueueProcess = async (nickname) => {
       bossCurHp,
     });
 
+    const bossFinalAttackerResponse = createResponse('response', 'S_DisplayNotificationHatchery', {
+      msg: `[${nickname}]님이 보스를 마지막으로 공격하여 처치했습니다!`,
+    });
+
     let phaseChanged = false;
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
       user.socket.write(attackBossResponse);
 
-      if (hatcherySession.phase === 0 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 2)) {
+      if (hatcherySession.phase === 1 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 2)) {
         phaseChanged = true;
-        user.socket.write(hatcherySession.firstPhaseResponse);
-      }
-      if (hatcherySession.phase === 1 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 5)) {
-        phaseChanged = true;
+        hatcherySession.boss.speed = config.hatchery.updatedBossSpeed;
         user.socket.write(hatcherySession.secondPhaseResponse);
+      }
+      if (hatcherySession.phase === 2 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 5)) {
+        phaseChanged = true;
+        user.socket.write(hatcherySession.thirdPhaseResponse);
       }
     }
     if (phaseChanged) {
       hatcherySession.phase++;
-      if (hatcherySession.phase === 2) {
-        await startSecondPhase(hatcherySession);
+      if (hatcherySession.phase === 3) {
+        await startThirdPhase(hatcherySession);
       }
     }
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
@@ -69,7 +75,7 @@ export const gameQueueProcess = async (nickname) => {
   }
 };
 
-const startSecondPhase = async (hatcherySession) => {
+const startThirdPhase = async (hatcherySession) => {
   setTimeout(async () => {
     if (hatcherySession.boss.hp !== 0) {
       for (const nickname of hatcherySession.playerNicknames) {
@@ -83,7 +89,7 @@ const startSecondPhase = async (hatcherySession) => {
         user.socket.write(gameOverResponse);
       }
     }
-  }, 30000);
+  }, config.hatchery.deathCountTime * 1000);
 };
 
 export default attackBossHatcheryHandler;

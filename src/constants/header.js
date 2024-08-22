@@ -71,5 +71,8 @@ export const PACKET_TYPE = {
   S_DespawnHatchery: 219,
   C_TryUsePotion: 220,
   S_TryUsePotion: 221,
+  S_EnterSecondPhase: 222,
+  S_EnterThirdPhase: 223,
+  S_DisplayNotificationHatchery: 224,
   // ********** 200번대 패킷 끝 ********** //
 };

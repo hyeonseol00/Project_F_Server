@@ -205,3 +205,16 @@ message S_TryUsePotion {
   int32 itemId = 1;
   int32 quantity = 2;
 }
+
+message S_EnterSecondPhase {
+  float bindTime = 1;
+  float updatedBossSpeed = 2;
+}
+
+message S_EnterThirdPhase {
+  float deathCountTime = 1;
+}
+
+message S_DisplayNotificationHatchery {
+  string msg = 1;
+}

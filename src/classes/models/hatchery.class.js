@@ -15,9 +15,14 @@ class Hatchery {
   }
 
   initialize() {
-    this.phase = 0;
-    this.firstPhaseResponse = createResponse('response', '', {});
-    this.secondPhaseResponse = createResponse('response', '', {});
+    this.phase = 1;
+    this.secondPhaseResponse = createResponse('response', 'S_EnterSecondPhase', {
+      bindTime: config.hatchery.bindTime,
+      updatedBossSpeed: config.hatchery.updatedBossSpeed,
+    });
+    this.thirdPhaseResponse = createResponse('response', 'S_EnterThirdPhase', {
+      deathCountTime: config.hatchery.deathCountTime,
+    });
 
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {

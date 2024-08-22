@@ -7,3 +7,6 @@ export const BOSS_ATTACK_RANGE = 4;
 export const DROP_ITEMS_QUANTITY = 6;
 export const BOSS_ATTACK_SPEED = 3000;
 export const HATCHERY_SPAWN_AREA_POSITION = { x: -3.55, y: -14.8, z: -267.3 };
+export const SECOND_PHASE_BIND_TIME = 10;
+export const SECOND_PHASE_BOSS_SPEED = 10;
+export const THIRD_PHASE_COUNT_TIME = 30;

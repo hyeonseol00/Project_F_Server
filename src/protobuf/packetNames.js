@@ -38,6 +38,9 @@ export const packetNames = {
     S_SetPlayerHpMpHatchery: 'response.S_SetPlayerHpMpHatchery',
     S_DespawnHatchery: 'response.S_DespawnHatchery',
     S_TryUsePotion: 'response.S_TryUsePotion',
+    S_EnterSecondPhase: 'response.S_EnterSecondPhase',
+    S_EnterThirdPhase: 'response.S_EnterThirdPhase',
+    S_DisplayNotificationHatchery: 'response.S_DisplayNotificationHatchery',
   },
   town: {
     C_Enter: 'town.C_Enter',
