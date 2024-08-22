@@ -38,6 +38,8 @@ export const packetNames = {
     S_SetPlayerHpMpHatchery: 'response.S_SetPlayerHpMpHatchery',
     S_DespawnHatchery: 'response.S_DespawnHatchery',
     S_TryUsePotion: 'response.S_TryUsePotion',
+    S_KillBoss: 'response.S_KillBoss',
+    S_HatcheryConfirmReward: 'response.S_HatcheryConfirmReward',
     S_EnterSecondPhase: 'response.S_EnterSecondPhase',
     S_EnterThirdPhase: 'response.S_EnterThirdPhase',
     S_DisplayNotificationHatchery: 'response.S_DisplayNotificationHatchery',
@@ -71,6 +73,7 @@ export const packetNames = {
     C_LeaveHatchery: 'hatchery.C_LeaveHatchery',
     C_PlayerHit: 'hatchery.C_PlayerHit',
     C_TryUsePotion: 'hatchery.C_TryUsePotion',
+    C_HatcherySelectReward: 'hatchery.C_HatcherySelectReward',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',
