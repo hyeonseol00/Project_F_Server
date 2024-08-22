@@ -36,7 +36,7 @@ async function lookupFunc() {
 
           console.log('이벤트 진행 횟수 : ', processedCount);
 
-          if (processedCount >= 2) {
+          if (processedCount >= config.server.count) {
             const deleteParams = {
               TableName: config.dynamoDB.awsTableName,
               Key: { id: event.id },
@@ -58,36 +58,6 @@ async function lookupFunc() {
     console.log('DynamoDB 데이터 읽는 중 오류 발생!', err);
   }
 }
-
-// function lookupFunc() {
-//   const params = { TableName: config.dynamoDB.awsTableName };
-
-//   docClient.scan(params, (err, data) => {
-//     if (!err) {
-//       const { Items } = data;
-//       const camelData = toCamelCase(Items);
-//       if (Items.length >= 1) {
-//         // 여기에 이벤트 매핑 핸들러로 데이터 던져주기
-//         camelData.forEach((event) => {
-//           eventNotificationHandler(event);
-
-//           setTimeout(() => {
-//             params.Key = { id: event.id };
-//             docClient.delete(params, (err, data) => {
-//               if (!err) {
-//                 console.log('DynamoDB 데이터 삭제 성공!', data);
-//               } else {
-//                 console.log('DynamoDB 데이터 삭제 실패!', err);
-//               }
-//             });
-//           }, 36000);
-//         });
-//       }
-//     } else {
-//       console.log('dynamoDB 데이터 읽는 중 오류 발생!', err);
-//     }
-//   });
-// }
 
 export default function initDynamoDB() {
   try {
