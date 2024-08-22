@@ -17,6 +17,7 @@ export const gameQueueProcess = async (nickname) => {
 
   try {
     const hatcherySession = getHatcherySession();
+    if (hatcherySession.boss.hp <= 0) return;
     const playerStatInfo = await getStatInfo(curUser.socket);
 
     let decreaseHp = playerStatInfo.atk;
@@ -99,7 +100,7 @@ export const gameQueueProcess = async (nickname) => {
 
 const startThirdPhase = async (hatcherySession) => {
   setTimeout(async () => {
-    if (hatcherySession.boss.hp !== 0) {
+    if (hatcherySession.boss.hp > 0) {
       for (const nickname of hatcherySession.playerNicknames) {
         const user = getUserByNickname(nickname);
         const userStatInfo = await getStatInfo(user.socket);
