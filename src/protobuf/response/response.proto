@@ -206,6 +206,18 @@ message S_TryUsePotion {
   int32 quantity = 2;
 }
 
+message S_KillBoss {
+  int32 playerId = 1;
+  repeated string btnTexts = 2;
+  string message = 3;
+}
+
+message S_HatcheryConfirmReward {
+  int32 selectedBtn = 1;
+  repeated string btnTexts = 2;
+  string message = 3;
+}
+
 message S_EnterSecondPhase {
   float bindTime = 1;
   float updatedBossSpeed = 2;

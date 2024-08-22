@@ -16,6 +16,7 @@ import attackBossHatcheryHandler from './hatchery/attackBoss.handler.js';
 import leaveHatcheryHandler from './hatchery/leaveHatchery.handler.js';
 import playerHitHatcheryHandler from './hatchery/playerHit.handler.js';
 import { usePotionHandler } from './hatchery/usePotion.handler.js';
+import hatcherySelectRewardHandler from './hatchery/hatcherySelectReward.handler.js';
 
 const handlers = {
   [PACKET_TYPE.C_Enter]: {
@@ -77,6 +78,10 @@ const handlers = {
   [PACKET_TYPE.C_TryUsePotion]: {
     handler: usePotionHandler,
     protoType: 'hatchery.C_TryUsePotion',
+  },
+  [PACKET_TYPE.C_HatcherySelectReward]: {
+    handler: hatcherySelectRewardHandler,
+    protoType: 'hatchery.C_HatcherySelectReward',
   },
 };
 
