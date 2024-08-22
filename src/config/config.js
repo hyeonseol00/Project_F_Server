@@ -72,6 +72,7 @@ import {
   BOSS_TARGET_INTERVAL,
   BOSS_TARGET_INTERVAL_ID,
   DROP_ITEMS_QUANTITY,
+  HATCHERY_DUNGEON_CODE,
   HATCHERY_SPAWN_AREA_POSITION,
   MAX_PLAYERS,
 } from '../constants/hatchery/sceneConfig.js';
@@ -207,6 +208,7 @@ export const config = {
     bossAttackRange: BOSS_ATTACK_RANGE,
     bossAttackSpeed: BOSS_ATTACK_SPEED,
     spawnAreaPos: HATCHERY_SPAWN_AREA_POSITION,
+    dungeonCode: HATCHERY_DUNGEON_CODE,
   },
   town: {
     spawnAreaPos: TOWN_SPAWN_AREA_POSTION,

@@ -1,3 +1,4 @@
+import { getDungeonItemsByDungeonCode, getItemById } from '../../assets/item.assets.js';
 import { config } from '../../config/config.js';
 import { findMonsterById } from '../../db/game/game.db.js';
 import { gameQueueProcess } from '../../handlers/hatchery/attackBoss.handler.js';
@@ -8,6 +9,7 @@ import { getStatInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 import Bull from 'bull';
+import Item from './item.class.js';
 
 class Hatchery {
   constructor() {
@@ -40,6 +42,7 @@ class Hatchery {
     }; */
 
     this.initMonster({ ...config.hatchery.bossInitTransform });
+    this.pushDungeonItems(config.hatchery.dungeonCode);
   }
 
   async addGameQueue(data) {
@@ -201,6 +204,37 @@ class Hatchery {
 
     this.lastUpdateTime = Date.now();
     this.lastUnitVector = unitVec;
+  }
+
+  async pushDungeonItems(dungeonCode) {
+    this.items = [];
+    this.mountingItems = []; // random mounting item list
+    this.potions = []; // random potion list
+
+    const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
+    for (const item of dungeonItems) {
+      const itemInfo = await getItemById(item.id);
+      if (itemInfo.itemType === 'potion') {
+        // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
+        const potion = new Item(item.id, dungeonCode);
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.potions.push(this.items.length); // items에 저장될 idx
+        }
+        this.items.push(potion);
+      } else {
+        const mountingItem = new Item(item.id);
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.mountingItems.push(this.items.length); // items에 저장될 idx
+        }
+        this.items.push(mountingItem);
+      }
+    }
+  }
+
+  getRandomItem() {
+    return this.items[this.mountingItems[Math.floor(Math.random() * this.mountingItems.length)]];
   }
 }
 
