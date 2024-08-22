@@ -48,7 +48,10 @@ export const gameQueueProcess = async (nickname) => {
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
       user.socket.write(attackBossResponse);
-      user.socket.write(killBossResponse);
+
+      if (hatcherySession.boss.hp <= 0) {
+        user.socket.write(killBossResponse);
+      }
     }
 
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
