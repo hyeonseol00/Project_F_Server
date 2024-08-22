@@ -18,7 +18,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 const hatcherySelectRewardHandler = async ({ socket, payload }) => {
   try {
-    const user = getUserBySocket(socket);
+    const targetUser = getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
     const selectedBtn = payload.selectedBtn !== null ? payload.selectedBtn : 0;
     let itemName;
@@ -45,51 +45,56 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
       await addItem(socket, selectItem.id, selectItem.quantity);
     }
 
-    /***** 골드 지급 로직 *****/
-    const userStatInfo = await getStatInfo(socket);
-    let playerExp = userStatInfo.exp + hatcherySession.boss.exp;
-    let playerGold = Number(await getGold(user.socket)) + hatcherySession.boss.gold;
+    const nicknames = hatcherySession.playerNicknames;
+    for (let i = 0; i < nicknames.length; i++) {
+      const user = getUserByNickname(nicknames[i]);
 
-    await setGold(user.socket, playerGold);
+      /***** 골드 지급 로직 *****/
+      const userStatInfo = await getStatInfo(user.socket);
+      let playerExp = userStatInfo.exp + hatcherySession.boss.exp;
+      let playerGold = Number(await getGold(user.socket)) + hatcherySession.boss.gold;
 
-    /***** 경험치 지급 로직 *****/
-    const playerLevel = userStatInfo.level;
-    const nextLevelData = await getLevelById(playerLevel + 1);
+      await setGold(user.socket, playerGold);
 
-    if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
-      playerExp -= nextLevelData.requiredExp;
+      /***** 경험치 지급 로직 *****/
+      const playerLevel = userStatInfo.level;
+      const nextLevelData = await getLevelById(playerLevel + 1);
 
-      userStatInfo.level = playerLevel + 1;
-      userStatInfo.exp = playerExp;
-      userStatInfo.maxHp += nextLevelData.hp;
-      userStatInfo.maxMp += nextLevelData.mp;
-      userStatInfo.hp = userStatInfo.maxHp;
-      userStatInfo.mp = userStatInfo.maxMp;
-      userStatInfo.atk += nextLevelData.attack;
-      userStatInfo.def += nextLevelData.defense;
-      userStatInfo.magic += nextLevelData.magic;
-      userStatInfo.speed += nextLevelData.speed;
-      userStatInfo.critRate += nextLevelData.critical;
-      userStatInfo.critDmg += nextLevelData.criticalAttack;
-      userStatInfo.avoidRate += nextLevelData.avoidAbility;
+      if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
+        playerExp -= nextLevelData.requiredExp;
 
-      skillPointUpdate(socket, user.skillPoint + nextLevelData.skillPoint);
+        userStatInfo.level = playerLevel + 1;
+        userStatInfo.exp = playerExp;
+        userStatInfo.maxHp += nextLevelData.hp;
+        userStatInfo.maxMp += nextLevelData.mp;
+        userStatInfo.hp = userStatInfo.maxHp;
+        userStatInfo.mp = userStatInfo.maxMp;
+        userStatInfo.atk += nextLevelData.attack;
+        userStatInfo.def += nextLevelData.defense;
+        userStatInfo.magic += nextLevelData.magic;
+        userStatInfo.speed += nextLevelData.speed;
+        userStatInfo.critRate += nextLevelData.critical;
+        userStatInfo.critDmg += nextLevelData.criticalAttack;
+        userStatInfo.avoidRate += nextLevelData.avoidAbility;
 
-      if ((playerLevel + 1) % 5 === 0) {
-        user.worldLevel++;
+        skillPointUpdate(socket, user.skillPoint + nextLevelData.skillPoint);
+
+        if ((playerLevel + 1) % 5 === 0) {
+          user.worldLevel++;
+        }
+      } else {
+        userStatInfo.exp = playerExp;
       }
-    } else {
-      userStatInfo.exp = playerExp;
-    }
 
-    await setStatInfo(user.socket, userStatInfo);
+      await setStatInfo(user.socket, userStatInfo);
+    }
 
     /***** S_HatcheryConfirmReward *****/
     const confirmRewardResponse = createResponse('response', 'S_HatcheryConfirmReward', {
       selectedBtn,
       btnTexts,
       message:
-        `${user.nickname}님께서 ${itemName}을(를) 획득했습니다!\n` +
+        `${targetUser.nickname}님께서 ${itemName}을(를) 획득했습니다!\n` +
         `${hatcherySession.boss.exp} 경험치, ${hatcherySession.boss.gold}골드를 획득했습니다.\n\n` +
         '잠시 후 마을로 귀환합니다.',
     });
