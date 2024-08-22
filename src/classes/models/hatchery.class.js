@@ -82,9 +82,9 @@ class Hatchery {
 
   addPlayer(playerNickname) {
     if (this.playerNicknames.length >= config.hatchery.maxPlayers) {
-      return '[SysTem] 이미 4명의 플레이어가 공략 중입니다!';
+      return `[Notice] 이미 4명의 플레이어가 공략 중입니다!\n[Notice] 공략 중인 플레이어: ${this.playerNicknames[0]}님, ${this.playerNicknames[1]}님, ${this.playerNicknames[2]}님, ${this.playerNicknames[3]}님`;
     } else if (this.phase > 1) {
-      return '[SysTem] 게임이 2페이즈 이상 진행되었습니다!';
+      return `[Notice] 게임이 2페이즈 이상 진행되었습니다!\n[Notice] 현재 페이즈: ${this.phase}`;
     } else if (this.playerNicknames.length <= 0) {
       this.intervalManager.addPlayer(
         config.hatchery.bossTargetIntervalId,
