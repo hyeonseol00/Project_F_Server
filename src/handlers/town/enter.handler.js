@@ -42,6 +42,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     // 플레이어 정보를 user에 추가한다.
     await setPlayerInfo(socket, playerInfo);
     gameSession.addUser(nickname);
+    gameSession.transforms[nickname] = curUser.playerInfo.transform;
 
     console.log('현재 접속 중인 유저: ', getAllUserNicknames());
 
@@ -153,7 +154,7 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
   const transformInfo = {
     posX: Math.random() * 18 - 9 + config.town.spawnAreaPos.x, // -9 ~ 9
-    posY: 1.0 + config.town.spawnAreaPos.y,
+    posY: config.town.spawnAreaPos.y,
     posZ: Math.random() * 16 - 8 + config.town.spawnAreaPos.z, // -8 ~ 8
     rot: Math.random() * 360, // 0 ~ 360
   };
