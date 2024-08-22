@@ -74,5 +74,8 @@ export const PACKET_TYPE = {
   S_KillBoss: 222,
   C_HatcherySelectReward: 223,
   S_HatcheryConfirmReward: 224,
+  S_EnterSecondPhase: 225,
+  S_EnterThirdPhase: 226,
+  S_DisplayNotificationHatchery: 227,
   // ********** 200번대 패킷 끝 ********** //
 };

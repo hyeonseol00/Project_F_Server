@@ -75,6 +75,9 @@ import {
   HATCHERY_DUNGEON_CODE,
   HATCHERY_SPAWN_AREA_POSITION,
   MAX_PLAYERS,
+  SECOND_PHASE_BIND_TIME,
+  SECOND_PHASE_BOSS_SPEED,
+  THIRD_PHASE_COUNT_TIME,
 } from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 import {
@@ -103,6 +106,7 @@ export const config = {
     port: PORT,
     host: HOST,
     channel: CHANNEL_NUMBER,
+    count: 3,
   },
   client: {
     version: CLIENT_VERSION,
@@ -209,6 +213,9 @@ export const config = {
     bossAttackSpeed: BOSS_ATTACK_SPEED,
     spawnAreaPos: HATCHERY_SPAWN_AREA_POSITION,
     dungeonCode: HATCHERY_DUNGEON_CODE,
+    bindTime: SECOND_PHASE_BIND_TIME,
+    updatedBossSpeed: SECOND_PHASE_BOSS_SPEED,
+    deathCountTime: THIRD_PHASE_COUNT_TIME,
   },
   town: {
     spawnAreaPos: TOWN_SPAWN_AREA_POSTION,

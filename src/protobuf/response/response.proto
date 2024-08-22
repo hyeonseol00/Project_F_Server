@@ -217,3 +217,16 @@ message S_HatcheryConfirmReward {
   repeated string btnTexts = 2;
   string message = 3;
 }
+
+message S_EnterSecondPhase {
+  float bindTime = 1;
+  float updatedBossSpeed = 2;
+}
+
+message S_EnterThirdPhase {
+  float deathCountTime = 1;
+}
+
+message S_DisplayNotificationHatchery {
+  string msg = 1;
+}

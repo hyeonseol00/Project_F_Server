@@ -30,8 +30,11 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
       const item = hatcherySession.getRandomItem();
       items.push(item);
       const itemInfo = await getItemById(items[i].id);
-      itemName = itemInfo.itemName;
-      btnTexts.push(`${itemName} x${items[i].quantity}`);
+      btnTexts.push(`${itemInfo.itemName} x${items[i].quantity}`);
+
+      if (i === selectedBtn) {
+        itemName = itemInfo.itemName;
+      }
     }
     const selectItem = items[selectedBtn];
 

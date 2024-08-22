@@ -40,6 +40,9 @@ export const packetNames = {
     S_TryUsePotion: 'response.S_TryUsePotion',
     S_KillBoss: 'response.S_KillBoss',
     S_HatcheryConfirmReward: 'response.S_HatcheryConfirmReward',
+    S_EnterSecondPhase: 'response.S_EnterSecondPhase',
+    S_EnterThirdPhase: 'response.S_EnterThirdPhase',
+    S_DisplayNotificationHatchery: 'response.S_DisplayNotificationHatchery',
   },
   town: {
     C_Enter: 'town.C_Enter',

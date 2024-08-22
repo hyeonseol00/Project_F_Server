@@ -6,21 +6,11 @@ let userPoints = [];
 
 export const chatEventHandler = (payload) => {
   try {
-    const { endTime } = payload;
-    const [hour, min] = endTime.split(':');
-    const today = new Date();
-    // const curHour = today.getHours();
-    const curMin = today.getMinutes();
-    const time = Math.abs(Number(min) - curMin) * 60 * 1000; // 2분일 경우 120000
+    const { gameTime } = payload;
 
     userPoints = [];
 
-    setTimeout(timeOver, time);
-
-    // 정시에 시작?
-    // if (Number(hour) - curHour === 0) {
-    //   setTimeout(timeOver(), time);
-    // }
+    setTimeout(timeOver, gameTime);
   } catch (err) {
     console.log(err);
   }

@@ -10,3 +10,7 @@ export const BOSS_ATTACK_SPEED = 3000;
 
 export const DROP_ITEMS_QUANTITY = 6;
 export const HATCHERY_DUNGEON_CODE = 5;
+
+export const SECOND_PHASE_BIND_TIME = 10;
+export const SECOND_PHASE_BOSS_SPEED = 7;
+export const THIRD_PHASE_COUNT_TIME = 30;
