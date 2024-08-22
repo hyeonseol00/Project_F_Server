@@ -67,6 +67,7 @@ import {
 import {
   BOSS_ATTACK_RANGE,
   BOSS_ATTACK_SPEED,
+  BOSS_DELAY_AFTER_ATTACK,
   BOSS_ID,
   BOSS_INIT_TRANSFORM,
   BOSS_TARGET_INTERVAL,
@@ -211,6 +212,7 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
     bossAttackSpeed: BOSS_ATTACK_SPEED,
+    bossAttackDelay: BOSS_DELAY_AFTER_ATTACK,
     spawnAreaPos: HATCHERY_SPAWN_AREA_POSITION,
     dungeonCode: HATCHERY_DUNGEON_CODE,
     bindTime: SECOND_PHASE_BIND_TIME,

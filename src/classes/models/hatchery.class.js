@@ -184,8 +184,9 @@ class Hatchery {
     // 여기 부분에 현재 위치 계산
     const lastUnitVec = this.lastUnitVector;
     const elapsedTime = Date.now() - this.lastUpdateTime;
+    const elapsedAttackTime = Date.now() - this.lastAttackTime;
     const timeDiff = elapsedTime / 1000;
-    const speed = this.boss.speed;
+    const speed = elapsedAttackTime > config.hatchery.bossAttackDelay ? this.boss.speed : 0;
 
     const moveDistance = timeDiff * speed;
     let distanceX = lastUnitVec.x * moveDistance;
@@ -223,9 +224,8 @@ class Hatchery {
     const rot = toEulerAngles(unitVec);
     bossTr.rot = rot - 90;
 
-    const bossUnitVector = inRange
-      ? { unitX: 0, unitZ: 0 }
-      : { unitX: unitVec.x, unitZ: unitVec.z };
+    const bossUnitVector =
+      inRange || !speed ? { unitX: 0, unitZ: 0 } : { unitX: unitVec.x, unitZ: unitVec.z };
 
     const bossMoveResponse = createResponse('response', 'S_BossMove', {
       bossTransform: bossTr,
@@ -236,7 +236,6 @@ class Hatchery {
       player.socket.write(bossMoveResponse);
     }
 
-    const elapsedAttackTime = Date.now() - this.lastAttackTime;
     if (inRange && elapsedAttackTime > config.hatchery.bossAttackSpeed) {
       const bossAttackResponse = createResponse('response', 'S_BossTryAttack', {});
       for (const player of players) {
