@@ -100,7 +100,7 @@ export const gameQueueProcess = async (nickname) => {
 
 const startThirdPhase = async (hatcherySession) => {
   setTimeout(async () => {
-    if (hatcherySession.boss.hp > 0) {
+    if (hatcherySession.boss.hp > 0 && hatcherySession.phase === 3) {
       for (const nickname of hatcherySession.playerNicknames) {
         const attackedUser = getUserByNickname(nickname);
         const userStatInfo = await getStatInfo(attackedUser.socket);
