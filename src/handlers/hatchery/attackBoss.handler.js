@@ -34,29 +34,51 @@ export const gameQueueProcess = async (nickname) => {
       bossCurHp,
     });
 
-    const bossFinalAttackerResponse = createResponse('response', 'S_DisplayNotificationHatchery', {
-      msg: `[${nickname}]님이 보스를 마지막으로 공격하여 처치했습니다!`,
-    });
-
-    let phaseChanged = false;
-    for (const nickname of hatcherySession.playerNicknames) {
-      const user = getUserByNickname(nickname);
-      user.socket.write(attackBossResponse);
-
-      if (hatcherySession.phase === 1 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 2)) {
-        phaseChanged = true;
-        hatcherySession.boss.speed = config.hatchery.updatedBossSpeed;
-        user.socket.write(hatcherySession.secondPhaseResponse);
-      }
-      if (hatcherySession.phase === 2 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 5)) {
-        phaseChanged = true;
-        user.socket.write(hatcherySession.thirdPhaseResponse);
+    // boss hp 0 만든 player msg 전송
+    if (hatcherySession.boss.hp <= 0) {
+      const bossFinalAttackerResponse = createResponse(
+        'response',
+        'S_DisplayNotificationHatchery',
+        {
+          msg: `[${nickname}]님이 보스를 마지막으로 공격하여 처치했습니다!`,
+        },
+      );
+      for (const nickname of hatcherySession.playerNicknames) {
+        const user = getUserByNickname(nickname);
+        user.socket.write(attackBossResponse);
+        user.socket.write(bossFinalAttackerResponse);
       }
     }
-    if (phaseChanged) {
-      hatcherySession.phase++;
-      if (hatcherySession.phase === 3) {
-        await startThirdPhase(hatcherySession);
+    // boss hp에 따라 phase 구분
+    else {
+      let phaseChanged = false;
+      const secondPhaseResponse = createResponse('response', 'S_EnterSecondPhase', {
+        bindTime: config.hatchery.bindTime,
+        updatedBossSpeed: config.hatchery.updatedBossSpeed,
+      });
+      const thirdPhaseResponse = createResponse('response', 'S_EnterThirdPhase', {
+        deathCountTime: config.hatchery.deathCountTime,
+      });
+      for (const nickname of hatcherySession.playerNicknames) {
+        const user = getUserByNickname(nickname);
+        user.socket.write(attackBossResponse);
+
+        if (hatcherySession.phase === 1 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 2)) {
+          phaseChanged = true;
+          hatcherySession.boss.speed = config.hatchery.updatedBossSpeed;
+
+          user.socket.write(secondPhaseResponse);
+        }
+        if (hatcherySession.phase === 2 && bossCurHp < Math.floor(hatcherySession.boss.maxHp / 5)) {
+          phaseChanged = true;
+          user.socket.write(thirdPhaseResponse);
+        }
+      }
+      if (phaseChanged) {
+        hatcherySession.phase++;
+        if (hatcherySession.phase === 3) {
+          await startThirdPhase(hatcherySession);
+        }
       }
     }
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
