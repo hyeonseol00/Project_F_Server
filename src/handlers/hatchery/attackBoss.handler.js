@@ -18,6 +18,10 @@ export const gameQueueProcess = async (nickname) => {
     const hatcherySession = getHatcherySession();
     const playerStatInfo = await getStatInfo(curUser.socket);
 
+    if (hatcherySession.boss.hp <= 0) {
+      return;
+    }
+
     let decreaseHp = playerStatInfo.atk;
 
     const isCritical = Math.floor(Math.random() * 101);
@@ -33,10 +37,20 @@ export const gameQueueProcess = async (nickname) => {
       bossCurHp,
     });
 
+    const killBossResponse = createResponse('response', 'S_KillBoss', {
+      playerId: curUser.playerId,
+      btnTexts: ['I', 'II', 'III', 'IV', 'V', 'VI'],
+      message:
+        `${nickname}님께서 ${hatcherySession.boss.name}을(를) 처치했습니다!\n` +
+        `${nickname}님의 보상 선택 대기중입니다...`,
+    });
+
     for (const nickname of hatcherySession.playerNicknames) {
       const user = getUserByNickname(nickname);
       user.socket.write(attackBossResponse);
+      user.socket.write(killBossResponse);
     }
+
     // 최종 보스 처치 퀘스트의 진행 상황 업데이트
     // if (hatcherySession.boss.hp <= 0) {
     //   questProgressHandler({
