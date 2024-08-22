@@ -20,6 +20,8 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
   try {
     const user = getUserBySocket(socket);
     const hatcherySession = getHatcherySession();
+    const selectedBtn = payload.selectedBtn !== null ? payload.selectedBtn : 0;
+    let itemName;
 
     /***** 아이템 지급 로직 *****/
     const items = [];
@@ -28,9 +30,10 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
       const item = hatcherySession.getRandomItem();
       items.push(item);
       const itemInfo = await getItemById(items[i].id);
-      btnTexts.push(`${itemInfo.itemName} x${items[i].quantity}`);
+      itemName = itemInfo.itemName;
+      btnTexts.push(`${itemName} x${items[i].quantity}`);
     }
-    const selectItem = items[payload.selectedBtn];
+    const selectItem = items[selectedBtn];
 
     const itemIdx = await getItemIdx(socket, selectItem.id);
     if (itemIdx === -1) {
@@ -72,7 +75,6 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
       if ((playerLevel + 1) % 5 === 0) {
         user.worldLevel++;
       }
-      user.socket.write(chatMessageResponse);
     } else {
       userStatInfo.exp = playerExp;
     }
@@ -81,10 +83,10 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
 
     /***** S_HatcheryConfirmReward *****/
     const confirmRewardResponse = createResponse('response', 'S_HatcheryConfirmReward', {
-      selectedBtn: payload.selectedBtn,
+      selectedBtn,
       btnTexts,
       message:
-        `${user.nickname}님께서 ${selectItem.name}을 획득했습니다!\n` +
+        `${user.nickname}님께서 ${itemName}을(를) 획득했습니다!\n` +
         `${hatcherySession.boss.exp} 경험치, ${hatcherySession.boss.gold}골드를 획득했습니다.\n\n` +
         '잠시 후 마을로 귀환합니다.',
     });
