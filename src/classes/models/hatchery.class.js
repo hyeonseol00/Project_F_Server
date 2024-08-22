@@ -1,3 +1,4 @@
+import { getDungeonItemsByDungeonCode, getItemById } from '../../assets/item.assets.js';
 import { config } from '../../config/config.js';
 import { findMonsterById } from '../../db/game/game.db.js';
 import { gameQueueProcess } from '../../handlers/hatchery/attackBoss.handler.js';
@@ -8,13 +9,16 @@ import { getStatInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 import Bull from 'bull';
+import { getMonsterById } from '../../assets/monster.assets.js';
+import Item from './item.class.js';
 
 class Hatchery {
   constructor() {
     this.initialize();
   }
 
-  initialize() {
+  async initialize() {
+    this.phase = 1;
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
         host: config.redis.host,
@@ -39,7 +43,14 @@ class Hatchery {
       nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
     }; */
 
-    this.initMonster({ ...config.hatchery.bossInitTransform });
+    if (this.boss) {
+      // 보스가 이미 존재하면 기존 보스를 초기화
+      this.changeMonster({ ...config.hatchery.bossInitTransform }, this.boss.id);
+    } else {
+      // 보스가 존재하지 않으면 초기 보스를 생성
+      this.initMonster({ ...config.hatchery.bossInitTransform });
+    }
+    this.pushDungeonItems(config.hatchery.dungeonCode);
   }
 
   async addGameQueue(data) {
@@ -78,9 +89,43 @@ class Hatchery {
     );
   }
 
+  async changeMonster(transform, bossId) {
+    const monster = await getMonsterById(bossId);
+    const {
+      monsterId,
+      monsterName,
+      monsterHp,
+      monsterAttack,
+      monsterExp,
+      monsterEffect,
+      monsterGold,
+      monsterCritical,
+      monsterCriticalAttack,
+      monsterSpeed,
+    } = monster;
+
+    this.boss = new BossMonster(
+      0,
+      monsterId,
+      monsterHp,
+      monsterAttack,
+      monsterName,
+      monsterEffect,
+      monsterExp,
+      monsterGold,
+      monsterCritical,
+      monsterCriticalAttack,
+      monsterHp,
+      transform,
+      monsterSpeed || 3.0, // monsterSpeed
+    );
+  }
+
   addPlayer(playerNickname) {
     if (this.playerNicknames.length >= config.hatchery.maxPlayers) {
-      throw new Error('게임 세션에 자리가 없습니다!');
+      return `[Notice] 이미 4명의 플레이어가 공략 중입니다!\n[Notice] 공략 중인 플레이어: ${this.playerNicknames[0]}님, ${this.playerNicknames[1]}님, ${this.playerNicknames[2]}님, ${this.playerNicknames[3]}님`;
+    } else if (this.phase > 1) {
+      return `[Notice] 게임이 2페이즈 이상 진행되었습니다!\n[Notice] 현재 페이즈: ${this.phase}`;
     } else if (this.playerNicknames.length <= 0) {
       this.intervalManager.addPlayer(
         config.hatchery.bossTargetIntervalId,
@@ -91,6 +136,7 @@ class Hatchery {
       this.lastUpdateTime = Date.now();
     }
     this.playerNicknames.push(playerNickname);
+    return false;
   }
 
   removePlayer(nickname) {
@@ -138,8 +184,9 @@ class Hatchery {
     // 여기 부분에 현재 위치 계산
     const lastUnitVec = this.lastUnitVector;
     const elapsedTime = Date.now() - this.lastUpdateTime;
+    const elapsedAttackTime = Date.now() - this.lastAttackTime;
     const timeDiff = elapsedTime / 1000;
-    const speed = this.boss.speed;
+    const speed = elapsedAttackTime > config.hatchery.bossAttackDelay ? this.boss.speed : 0;
 
     const moveDistance = timeDiff * speed;
     let distanceX = lastUnitVec.x * moveDistance;
@@ -177,9 +224,8 @@ class Hatchery {
     const rot = toEulerAngles(unitVec);
     bossTr.rot = rot - 90;
 
-    const bossUnitVector = inRange
-      ? { unitX: 0, unitZ: 0 }
-      : { unitX: unitVec.x, unitZ: unitVec.z };
+    const bossUnitVector =
+      inRange || !speed ? { unitX: 0, unitZ: 0 } : { unitX: unitVec.x, unitZ: unitVec.z };
 
     const bossMoveResponse = createResponse('response', 'S_BossMove', {
       bossTransform: bossTr,
@@ -190,7 +236,6 @@ class Hatchery {
       player.socket.write(bossMoveResponse);
     }
 
-    const elapsedAttackTime = Date.now() - this.lastAttackTime;
     if (inRange && elapsedAttackTime > config.hatchery.bossAttackSpeed) {
       const bossAttackResponse = createResponse('response', 'S_BossTryAttack', {});
       for (const player of players) {
@@ -201,6 +246,37 @@ class Hatchery {
 
     this.lastUpdateTime = Date.now();
     this.lastUnitVector = unitVec;
+  }
+
+  async pushDungeonItems(dungeonCode) {
+    this.items = [];
+    this.mountingItems = []; // random mounting item list
+    this.potions = []; // random potion list
+
+    const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
+    for (const item of dungeonItems) {
+      const itemInfo = await getItemById(item.id);
+      if (itemInfo.itemType === 'potion') {
+        // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
+        const potion = new Item(item.id, dungeonCode);
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.potions.push(this.items.length); // items에 저장될 idx
+        }
+        this.items.push(potion);
+      } else {
+        const mountingItem = new Item(item.id);
+        for (let i = 0; i < item.itemProbability; i++) {
+          // 확률 90% = 90개, 1% = 1개 넣어줌
+          this.mountingItems.push(this.items.length); // items에 저장될 idx
+        }
+        this.items.push(mountingItem);
+      }
+    }
+  }
+
+  getRandomItem() {
+    return this.items[this.mountingItems[Math.floor(Math.random() * this.mountingItems.length)]];
   }
 }
 

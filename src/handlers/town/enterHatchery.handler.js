@@ -16,8 +16,17 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
     const { hp, maxHp, name, transform, speed } = hatcherySession.boss;
     const { posX, posY, posZ, rot } = transform;
 
+    const canNotEnter = hatcherySession.addPlayer(user.nickname);
+    if (canNotEnter) {
+      const canNotEnterResponse = createResponse('response', 'S_Chat', {
+        playerId: user.playerId,
+        chatMsg: canNotEnter,
+      });
+      socket.write(canNotEnterResponse);
+      return;
+    }
+
     gameSession.removeUser(user.nickname);
-    hatcherySession.addPlayer(user.nickname);
 
     /***** S_EnterHatchery *****/
     const transformInfo = {
@@ -67,6 +76,16 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
 
       user.socket.write(spawnHatcheryResponse);
     }
+
+    /***** S_Despawn *****/
+    const despawnTownResponse = createResponse('response', 'S_Despawn', {
+      playerIds: [user.playerId],
+    });
+    const townUserIds = gameSession.getAllUserIds();
+    townUserIds.forEach((nickname) => {
+      const user = getUserByNickname(nickname);
+      user.socket.write(despawnTownResponse);
+    });
   } catch (err) {
     handleError(socket, err);
   }

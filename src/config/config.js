@@ -67,13 +67,18 @@ import {
 import {
   BOSS_ATTACK_RANGE,
   BOSS_ATTACK_SPEED,
+  BOSS_DELAY_AFTER_ATTACK,
   BOSS_ID,
   BOSS_INIT_TRANSFORM,
   BOSS_TARGET_INTERVAL,
   BOSS_TARGET_INTERVAL_ID,
   DROP_ITEMS_QUANTITY,
+  HATCHERY_DUNGEON_CODE,
   HATCHERY_SPAWN_AREA_POSITION,
   MAX_PLAYERS,
+  SECOND_PHASE_BIND_TIME,
+  SECOND_PHASE_BOSS_SPEED,
+  THIRD_PHASE_COUNT_TIME,
 } from '../constants/hatchery/sceneConfig.js';
 import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 import {
@@ -102,6 +107,7 @@ export const config = {
     port: PORT,
     host: HOST,
     channel: CHANNEL_NUMBER,
+    count: 3,
   },
   client: {
     version: CLIENT_VERSION,
@@ -206,7 +212,12 @@ export const config = {
     bossTargetInterval: BOSS_TARGET_INTERVAL,
     bossAttackRange: BOSS_ATTACK_RANGE,
     bossAttackSpeed: BOSS_ATTACK_SPEED,
+    bossAttackDelay: BOSS_DELAY_AFTER_ATTACK,
     spawnAreaPos: HATCHERY_SPAWN_AREA_POSITION,
+    dungeonCode: HATCHERY_DUNGEON_CODE,
+    bindTime: SECOND_PHASE_BIND_TIME,
+    updatedBossSpeed: SECOND_PHASE_BOSS_SPEED,
+    deathCountTime: THIRD_PHASE_COUNT_TIME,
   },
   town: {
     spawnAreaPos: TOWN_SPAWN_AREA_POSTION,
