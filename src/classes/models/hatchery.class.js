@@ -9,6 +9,7 @@ import { getStatInfo } from '../DBgateway/playerinfo.gateway.js';
 import IntervalManager from '../managers/interval.manager.js';
 import BossMonster from './bossMonster.class.js';
 import Bull from 'bull';
+import { getMonsterById } from '../../assets/monster.assets.js';
 import Item from './item.class.js';
 
 class Hatchery {
@@ -16,9 +17,8 @@ class Hatchery {
     this.initialize();
   }
 
-  initialize() {
+  async initialize() {
     this.phase = 1;
-
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
         host: config.redis.host,
@@ -43,7 +43,13 @@ class Hatchery {
       nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
     }; */
 
-    this.initMonster({ ...config.hatchery.bossInitTransform });
+    if (this.boss) {
+      // 보스가 이미 존재하면 기존 보스를 초기화
+      this.changeMonster({ ...config.hatchery.bossInitTransform }, this.boss.id);
+    } else {
+      // 보스가 존재하지 않으면 초기 보스를 생성
+      this.initMonster({ ...config.hatchery.bossInitTransform });
+    }
     this.pushDungeonItems(config.hatchery.dungeonCode);
   }
 
@@ -53,6 +59,38 @@ class Hatchery {
 
   async initMonster(transform) {
     const monster = await findMonsterById(config.hatchery.bossId);
+    const {
+      monsterId,
+      monsterName,
+      monsterHp,
+      monsterAttack,
+      monsterExp,
+      monsterEffect,
+      monsterGold,
+      monsterCritical,
+      monsterCriticalAttack,
+      monsterSpeed,
+    } = monster;
+
+    this.boss = new BossMonster(
+      0,
+      monsterId,
+      monsterHp,
+      monsterAttack,
+      monsterName,
+      monsterEffect,
+      monsterExp,
+      monsterGold,
+      monsterCritical,
+      monsterCriticalAttack,
+      monsterHp,
+      transform,
+      monsterSpeed || 3.0, // monsterSpeed
+    );
+  }
+
+  async changeMonster(transform, bossId) {
+    const monster = await getMonsterById(bossId);
     const {
       monsterId,
       monsterName,
