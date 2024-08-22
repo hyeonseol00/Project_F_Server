@@ -16,7 +16,6 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
     const { hp, maxHp, name, transform, speed } = hatcherySession.boss;
     const { posX, posY, posZ, rot } = transform;
 
-    gameSession.removeUser(user.nickname);
     const canNotEnter = hatcherySession.addPlayer(user.nickname);
     if (canNotEnter) {
       const canNotEnterResponse = createResponse('response', 'S_Chat', {
@@ -26,6 +25,8 @@ const enterHatcheryHandler = async ({ socket, payload }) => {
       socket.write(canNotEnterResponse);
       return;
     }
+
+    gameSession.removeUser(user.nickname);
 
     /***** S_EnterHatchery *****/
     const transformInfo = {
