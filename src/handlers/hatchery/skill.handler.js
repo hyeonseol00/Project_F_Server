@@ -50,11 +50,6 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
           playerStatInfo.magic = t;
           break;
       }
-      playerStatInfo.mp -= config.skill.manaCost;
-      playerStatInfo.atk += config.skill.atkBuff;
-      playerStatInfo.def += config.skill.defBuff;
-      playerStatInfo.critRate += config.skill.critRateBuff;
-      playerStatInfo.critDmg += config.skill.critDmgBuff;
     }
 
     //스킬 사용 시 플레이어 상태 업데이트
