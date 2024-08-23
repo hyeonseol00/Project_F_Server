@@ -232,5 +232,5 @@ message S_DisplayNotificationHatchery {
 }
 
 message S_TrySkill {
-  float playerId = 1;
+  int32 playerId = 1;
 }
