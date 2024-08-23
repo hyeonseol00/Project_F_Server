@@ -54,6 +54,8 @@ export const gameQueueProcess = async (nickname) => {
         user.socket.write(attackBossResponse);
         user.socket.write(killBossResponse);
       }
+      // 보스 처치 시 팬텀나이트로 보스 변경
+      hatcherySession.initMonster({ ...config.hatchery.bossInitTransform });
     }
     // boss hp에 따라 phase 구분
     else {
