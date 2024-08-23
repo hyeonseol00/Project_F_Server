@@ -104,9 +104,7 @@ import { TOWN_SPAWN_AREA_POSTION } from '../constants/town/townSceneConfig.js';
 import {
   MANA_COST,
   BUFF_CHARACTER_ATK,
-  BUFF_CHARACTER_DEF,
   BUFF_CHARACTER_CRITRATE,
-  BUFF_CHARACTER_CRITDMG,
 } from '../constants/hatchery/skillManaConfig.js';
 
 export const config = {
@@ -264,8 +262,6 @@ export const config = {
   skill: {
     manaCost: MANA_COST,
     atkBuff: BUFF_CHARACTER_ATK,
-    defBuff: BUFF_CHARACTER_DEF,
     critRateBuff: BUFF_CHARACTER_CRITRATE,
-    critDmgBuff: BUFF_CHARACTER_CRITDMG,
   },
 };

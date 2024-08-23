@@ -19,6 +19,8 @@ class Hatchery {
   }
 
   async initialize() {
+    this.berserkerList = [];
+    this.invincibilityList = [];
     this.phase = 1;
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
@@ -232,6 +234,24 @@ class Hatchery {
 
   getRandomItem() {
     return this.items[this.randomItems[Math.floor(Math.random() * this.randomItems.length)]];
+  }
+
+  berserkerModeOn(nickname) {
+    this.berserkerList.push(nickname);
+  }
+
+  berserkerModeOff(nickname) {
+    this.berserkerList = this.berserkerList.filter((name) => name !== nickname);
+  }
+
+  invincibilityModeOn(nickname) {
+    this.invincibilityList.push(nickname);
+    console.log(this.invincibilityList);
+  }
+
+  invincibilityModeOff(nickname) {
+    this.invincibilityList = this.invincibilityList.filter((name) => name !== nickname);
+    console.log(this.invincibilityList);
   }
 }
 

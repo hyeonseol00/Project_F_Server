@@ -19,9 +19,22 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
     }
     const finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
 
+    const isInvincible = hatcherySession.invincibilityList.find(
+      (nickname) => nickname === player.nickname,
+    );
+    const isBerserker = hatcherySession.berserkerList.find(
+      (nickname) => nickname === player.nickname,
+    );
+    if (isInvincible) {
+      return;
+    }
+
     playerStatInfo.hp -= finalDamage;
     if (playerStatInfo.hp <= 0) {
       playerStatInfo.hp = 0;
+      if (isBerserker) {
+        playerStatInfo.hp = 1;
+      }
     }
 
     const playerHitResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
