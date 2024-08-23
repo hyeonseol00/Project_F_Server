@@ -109,9 +109,9 @@ export default async function switchToMonsterAttackScene(dungeon, socket) {
     });
     socket.write(playerHp);
 
-    await setStatInfo(socket, playerStatInfo);
-
     dungeon.battleSceneStatus = config.sceneStatus.enemyAtk;
     dungeon.accTargetIdx();
+
+    await setStatInfo(socket, playerStatInfo);
   }
 }
