@@ -17,7 +17,10 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
       const criticalRate = boss.criticalAttack / 100;
       decreaseHp = Math.floor(boss.power * criticalRate);
     }
-    const finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
+
+    let finalDamage = decreaseHp;
+    if (hatcherySession.phase === 1)
+      finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
 
     const isInvincible = hatcherySession.invincibilityList.find(
       (nickname) => nickname === player.nickname,

@@ -31,8 +31,6 @@ export const gameQueueProcess = async (nickname) => {
       const criticalRate = playerStatInfo.critDmg / 100;
       decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
-    console.log(playerStatInfo);
-    console.log(`${curUser.nickname} atk: `, decreaseHp);
     hatcherySession.boss.hp -= decreaseHp;
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;

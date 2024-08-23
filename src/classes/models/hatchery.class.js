@@ -238,22 +238,18 @@ class Hatchery {
 
   berserkerModeOn(nickname) {
     this.berserkerList.push(nickname);
-    console.log('berserkerList: ', this.berserkerList);
   }
 
   berserkerModeOff(nickname) {
     this.berserkerList = this.berserkerList.filter((name) => name !== nickname);
-    console.log('berserkerList: ', this.berserkerList);
   }
 
   invincibilityModeOn(nickname) {
     this.invincibilityList.push(nickname);
-    console.log('invincibilityList: ', this.invincibilityList);
   }
 
   invincibilityModeOff(nickname) {
     this.invincibilityList = this.invincibilityList.filter((name) => name !== nickname);
-    console.log('invincibilityList: ', this.invincibilityList);
   }
 }
 
