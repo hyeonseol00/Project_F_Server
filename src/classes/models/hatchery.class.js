@@ -14,6 +14,7 @@ import Item from './item.class.js';
 
 class Hatchery {
   constructor() {
+    this.nextBossId = config.hatchery.bossId;
     this.initialize();
   }
 
@@ -43,13 +44,9 @@ class Hatchery {
       nickname2: { posX: 0, posY: 0, posZ: 0, rot: 0 },
     }; */
 
-    if (this.boss) {
-      // 보스가 이미 존재하면 기존 보스를 초기화
-      this.changeMonster({ ...config.hatchery.bossInitTransform }, this.boss.id);
-    } else {
-      // 보스가 존재하지 않으면 초기 보스를 생성
-      this.initMonster({ ...config.hatchery.bossInitTransform });
-    }
+    // 보스 생성
+    this.createMonster({ ...config.hatchery.bossInitTransform });
+
     this.pushDungeonItems(config.hatchery.dungeonCode);
   }
 
@@ -57,39 +54,9 @@ class Hatchery {
     await this.gameQueue.add({ nickname: JSON.stringify(data) });
   }
 
-  async initMonster(transform) {
-    const monster = await findMonsterById(config.hatchery.bossId);
-    const {
-      monsterId,
-      monsterName,
-      monsterHp,
-      monsterAttack,
-      monsterExp,
-      monsterEffect,
-      monsterGold,
-      monsterCritical,
-      monsterCriticalAttack,
-      monsterSpeed,
-    } = monster;
-
-    this.boss = new BossMonster(
-      0,
-      monsterId,
-      monsterHp,
-      monsterAttack,
-      monsterName,
-      monsterEffect,
-      monsterExp,
-      monsterGold,
-      monsterCritical,
-      monsterCriticalAttack,
-      monsterHp,
-      transform,
-      monsterSpeed || 3.0, // monsterSpeed
-    );
-  }
-
-  async changeMonster(transform, bossId) {
+  async createMonster(transform) {
+    const bossId = this.nextBossId;
+    this.nextBossId = config.hatchery.bossId;
     const monster = await getMonsterById(bossId);
     const {
       monsterId,
@@ -250,33 +217,21 @@ class Hatchery {
 
   async pushDungeonItems(dungeonCode) {
     this.items = [];
-    this.mountingItems = []; // random mounting item list
-    this.potions = []; // random potion list
+    this.randomItems = []; // random item idx list
 
     const dungeonItems = await getDungeonItemsByDungeonCode(dungeonCode + 5000);
     for (const item of dungeonItems) {
-      const itemInfo = await getItemById(item.id);
-      if (itemInfo.itemType === 'potion') {
-        // quantity: 1던전에선 포션 1개, 4던전에선 4개 지급
-        const potion = new Item(item.id, dungeonCode);
-        for (let i = 0; i < item.itemProbability; i++) {
-          // 확률 90% = 90개, 1% = 1개 넣어줌
-          this.potions.push(this.items.length); // items에 저장될 idx
-        }
-        this.items.push(potion);
-      } else {
-        const mountingItem = new Item(item.id);
-        for (let i = 0; i < item.itemProbability; i++) {
-          // 확률 90% = 90개, 1% = 1개 넣어줌
-          this.mountingItems.push(this.items.length); // items에 저장될 idx
-        }
-        this.items.push(mountingItem);
+      const curItem = new Item(item.id);
+      for (let i = 0; i < item.itemProbability; i++) {
+        // 확률 90 = 90개, 9 = 9개, 1 = 1개 넣어줌
+        this.randomItems.push(this.items.length); // items에 저장될 idx
       }
+      this.items.push(curItem);
     }
   }
 
   getRandomItem() {
-    return this.items[this.mountingItems[Math.floor(Math.random() * this.mountingItems.length)]];
+    return this.items[this.randomItems[Math.floor(Math.random() * this.randomItems.length)]];
   }
 }
 
