@@ -1,7 +1,7 @@
 import { getStatInfo, setStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../config/config.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
-import { getUserBySocket } from '../../session/user.session.js';
+import { getUserBySocket, getUserByNickname } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const skillHatcheryHandler = async ({ socket, payload }) => {
@@ -13,11 +13,15 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     const { skillTime } = payload;
 
     //스킬 사용 시 스탯 변경
-    playerStatInfo.mp -= config.skill.manaCost;
-    playerStatInfo.atk += config.skill.atkBuff;
-    playerStatInfo.def += config.skill.defBuff;
-    playerStatInfo.critRate += config.skill.critRateBuff;
-    playerStatInfo.critDmg += config.skill.critDmgBuff;
+    if (playerStatInfo.mp < config.skill.manaCost) {
+      return;
+    } else {
+      playerStatInfo.mp -= config.skill.manaCost;
+      playerStatInfo.atk += config.skill.atkBuff;
+      playerStatInfo.def += config.skill.defBuff;
+      playerStatInfo.critRate += config.skill.critRateBuff;
+      playerStatInfo.critDmg += config.skill.critDmgBuff;
+    }
 
     //스킬 사용 시 플레이어 상태 업데이트
     const response = createResponse('response', 'S_TrySkill', {
