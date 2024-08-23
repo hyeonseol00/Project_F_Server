@@ -20,13 +20,13 @@ export const eventNotificationHandler = async (data) => {
       rewardId: rewardId ? rewardId : 1,
     });
 
+    chatHandlerMappings[eventId](data);
+
     for (const user of allUser) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
         chatMsg: `[Event]: ${eventName}`,
       });
-
-      chatHandlerMappings[eventId](data);
 
       user.socket.write(response);
     }
