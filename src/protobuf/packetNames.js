@@ -43,6 +43,7 @@ export const packetNames = {
     S_EnterSecondPhase: 'response.S_EnterSecondPhase',
     S_EnterThirdPhase: 'response.S_EnterThirdPhase',
     S_DisplayNotificationHatchery: 'response.S_DisplayNotificationHatchery',
+    S_TrySkill: 'response.S_TrySkill',
   },
   town: {
     C_Enter: 'town.C_Enter',
@@ -74,6 +75,7 @@ export const packetNames = {
     C_PlayerHit: 'hatchery.C_PlayerHit',
     C_TryUsePotion: 'hatchery.C_TryUsePotion',
     C_HatcherySelectReward: 'hatchery.C_HatcherySelectReward',
+    C_TrySkill: 'hatchery.C_TrySkill',
   },
   custom: {
     PlayerInfo: 'custom.PlayerInfo',

@@ -28,3 +28,7 @@ message C_TryUsePotion {
 message C_HatcherySelectReward {
   int32 selectedBtn = 1;
 }
+
+message C_TrySkill {
+  float skillTime = 1;
+}

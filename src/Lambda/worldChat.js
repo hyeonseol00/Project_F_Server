@@ -20,8 +20,6 @@ export const eventNotificationHandler = async (data) => {
       rewardId: rewardId ? rewardId : 1,
     });
 
-    chatHandlerMappings[eventId](data);
-
     for (const user of allUser) {
       const response = createResponse('response', 'S_Chat', {
         playerId: user.playerId,
@@ -30,6 +28,9 @@ export const eventNotificationHandler = async (data) => {
 
       user.socket.write(response);
     }
+
+    // 이벤트 내용 나온 뒤 이벤트 진행
+    chatHandlerMappings[eventId](data);
   } catch (err) {
     console.error(err);
   }
