@@ -230,3 +230,7 @@ message S_EnterThirdPhase {
 message S_DisplayNotificationHatchery {
   string msg = 1;
 }
+
+message S_TrySkill {
+  float playerId = 1;
+}

@@ -77,5 +77,7 @@ export const PACKET_TYPE = {
   S_EnterSecondPhase: 225,
   S_EnterThirdPhase: 226,
   S_DisplayNotificationHatchery: 227,
+  C_TrySkill: 228,
+  S_TrySkill: 229,
   // ********** 200번대 패킷 끝 ********** //
 };
