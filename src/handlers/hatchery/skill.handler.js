@@ -13,7 +13,7 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     const { skillTime } = payload;
 
     //스킬 사용 시 스탯 변경
-    if (playerStatInfo.mp <= config.skill.manaCost) {
+    if (playerStatInfo.mp < config.skill.manaCost) {
       return;
     } else {
       playerStatInfo.mp -= config.skill.manaCost;
