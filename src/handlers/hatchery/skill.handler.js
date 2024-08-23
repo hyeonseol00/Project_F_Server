@@ -13,15 +13,11 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     const { skillTime } = payload;
 
     //스킬 사용 시 스탯 변경
-    if (playerStatInfo.mp < config.skill.manaCost) {
-      return;
-    } else {
-      playerStatInfo.mp -= config.skill.manaCost;
-      playerStatInfo.atk += config.skill.atkBuff;
-      playerStatInfo.def += config.skill.defBuff;
-      playerStatInfo.critRate += config.skill.critRateBuff;
-      playerStatInfo.critDmg += config.skill.critDmgBuff;
-    }
+    playerStatInfo.mp -= config.skill.manaCost;
+    playerStatInfo.atk += config.skill.atkBuff;
+    playerStatInfo.def += config.skill.defBuff;
+    playerStatInfo.critRate += config.skill.critRateBuff;
+    playerStatInfo.critDmg += config.skill.critDmgBuff;
 
     //스킬 사용 시 플레이어 상태 업데이트
     const response = createResponse('response', 'S_TrySkill', {
