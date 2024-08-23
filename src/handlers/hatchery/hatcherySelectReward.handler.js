@@ -59,9 +59,10 @@ const hatcherySelectRewardHandler = async ({ socket, payload }) => {
       /***** 경험치 지급 로직 *****/
       const playerLevel = userStatInfo.level;
       const nextLevelData = await getLevelById(playerLevel + 1);
+      const requiredExp = nextLevelData ? nextLevelData.requiredExp : 0;
 
-      if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
-        playerExp -= nextLevelData.requiredExp;
+      if (playerExp >= requiredExp && playerLevel < config.battleScene.maxLevel) {
+        playerExp -= requiredExp;
 
         userStatInfo.level = playerLevel + 1;
         userStatInfo.exp = playerExp;

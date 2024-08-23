@@ -85,11 +85,12 @@ const questRewardHandler = async (sender, message) => {
 
     // 레벨업 로직
     const playerLevel = userStatInfo.level;
-    const nextLevelData = getLevelById(playerLevel + 1);
+    const nextLevelData = await getLevelById(playerLevel + 1);
+    const requiredExp = nextLevelData ? nextLevelData.requiredExp : 0;
     let levelUpMessage = '';
 
-    if (playerExp >= nextLevelData.requiredExp && playerLevel < config.battleScene.maxLevel) {
-      playerExp -= nextLevelData.requiredExp;
+    if (playerExp >= requiredExp && playerLevel < config.battleScene.maxLevel) {
+      playerExp -= requiredExp;
 
       userStatInfo.level = playerLevel + 1;
       userStatInfo.exp = playerExp;
