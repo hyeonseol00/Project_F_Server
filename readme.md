@@ -40,7 +40,7 @@
 
 ## 📃 와이어 프레임
 
-![와이어프레임](https://github.com/user-attachments/assets/8d601aa0-0397-44cc-a1e5-a6f56ea08a19)
+![수정된 와이어 프레임](https://github.com/user-attachments/assets/8ffa03ad-bc34-47a1-8f0e-1b025d5f4f6f)
 
 ## 📃 ERD Diagram
 
