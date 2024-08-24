@@ -121,6 +121,6 @@ export default async function targetMonsterScene(responseCode, dungeon, socket) 
     dungeon.currentAttackType = config.attackType.normal;
   }
 
-  await setStatInfo(socket, playerStatInfo);
   dungeon.battleSceneStatus = config.sceneStatus.playerAtk;
+  await setStatInfo(socket, playerStatInfo);
 }

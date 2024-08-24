@@ -35,8 +35,12 @@
 <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
 <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+<img src="https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white">
 <img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
 <img src="https://img.shields.io/badge/amazonrds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white">
+<img src="https://img.shields.io/badge/awslambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white">
+<img src="https://img.shields.io/badge/amazondynamodb-4053D6?style=for-the-badge&logo=amazondynamodb&logoColor=white">
+<img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
 
 ## 📃 와이어 프레임
 
@@ -227,6 +231,8 @@
     - 보스를 쓰러뜨리거나 사망 시 마을로 귀환할 수 있습니다.
     - 보스의 체력이 일정 수준 이하로 낮아지면 페이즈가 변경돼 보스의 패턴이 바뀌게 됩니다.
     - 버그의 둥지에서 인벤토리에 있는 포션 아이템을 사용할 수 있도록 했습니다.
+    - 마우스 우클릭 시 각 클래스마다 고유한 버프를 받을 수 있습니다.
+    - 보스에 마지막 타격을 입힌 유저에대해 보상을 선택할 기회를 줍니다.
 
 15. **퀘스트 시스템**
     - 접속한 캐릭터의 레벨을 기준으로 수락할 수 있는 퀘스트가 있습니다.
