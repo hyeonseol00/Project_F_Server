@@ -31,7 +31,6 @@ export const gameQueueProcess = async (nickname) => {
       const criticalRate = playerStatInfo.critDmg / 100;
       decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
-
     hatcherySession.boss.hp -= decreaseHp;
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
@@ -54,11 +53,6 @@ export const gameQueueProcess = async (nickname) => {
         user.socket.write(attackBossResponse);
         user.socket.write(killBossResponse);
       }
-      // 보스 처치 시 팬텀나이트로 보스 변경
-      hatcherySession.changeMonster(
-        { ...config.hatchery.bossInitTransform },
-        config.hatchery.bossId,
-      );
     }
     // boss hp에 따라 phase 구분
     else {

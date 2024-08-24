@@ -1,4 +1,8 @@
-import { getStatInfo, setStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getPlayerInfo,
+  getStatInfo,
+  setStatInfo,
+} from '../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../config/config.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket, getUserByNickname } from '../../session/user.session.js';
@@ -9,6 +13,8 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     const player = getUserBySocket(socket);
     const playerStatInfo = await getStatInfo(socket);
     const hatcherySession = getHatcherySession();
+    const playerInfo = await getPlayerInfo(socket);
+    const jobId = playerInfo.class;
 
     const { skillTime } = payload;
 
@@ -16,11 +22,24 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     if (playerStatInfo.mp < config.skill.manaCost) {
       return;
     } else {
-      playerStatInfo.mp -= config.skill.manaCost;
-      playerStatInfo.atk += config.skill.atkBuff;
-      playerStatInfo.def += config.skill.defBuff;
-      playerStatInfo.critRate += config.skill.critRateBuff;
-      playerStatInfo.critDmg += config.skill.critDmgBuff;
+      switch (jobId) {
+        case 1001:
+          break;
+        case 1002:
+          playerStatInfo.critRate += config.skill.critRateBuff;
+          playerStatInfo.critDmg *= 2;
+          hatcherySession.berserkerModeOn(player.nickname);
+          break;
+        case 1003:
+          break;
+        case 1004:
+          playerStatInfo.atk *= config.skill.atkBuff;
+          hatcherySession.invincibilityModeOn(player.nickname);
+          break;
+        case 1005:
+          playerStatInfo.atk += playerStatInfo.magic;
+          break;
+      }
     }
 
     //스킬 사용 시 플레이어 상태 업데이트
@@ -46,13 +65,26 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     setTimeout(async () => {
       const playerStatInfo = await getStatInfo(socket);
 
-      playerStatInfo.atk -= config.skill.atkBuff;
-      playerStatInfo.def -= config.skill.defBuff;
-      playerStatInfo.critRate -= config.skill.critRateBuff;
-      playerStatInfo.critDmg -= config.skill.critDmgBuff;
-
+      switch (jobId) {
+        case 1001:
+          break;
+        case 1002:
+          playerStatInfo.critRate -= config.skill.critRateBuff;
+          playerStatInfo.critDmg /= 2;
+          hatcherySession.berserkerModeOff(player.nickname);
+          break;
+        case 1003:
+          break;
+        case 1004:
+          playerStatInfo.atk /= config.skill.atkBuff;
+          hatcherySession.invincibilityModeOff(player.nickname);
+          break;
+        case 1005:
+          playerStatInfo.atk -= playerStatInfo.magic;
+          break;
+      }
       await setStatInfo(socket, playerStatInfo);
-    }, skillTime);
+    }, skillTime * 1000);
   } catch (err) {
     console.error(err);
   }
