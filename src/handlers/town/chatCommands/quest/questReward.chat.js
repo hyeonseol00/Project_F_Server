@@ -16,6 +16,7 @@ import {
   getStatInfo,
   setGold,
   setStatInfo,
+  skillPointUpdate,
 } from '../../../../classes/DBgateway/playerinfo.gateway.js';
 import { getGameSession } from '../../../../session/game.session.js';
 
@@ -106,7 +107,7 @@ const questRewardHandler = async (sender, message) => {
       userStatInfo.critDmg += nextLevelData.criticalAttack;
       userStatInfo.avoidRate += nextLevelData.avoidAbility;
 
-      skillPointUpdate(socket, user.skillPoint + nextLevelData.skillPoint);
+      skillPointUpdate(user.socket, user.skillPoint + nextLevelData.skillPoint);
 
       if ((playerLevel + 1) % 5 === 0) {
         user.worldLevel++;

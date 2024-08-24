@@ -17,7 +17,6 @@ export const gameQueueProcess = async (nickname) => {
 
   try {
     const hatcherySession = getHatcherySession();
-    if (hatcherySession.boss.hp <= 0) return;
     const playerStatInfo = await getStatInfo(curUser.socket);
 
     if (hatcherySession.boss.hp <= 0) {
