@@ -1,8 +1,4 @@
-import {
-  getPlayerInfo,
-  getStatInfo,
-  setStatInfo,
-} from '../../classes/DBgateway/playerinfo.gateway.js';
+import { getPlayerInfo, getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../config/config.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket, getUserByNickname } from '../../session/user.session.js';

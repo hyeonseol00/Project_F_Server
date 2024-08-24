@@ -8,7 +8,6 @@ import { getUserByNickname, getUserBySocket } from '../../session/user.session.j
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import { some } from 'lodash';
 // import { questProgressHandler } from '../../town/chatCommands/quest/questProgress.chat.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
