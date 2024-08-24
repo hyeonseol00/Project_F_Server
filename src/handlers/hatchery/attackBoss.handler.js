@@ -1,9 +1,14 @@
-import { getStatInfo, setStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getPlayerInfo,
+  getStatInfo,
+  setStatInfo,
+} from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
+import { some } from 'lodash';
 // import { questProgressHandler } from '../../town/chatCommands/quest/questProgress.chat.js';
 
 const attackBossHatcheryHandler = async ({ socket, payload }) => {
@@ -19,6 +24,8 @@ export const gameQueueProcess = async (nickname) => {
     const hatcherySession = getHatcherySession();
     if (hatcherySession.boss.hp <= 0) return;
     const playerStatInfo = await getStatInfo(curUser.socket);
+    const playerInfo = await getPlayerInfo(curUser.socket);
+    const jobId = playerInfo.jobId;
 
     if (hatcherySession.boss.hp <= 0) {
       return;
@@ -31,6 +38,32 @@ export const gameQueueProcess = async (nickname) => {
       const criticalRate = playerStatInfo.critDmg / 100;
       decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
+
+    if (curUser.isBuff) {
+      switch (jobId) {
+        case 1002:
+          if (isCritical <= playerStatInfo.critRate + config.skill.critRateBuff) {
+            const criticalRate = (playerStatInfo.critDmg * 2) / 100;
+            decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
+          }
+          break;
+        case 1004:
+          if (isCritical <= playerStatInfo.critRate) {
+            const criticalRate = playerStatInfo.critDmg / 100;
+            decreaseHp = Math.floor(playerStatInfo.atk * config.skill.atkBuff * criticalRate);
+          }
+          break;
+        case 1005:
+          if (isCritical <= playerStatInfo.critRate) {
+            const criticalRate = playerStatInfo.critDmg / 100;
+            decreaseHp = Math.floor((playerStatInfo.atk + playerStatInfo.magic) * criticalRate);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
     hatcherySession.boss.hp -= decreaseHp;
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;

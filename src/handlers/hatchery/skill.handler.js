@@ -22,22 +22,16 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
     if (playerStatInfo.mp < config.skill.manaCost) {
       return;
     } else {
+      player.isBuff = true;
+      playerStatInfo.mp -= config.skill.manaCost;
       switch (jobId) {
-        case 1001:
-          break;
         case 1002:
-          playerStatInfo.critRate += config.skill.critRateBuff;
-          playerStatInfo.critDmg *= 2;
           hatcherySession.berserkerModeOn(player.nickname);
           break;
-        case 1003:
-          break;
         case 1004:
-          playerStatInfo.atk *= config.skill.atkBuff;
           hatcherySession.invincibilityModeOn(player.nickname);
           break;
-        case 1005:
-          playerStatInfo.atk += playerStatInfo.magic;
+        default:
           break;
       }
     }
@@ -59,31 +53,19 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
       user.socket.write(playerHpMpResponse);
     });
 
-    await setStatInfo(socket, playerStatInfo);
-
     // 버프 빠지고 다시 스텟 변경
-    setTimeout(async () => {
-      const playerStatInfo = await getStatInfo(socket);
-
+    setTimeout(() => {
+      player.isBuff = false;
       switch (jobId) {
-        case 1001:
-          break;
         case 1002:
-          playerStatInfo.critRate -= config.skill.critRateBuff;
-          playerStatInfo.critDmg /= 2;
           hatcherySession.berserkerModeOff(player.nickname);
           break;
-        case 1003:
-          break;
         case 1004:
-          playerStatInfo.atk /= config.skill.atkBuff;
           hatcherySession.invincibilityModeOff(player.nickname);
           break;
-        case 1005:
-          playerStatInfo.atk -= playerStatInfo.magic;
+        default:
           break;
       }
-      await setStatInfo(socket, playerStatInfo);
     }, skillTime * 1000);
   } catch (err) {
     console.error(err);
