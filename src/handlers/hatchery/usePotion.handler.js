@@ -22,6 +22,11 @@ export const usePotionHandler = async ({ socket, payload }) => {
     const useItemInfo = await getItemById(useItemId);
     const { itemHp, itemMp, requireLevel } = useItemInfo;
 
+    if (hp <= 0) {
+      console.log(`이미 사망한 유저입니다.`);
+      return;
+    }
+
     if (!userItem || userItem.quantity <= 0) {
       // 수량 부족 검증
       console.log(`${useItemInfo.itemName} 아이템이 없습니다.`);
