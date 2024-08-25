@@ -27,6 +27,8 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
         case 1004:
           hatcherySession.invincibilityModeOn(player.nickname);
           break;
+        case 1005:
+          hatcherySession.mageModeOn(player.nickname);
         default:
           break;
       }
@@ -59,6 +61,8 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
         case 1004:
           hatcherySession.invincibilityModeOff(player.nickname);
           break;
+        case 1005:
+          hatcherySession.mageModeOff(player.nickname);
         default:
           break;
       }

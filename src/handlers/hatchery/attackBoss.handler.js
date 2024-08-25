@@ -23,11 +23,23 @@ export const gameQueueProcess = async (nickname) => {
     const hatcherySession = getHatcherySession();
     if (hatcherySession.boss.hp <= 0) return;
     const playerStatInfo = await getStatInfo(curUser.socket);
-    const playerInfo = await getPlayerInfo(curUser.socket);
-    const jobId = playerInfo.jobId;
 
-    if (hatcherySession.boss.hp <= 0) {
-      return;
+    if (curUser.isBuff) {
+      const isBerserker = hatcherySession.berserkerList.find(
+        (nickname) => nickname === curUser.nickname,
+      );
+      const isInvincible = hatcherySession.invincibilityList.find(
+        (nickname) => nickname === curUser.nickname,
+      );
+      const isMage = hatcherySession.mageList.find((nickname) => nickname === curUser.nickname);
+      if (isBerserker) {
+        playerStatInfo.critRate += config.skill.critRateBuff;
+        playerStatInfo.critDmg *= 2;
+      } else if (isInvincible) {
+        playerStatInfo.atk *= config.skill.atkBuff;
+      } else if (isMage) {
+        playerStatInfo.atk += playerStatInfo.magic;
+      }
     }
 
     let decreaseHp = playerStatInfo.atk;
@@ -38,32 +50,10 @@ export const gameQueueProcess = async (nickname) => {
       decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
 
-    if (curUser.isBuff) {
-      switch (jobId) {
-        case 1002:
-          if (isCritical <= playerStatInfo.critRate + config.skill.critRateBuff) {
-            const criticalRate = (playerStatInfo.critDmg * 2) / 100;
-            decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
-          }
-          break;
-        case 1004:
-          if (isCritical <= playerStatInfo.critRate) {
-            const criticalRate = playerStatInfo.critDmg / 100;
-            decreaseHp = Math.floor(playerStatInfo.atk * config.skill.atkBuff * criticalRate);
-          }
-          break;
-        case 1005:
-          if (isCritical <= playerStatInfo.critRate) {
-            const criticalRate = playerStatInfo.critDmg / 100;
-            decreaseHp = Math.floor((playerStatInfo.atk + playerStatInfo.magic) * criticalRate);
-          }
-          break;
-        default:
-          break;
-      }
-    }
-
     hatcherySession.boss.hp -= decreaseHp;
+    console.log(
+      `decreaseHp: ${decreaseHp}, isBuff: ${curUser.isBuff}, criRate: ${playerStatInfo.critRate}`,
+    );
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
     const attackBossResponse = createResponse('response', 'S_SetHatcheryBossHp', {

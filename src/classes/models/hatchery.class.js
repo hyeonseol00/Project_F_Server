@@ -21,6 +21,7 @@ class Hatchery {
   async initialize() {
     this.berserkerList = [];
     this.invincibilityList = [];
+    this.mageList = [];
     this.phase = 1;
     this.gameQueue = new Bull(config.bullQueue.queueName, {
       redis: {
@@ -250,6 +251,14 @@ class Hatchery {
 
   invincibilityModeOff(nickname) {
     this.invincibilityList = this.invincibilityList.filter((name) => name !== nickname);
+  }
+
+  mageModeOn(nickname) {
+    this.mageList.push(nickname);
+  }
+
+  mageModeOff(nickname) {
+    this.mageList = this.mageList.filter((name) => name !== nickname);
   }
 }
 
