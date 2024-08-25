@@ -51,9 +51,6 @@ export const gameQueueProcess = async (nickname) => {
     }
 
     hatcherySession.boss.hp -= decreaseHp;
-    console.log(
-      `decreaseHp: ${decreaseHp}, isBuff: ${curUser.isBuff}, criRate: ${playerStatInfo.critRate}`,
-    );
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
     const attackBossResponse = createResponse('response', 'S_SetHatcheryBossHp', {

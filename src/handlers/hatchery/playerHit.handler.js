@@ -38,6 +38,8 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
       playerStatInfo.hp = 0;
       if (isBerserker) {
         playerStatInfo.hp = 1;
+      } else {
+        hatcherySession.deadPlayer.push(player.nickname);
       }
     }
 

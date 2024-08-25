@@ -38,6 +38,7 @@ class Hatchery {
     });
 
     this.playerNicknames = [];
+    this.deadPlayer = [];
     this.intervalManager = new IntervalManager();
     this.lastUnitVector = { x: 0, z: 0 };
     this.lastAttackTime = Date.now();
@@ -137,11 +138,11 @@ class Hatchery {
 
     // 플레이어들과 몬스터 간의 거리 계산
     for (const player of players) {
+      const isDead = this.deadPlayer.find((nickname) => nickname === player.nickname);
+      if (isDead) continue;
       const playerTr = this.transforms[player.nickname];
       const distance = this.boss.getDistanceFromPlayer(playerTr);
-      const playerStatInfo = await getStatInfo(player.socket);
-      const hp = playerStatInfo.hp;
-      if (minDistance > distance && hp > 0) {
+      if (minDistance > distance) {
         minDistance = distance;
         targetPlayerTr = playerTr;
       }

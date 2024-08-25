@@ -16,16 +16,16 @@ export const usePotionHandler = async ({ socket, payload }) => {
     const userStatInfo = await getStatInfo(socket);
     const { hp, maxHp, mp, maxMp, level } = userStatInfo;
 
+    if (hp <= 0) {
+      console.log(`이미 사망한 유저입니다.`);
+      return;
+    }
+
     const { itemId: useItemId } = payload;
     const userItem = await getItem(socket, useItemId);
 
     const useItemInfo = await getItemById(useItemId);
     const { itemHp, itemMp, requireLevel } = useItemInfo;
-
-    if (hp <= 0) {
-      console.log(`이미 사망한 유저입니다.`);
-      return;
-    }
 
     if (!userItem || userItem.quantity <= 0) {
       // 수량 부족 검증
@@ -42,10 +42,14 @@ export const usePotionHandler = async ({ socket, payload }) => {
     const newHp = Math.min(hp + itemHp, maxHp);
     const newMp = Math.min(mp + itemMp, maxMp);
 
-    // 상태 업데이트
-    userStatInfo.hp = newHp;
-    userStatInfo.mp = newMp;
-    await setStatInfo(socket, userStatInfo);
+    const user = await getUserBySocket(socket);
+    const hatcherySession = getHatcherySession();
+
+    const isDead = hatcherySession.deadPlayer.find((nickname) => nickname === user.nickname);
+    if (isDead) {
+      console.log(`이미 사망한 유저입니다.`);
+      return;
+    }
 
     // 인벤토리 업데이트
     if (userItem.quantity === 1) {
@@ -54,6 +58,11 @@ export const usePotionHandler = async ({ socket, payload }) => {
       await decItem(socket, useItemId, 1);
     }
 
+    // 상태 업데이트
+    userStatInfo.hp = newHp;
+    userStatInfo.mp = newMp;
+    await setStatInfo(socket, userStatInfo);
+
     // S_TryUsePotion 패킷 전송
     const usePotionResponse = createResponse('response', 'S_TryUsePotion', {
       itemId: useItemId,
@@ -61,13 +70,11 @@ export const usePotionHandler = async ({ socket, payload }) => {
     });
     socket.write(usePotionResponse);
 
-    const user = await getUserBySocket(socket);
-    const hatcherySession = getHatcherySession();
     // S_SetPlayerHpMpHatchery 패킷 전송
     const setPlayerStatResponse = createResponse('response', 'S_SetPlayerHpMpHatchery', {
       playerId: user.playerId,
-      playerCurHp: userStatInfo.hp,
-      playerCurMp: userStatInfo.mp,
+      playerCurHp: newHp,
+      playerCurMp: newMp,
     });
     hatcherySession.playerNicknames.forEach((nickname) => {
       const user = getUserByNickname(nickname);
