@@ -1,4 +1,8 @@
-import { getPlayerInfo, getStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getPlayerInfo,
+  getStatInfo,
+  setStatInfo,
+} from '../../classes/DBgateway/playerinfo.gateway.js';
 import { config } from '../../config/config.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserBySocket, getUserByNickname } from '../../session/user.session.js';
@@ -50,6 +54,8 @@ const skillHatcheryHandler = async ({ socket, payload }) => {
       user.socket.write(response);
       user.socket.write(playerHpMpResponse);
     });
+
+    await setStatInfo(socket, playerStatInfo);
 
     // 버프 빠지고 다시 스텟 변경
     setTimeout(() => {
