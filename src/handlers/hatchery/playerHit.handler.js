@@ -7,8 +7,15 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const playerHitHatcheryHandler = async ({ socket, payload }) => {
   try {
     const player = getUserBySocket(socket);
-    const playerStatInfo = await getStatInfo(socket);
     const hatcherySession = getHatcherySession();
+    const isInvincible = hatcherySession.invincibilityList.find(
+      (nickname) => nickname === player.nickname,
+    );
+    if (isInvincible) {
+      return;
+    }
+
+    const playerStatInfo = await getStatInfo(socket);
     const boss = hatcherySession.boss;
 
     let decreaseHp = boss.power;
@@ -22,21 +29,17 @@ const playerHitHatcheryHandler = async ({ socket, payload }) => {
     if (hatcherySession.phase === 1)
       finalDamage = Math.floor(decreaseHp / (1 + playerStatInfo.def * 0.01)); // LOL 피해량 공식
 
-    const isInvincible = hatcherySession.invincibilityList.find(
-      (nickname) => nickname === player.nickname,
-    );
     const isBerserker = hatcherySession.berserkerList.find(
       (nickname) => nickname === player.nickname,
     );
-    if (isInvincible) {
-      return;
-    }
 
     playerStatInfo.hp -= finalDamage;
     if (playerStatInfo.hp <= 0) {
       playerStatInfo.hp = 0;
       if (isBerserker) {
         playerStatInfo.hp = 1;
+      } else {
+        hatcherySession.deadPlayer.push(player.nickname);
       }
     }
 

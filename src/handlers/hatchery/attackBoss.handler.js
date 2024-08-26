@@ -1,4 +1,8 @@
-import { getStatInfo, setStatInfo } from '../../classes/DBgateway/playerinfo.gateway.js';
+import {
+  getPlayerInfo,
+  getStatInfo,
+  setStatInfo,
+} from '../../classes/DBgateway/playerinfo.gateway.js';
 import { getHatcherySession } from '../../session/hatchery.session.js';
 import { getUserByNickname, getUserBySocket } from '../../session/user.session.js';
 import { createResponse } from '../../utils/response/createResponse.js';
@@ -17,10 +21,25 @@ export const gameQueueProcess = async (nickname) => {
 
   try {
     const hatcherySession = getHatcherySession();
+    if (hatcherySession.boss.hp <= 0) return;
     const playerStatInfo = await getStatInfo(curUser.socket);
 
-    if (hatcherySession.boss.hp <= 0) {
-      return;
+    if (curUser.isBuff) {
+      const isBerserker = hatcherySession.berserkerList.find(
+        (nickname) => nickname === curUser.nickname,
+      );
+      const isInvincible = hatcherySession.invincibilityList.find(
+        (nickname) => nickname === curUser.nickname,
+      );
+      const isMage = hatcherySession.mageList.find((nickname) => nickname === curUser.nickname);
+      if (isBerserker) {
+        playerStatInfo.critRate += config.skill.critRateBuff;
+        playerStatInfo.critDmg *= 2;
+      } else if (isInvincible) {
+        playerStatInfo.atk *= config.skill.atkBuff;
+      } else if (isMage) {
+        playerStatInfo.atk += playerStatInfo.magic;
+      }
     }
 
     let decreaseHp = playerStatInfo.atk;
@@ -30,6 +49,7 @@ export const gameQueueProcess = async (nickname) => {
       const criticalRate = playerStatInfo.critDmg / 100;
       decreaseHp = Math.floor(playerStatInfo.atk * criticalRate);
     }
+
     hatcherySession.boss.hp -= decreaseHp;
 
     const bossCurHp = hatcherySession.boss.hp > 0 ? hatcherySession.boss.hp : 0;
