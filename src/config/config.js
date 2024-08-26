@@ -99,7 +99,7 @@ import {
   DUNGEON_TABLE_KEY,
   DUNGEON_MONSTER_TABLE_KEY,
 } from '../constants/redisKey.js';
-import { LOOKUP_INTERVAL } from '../constants/dynamoDB.js';
+import { LOOKUP_INTERVAL, SERVER_QUANTITY } from '../constants/dynamoDB.js';
 import { TOWN_SPAWN_AREA_POSTION } from '../constants/town/townSceneConfig.js';
 import {
   MANA_COST,
@@ -112,7 +112,7 @@ export const config = {
     port: PORT,
     host: HOST,
     channel: CHANNEL_NUMBER,
-    count: 3,
+    count: SERVER_QUANTITY,
   },
   client: {
     version: CLIENT_VERSION,
