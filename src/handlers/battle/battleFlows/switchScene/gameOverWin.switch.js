@@ -20,7 +20,7 @@ export default async function switchToGameOverWin(dungeon, socket) {
     await addItem(socket, item.id, item.quantity);
   }
 
-  const msg = `${itemInfo.itemName}을 획득했습니다.\n마을로 귀환하겠습니다!`;
+  const msg = `${itemInfo.itemName}을(를) 획득했습니다.\n마을로 귀환하겠습니다!`;
   const btns = [{ msg: '마을로 귀환', enable: true }];
   const battleLog = {
     msg,

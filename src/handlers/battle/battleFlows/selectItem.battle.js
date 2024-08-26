@@ -23,12 +23,12 @@ export default async function selectItemScene(responseCode, dungeon, socket) {
   }
   const usedItemInfo = await getItemById(usedItem.id);
 
-  let msg = `${usedItemInfo.itemName}을 사용하여\n`;
+  let msg = `${usedItemInfo.itemName}을(를) 사용하여\n`;
   await decItem(socket, usedItem.id, 1);
 
   // S_SetPlayerHp 패킷
   if (usedItemInfo.itemHp && playerStatInfo.hp !== playerStatInfo.maxHp) {
-    msg += `Player의 체력을 ${Math.floor(Math.min(usedItemInfo.itemHp, playerStatInfo.maxHp - playerStatInfo.hp))}만큼 회복했습니다.\n`;
+    msg += `플레이어의 체력을 ${Math.floor(Math.min(usedItemInfo.itemHp, playerStatInfo.maxHp - playerStatInfo.hp))}만큼 회복했습니다.\n`;
     playerStatInfo.hp = Math.min(usedItemInfo.itemHp + playerStatInfo.hp, playerStatInfo.maxHp);
     const responseSetPlayerHp = createResponse('response', 'S_SetPlayerHp', {
       hp: playerStatInfo.hp,

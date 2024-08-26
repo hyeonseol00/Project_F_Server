@@ -26,7 +26,7 @@ export const worldBossEventHandler = async (payload) => {
         for (const user of allUser) {
           const response = createResponse('response', 'S_Chat', {
             playerId: user.playerId,
-            chatMsg: `[Event]: 이벤트 보스 ${bossInfo.monsterName}이(가) 다음 던전에 출연합니다.`,
+            chatMsg: `[Event]: 이벤트 보스 ${bossInfo.monsterName}이(가) 다음 던전에 출현합니다.`,
           });
 
           user.socket.write(response);
@@ -40,7 +40,7 @@ export const worldBossEventHandler = async (payload) => {
         for (const user of allUser) {
           const response = createResponse('response', 'S_Chat', {
             playerId: user.playerId,
-            chatMsg: `[Event]: 이벤트 보스 ${bossInfo.monsterName}이(가) 출연하였습니다.`,
+            chatMsg: `[Event]: 이벤트 보스 ${bossInfo.monsterName}이(가) 출현했습니다.`,
           });
 
           user.socket.write(response);

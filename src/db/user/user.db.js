@@ -143,7 +143,7 @@ export const addUserQuest = async (characterId, questId, killCount = 0, status =
   );
 
   if (existingQuest.length > 0) {
-    console.log(`유저 ${characterId}는 이미 퀘스트 ${questId}를 가지고 있습니다.`);
+    console.log(`유저 ${characterId}님은 이미 퀘스트 ${questId}를 가지고 있습니다.`);
     return false;
   }
 
